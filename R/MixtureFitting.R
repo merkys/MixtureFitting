@@ -212,7 +212,8 @@ vmm_init_vector <- function( m )
 # p[1:m] -- mixture proportions
 # p[(m+1):(2*m)] -- means of the peaks
 # p[(2*m+1):(3*m)] -- dispersions of the peaks
-dgmm_R <- function (x, p, normalise_proportions = FALSE, restrict_sigmas = FALSE)
+dgmm_R <- function( x, p, normalise_proportions = FALSE,
+                    restrict_sigmas = FALSE )
 {
     m     = length(p)/3
     A     = p[1:m]
@@ -230,7 +231,7 @@ dgmm_R <- function (x, p, normalise_proportions = FALSE, restrict_sigmas = FALSE
     return( sum )
 }
 
-dvmm_R <- function (x, p)
+dvmm_R <- function( x, p )
 {
     m  = length(p)/3
     A  = p[1:m]
@@ -238,7 +239,8 @@ dvmm_R <- function (x, p)
     k  = p[(2*m+1):(3*m)]
     sum = 0
     for( i in 1:m ) {
-        sum = sum + A[i] * exp( k[i] * cos( deg2rad( x - mu[i] ) ) ) / ( 2 * pi * besselI( k[i], 0 ) )
+        sum = sum + A[i] * exp( k[i] * cos( deg2rad( x - mu[i] ) ) ) /
+                           ( 2 * pi * besselI( k[i], 0 ) )
     }
     return( sum )
 }
@@ -268,7 +270,8 @@ llgmm_R <- function (x, p)
     if( length(p[is.na(p)]) > 0 ) {
         return( NaN )
     }
-    if( length(A[A>=0]) < length(A) || length(sigma[sigma>=0]) < length(sigma) ) {
+    if( length(A[A>=0]) < length(A) ||
+        length(sigma[sigma>=0]) < length(sigma) ) {
         return( -Inf )
     }
     diff = matrix(data = 0, nrow = n, ncol = m )
@@ -406,8 +409,10 @@ vmm_fit_em_by_diff_R <- function( x, p,
         for( j in 1:m ) {
             h = dvmm( x, c( A[j], mu[j], k[j] ) ) / q
             A[j]  = sum( h ) / length( x )
-            mu[j] = rad2deg( atan2( sum( sin( deg2rad(x) ) * h ), sum( cos( deg2rad(x) ) * h ) ) )
-            Rbar  = sqrt( sum( sin( deg2rad(x) ) * h )^2 + sum( cos( deg2rad(x) ) * h )^2 ) / sum( h )
+            mu[j] = rad2deg( atan2( sum( sin( deg2rad(x) ) * h ),
+                                    sum( cos( deg2rad(x) ) * h ) ) )
+            Rbar  = sqrt( sum( sin( deg2rad(x) ) * h )^2 +
+                          sum( cos( deg2rad(x) ) * h )^2 ) / sum( h )
             k[j]  = ( 2 * Rbar - Rbar ^ 3 ) / ( 1 - Rbar ^ 2 )
             if( debug == TRUE ) {
                 cat( A[j], " ", mu[j], " ", k[j], " " )
@@ -450,8 +455,10 @@ vmm_fit_em_by_ll_R <- function( x, p, epsilon = .Machine$double.eps,
         for( j in 1:m ) {
             h = dvmm( x, c( A[j], mu[j], k[j] ) ) / q
             A[j]  = sum( h ) / length( x )
-            mu[j] = rad2deg( atan2( sum( sin( deg2rad(x) ) * h ), sum( cos( deg2rad(x) ) * h ) ) )
-            Rbar  = sqrt( sum( sin( deg2rad(x) ) * h )^2 + sum( cos( deg2rad(x) ) * h )^2 ) / sum( h )
+            mu[j] = rad2deg( atan2( sum( sin( deg2rad(x) ) * h ),
+                                    sum( cos( deg2rad(x) ) * h ) ) )
+            Rbar  = sqrt( sum( sin( deg2rad(x) ) * h )^2 +
+                          sum( cos( deg2rad(x) ) * h )^2 ) / sum( h )
             k[j]  = ( 2 * Rbar - Rbar ^ 3 ) / ( 1 - Rbar ^ 2 )
             if( debug == TRUE ) {
                 cat( A[j], " ", mu[j], " ", k[j], " " )
@@ -510,7 +517,8 @@ cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
             A[j] = sum( h ) / length( x )
             for( i in 1:iter.cauchy ) {
                 e0k  = sum( h / (1+((x-c[j])/s[j])^2) ) / sum( h )
-                e1k  = sum( h * ((x-c[j])/s[j])/(1+((x-c[j])/s[j])^2) ) / sum( h )
+                e1k  = sum( h * ((x-c[j])/s[j])/(1+((x-c[j])/s[j])^2) ) /
+                       sum( h )
                 c[j] = c[j] + s[j] * e1k / e0k
                 s[j] = s[j] * sqrt( 1/e0k - 1 )
             }
@@ -602,7 +610,8 @@ rgmm <- function (n,p)
         if( i == m ) {
             last = n
         }
-        x[(prev+1):(last)] = rnorm( length((prev+1):(last)), mu[i], sigma[i] )
+        x[(prev+1):(last)] = rnorm( length((prev+1):(last)),
+                                    mu[i], sigma[i] )
         prev = last
     }
     return( x )
@@ -643,7 +652,8 @@ rvmm <- function (n,p)
             cn[ log( cn / runif( na_count, 0, 1 ) ) + 1 - cn < 0 ] = NaN
             c[is.na(c)] = cn
         }
-        x[(prev+1):(last)] = sign( runif( quant, 0, 1 ) - 0.5 ) * acos( f ) + mu[i]
+        x[(prev+1):(last)] = sign( runif( quant, 0, 1 ) - 0.5 ) *
+                             acos( f ) + mu[i]
         prev = last
     }
     return( rad2deg( x ) )
@@ -678,7 +688,8 @@ llgmm_conservative <- function (x, p)
     sigma = p[(2*m+1):(3*m)]
     sum = 0
     for (i in 1:n) {
-        sum = sum + log( sum( A / ( sqrt(2*pi) * sigma ) * exp( -(mu-x[i])^2/(2*sigma^2) ) ) )
+        sum = sum + log( sum( A / ( sqrt(2*pi) * sigma ) *
+                         exp( -(mu-x[i])^2/(2*sigma^2) ) ) )
     }
     return( sum )
 }
@@ -755,7 +766,8 @@ gmm_size_probability_nls <- function (x, n, bins = 100, trace = FALSE)
     }
     y = vector( "numeric", bins )
     for (i in 1:bins) {
-        y[i] = length(x[x >= lower+(i-1)*binsize & x < lower+i*binsize])/length(x)
+        y[i] = length(x[x >= lower+(i-1)*binsize &
+                        x < lower+i*binsize])/length(x)
     }
     leastsq = nls( y ~ dgmm( lower + seq( 0, bins - 1, 1 ) * binsize,
                              theta,
@@ -767,8 +779,10 @@ gmm_size_probability_nls <- function (x, n, bins = 100, trace = FALSE)
                    lower = l )
     par = coef( leastsq )
     prob = factorial( n ) * ( 4*pi )^n * exp( -sum(resid(leastsq)^2)/2 ) /
-           (((maximum-minimum) * 1 * max(par[(2*n+1):(3*n)]))^n * sqrt(det(solve(vcov(leastsq)))))
-    return( list( p = prob, par = par, residual = sum(resid(leastsq)^2), hessian = solve(vcov(leastsq)), vcov = vcov(leastsq) ) )
+           (((maximum-minimum) * 1 * max(par[(2*n+1):(3*n)]))^n *
+            sqrt(det(solve(vcov(leastsq)))))
+    return( list( p = prob, par = par, residual = sum(resid(leastsq)^2),
+                  hessian = solve(vcov(leastsq)), vcov = vcov(leastsq) ) )
 }
 
 gmm_fit_kmeans <- function(x, n)
@@ -835,7 +849,8 @@ pssd_gradient <- function(x, y, p)
     return( grad )
 }
 
-gradient_descent <- function( gradfn, start, gamma = 0.1, ..., epsilon = 0.01 )
+gradient_descent <- function( gradfn, start, gamma = 0.1, ...,
+                              epsilon = 0.01 )
 {
     a = start
     while( TRUE ) {
@@ -864,12 +879,13 @@ pssd <- function( x, y, p )
     sum   = sum + sum( exp( -sigma[sigma<=0] ) - 1 )
     sum   = sum + sum( exp( -A[A<=0] ) - 1 )
     sum   = sum + ( sum( A ) - 1 )^2
-    sum   = sum + sum( ( mu[mu<min(x)] - min(x) )^2 ) + sum( ( mu[mu>max(x)] - max(x) )^2 )
+    sum   = sum + sum( ( mu[mu<min(x)] - min(x) )^2 ) +
+                  sum( ( mu[mu>max(x)] - max(x) )^2 )
     return( sum )
 }
 
-simplex <- function(fn, start, ..., epsilon = 0.000001, alpha = 1, gamma = 2,
-                        rho = 0.5, delta = 0.5, trace = F)
+simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
+                     gamma = 2, rho = 0.5, delta = 0.5, trace = F )
 {
     A = start
     while( TRUE ) {
@@ -896,7 +912,7 @@ simplex <- function(fn, start, ..., epsilon = 0.000001, alpha = 1, gamma = 2,
         xr = x0 + alpha * ( x0 - A[[length( A )]] )     # reflected point
         fr = fn( xr, ... )
 
-        if( fr < v[1] ) {           # reflected point is the best point so far
+        if( fr < v[1] ) {       # reflected point is the best point so far
             xe = x0 + gamma * ( x0 - A[[length( A )]] ) # expansion
             fe = fn( xe, ... )
             if( fe < fr ) {
@@ -977,7 +993,8 @@ gmm_fit_hwhm <- function( x, y, n )
         xleft  = x[1:maxid]
         xright = x[maxid:length(x)]
         sigma = min( c( x[maxid] - head(xleft[aleft>a[maxid]/2],1),
-                        head(xright[aright<a[maxid]/2],1) - x[maxid] ) ) / sqrt( 2 * log( 2 ) )
+                        head(xright[aright<a[maxid]/2],1) - x[maxid] ) ) /
+                sqrt( 2 * log( 2 ) )
         if( sigma == 0 ) {
             p = c( p[1:(i-1)], p[(n+1):(n+i-1)], p[(2*n+1):(2*n+i-1)] )
             break
@@ -996,8 +1013,10 @@ gmm_fit_hwhm_spline_derivatives <- function( x, y )
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]
     seq = 2:(length(y)-1)
-    peak_positions = seq[diff[1:(length(diff)-1)] > 0 & diff[2:length(diff)] < 0]
-    sorted_peak_order = rev( sort( y[peak_positions], index.return = TRUE )$ix )
+    peak_positions = seq[diff[1:(length(diff)-1)] > 0 &
+                         diff[2:length(diff)] < 0]
+    sorted_peak_order = rev( sort( y[peak_positions],
+                                   index.return = TRUE )$ix )
     peak_positions = peak_positions[sorted_peak_order]
     n = length( peak_positions )
     p = vector( "numeric", 3 * n )
@@ -1009,7 +1028,8 @@ gmm_fit_hwhm_spline_derivatives <- function( x, y )
         xleft  = x[1:maxid]
         xright = x[maxid:length(x)]
         sigma = min( c( x[maxid] - head(xleft[aleft>a[maxid]/2],1),
-                        head(xright[aright<a[maxid]/2],1) - x[maxid] ) ) / sqrt( 2 * log( 2 ) )
+                        head(xright[aright<a[maxid]/2],1) - x[maxid] ) ) /
+                sqrt( 2 * log( 2 ) )
         if( sigma == 0 ) {
             p = c( p[1:(i-1)], p[(n+1):(n+i-1)], p[(2*n+1):(2*n+i-1)] )
             break
@@ -1028,8 +1048,10 @@ cmm_fit_hwhm_spline_derivatives <- function( x, y )
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]
     seq = 2:(length(y)-1)
-    peak_positions = seq[diff[1:(length(diff)-1)] > 0 & diff[2:length(diff)] < 0]
-    sorted_peak_order = rev( sort( y[peak_positions], index.return = TRUE )$ix )
+    peak_positions = seq[diff[1:(length(diff)-1)] > 0 &
+                         diff[2:length(diff)] < 0]
+    sorted_peak_order = rev( sort( y[peak_positions],
+                                   index.return = TRUE )$ix )
     peak_positions = peak_positions[sorted_peak_order]
     n = length( peak_positions )
     p = vector( "numeric", 3 * n )
@@ -1113,7 +1135,8 @@ smm_fit_em_APK10 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
             b = sum( ( z - zbar )^2 * w ) / sum( w ) - trigamma( 0.5 )
 
             ni[j] = ( 1 + sqrt( 1 + 4 * b ) ) / b
-            s[j] = exp( zbar - log( ni[j] ) + digamma( ni[j] / 2 ) - digamma( 0.5 ) )
+            s[j] = exp( zbar - log( ni[j] ) + digamma( ni[j] / 2 ) -
+                        digamma( 0.5 ) )
             if( debug == TRUE ) {
                 cat( A[j], " ", c[j], " ", s[j], " ", ni[j], " " )
             }
@@ -1327,10 +1350,14 @@ s_fit_primitive <- function( x )
 mk_fit_images <- function( h, l, prefix = "img_" ) {
     maxstrlen = ceiling( log( length( r ) ) / log( 10 ) )
     for( i in 1:length( l ) ) {
-        fname = paste( prefix, sprintf( paste("%0",maxstrlen,"d",sep=""), i ), ".png", sep = "" )
+        fname = paste( prefix,
+                       sprintf( paste("%0",maxstrlen,"d",sep=""), i ),
+                       ".png", sep = "" )
         png( filename = fname )
         plot(h)
-        lines( h$mids, sum(h$counts) * dgmm( h$mids, l[[i]] )/sum( h$density ), col = "red", lwd = 2 )
+        lines( h$mids,
+               sum(h$counts) * dgmm( h$mids, l[[i]] )/sum( h$density ),
+               col = "red", lwd = 2 )
         dev.off()
     }
 }
@@ -1421,8 +1448,10 @@ smm_init_vector_kmeans <- function( x, m ) {
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 6, 3689--3694
 smm_split_component <- function( p, alpha = 0.5, beta = 0.5, u = 0.5 ) {
     A  = c( alpha, 1 - alpha ) * p[1]
-    c = p[2] + c( -sqrt( A[2]/A[1] ), sqrt( A[1]/A[2] ) ) * u * sqrt( p[3] )
-    s = p[1] * p[3] * (1 - (p[4] - 2) * u^2 / p[4]) * c( beta, 1 - beta ) / A
+    c = p[2] + c( -sqrt( A[2]/A[1] ), sqrt( A[1]/A[2] ) ) * u *
+               sqrt( p[3] )
+    s = p[1] * p[3] * (1 - (p[4] - 2) * u^2 / p[4]) *
+        c( beta, 1 - beta ) / A
     return( c( A, c, s, p[4], p[4] ) )
 }
 
@@ -1432,11 +1461,14 @@ plot_circular_hist <- function( x, breaks = 72, ball = 0.5, ... ) {
     xx[(1:breaks)*3] = 1:breaks * 2*pi / breaks
     for( i in 1:breaks ) {
         xx[((i-1)*3+1):((i-1)*3+2)] = (i-1) * 2*pi / breaks
-        yy[((i-1)*3+2):(i*3)] = length( x[x >= 360 / breaks * (i-1) & x < 360 / breaks * i] )
+        yy[((i-1)*3+2):(i*3)] =
+            length( x[x >= 360 / breaks * (i-1) & x < 360 / breaks * i] )
     }
     yy = (yy / max(yy)) * (1-ball) + ball
-    plot( yy * cos( xx ), yy * sin( xx ), type = "l", asp = 1, ann = FALSE, axes = FALSE, ... )
-    lines( ball * cos( seq( 0, 2*pi, pi/180 ) ), ball * sin( seq( 0, 2*pi, pi/180 ) ) )
+    plot( yy * cos( xx ), yy * sin( xx ), type = "l", asp = 1,
+          ann = FALSE, axes = FALSE, ... )
+    lines( ball * cos( seq( 0, 2*pi, pi/180 ) ),
+           ball * sin( seq( 0, 2*pi, pi/180 ) ) )
 }
 
 deg2rad <- function( x ) {
@@ -1454,13 +1486,15 @@ kmeans_circular <- function( x, centers, iter.max = 10 ) {
     for( i in 1:iter.max ) {
         cluster = numeric(n) * 0
         for( j in 2:(n-1) ) {
-            cluster[x >= (centers[j] + centers[j-1])/2 & x < (centers[j+1] + centers[j])/2] = j
+            cluster[x >= (centers[j] + centers[j-1])/2 &
+                    x <  (centers[j+1] + centers[j])/2] = j
         }
         midpoint = (centers[n] - 2*pi + centers[1])/2
         if( midpoint < 0 ) {
             cluster[x < (centers[1] + centers[2])/2] = 1
             cluster[x >= midpoint + 2*pi] = 1
-            cluster[x <  midpoint + 2*pi & x >= (centers[n-1] + centers[n])/2] = n
+            cluster[x <  midpoint + 2*pi &
+                    x >= (centers[n-1] + centers[n])/2] = n
             x[x >= midpoint + 2*pi] = x[x >= midpoint + 2*pi] - 2*pi
         } else {
             cluster[x >= (centers[n-1] + centers[n])/2] = n
@@ -1469,7 +1503,8 @@ kmeans_circular <- function( x, centers, iter.max = 10 ) {
             x[x < midpoint] = x[x < midpoint] + 2*pi
         }
         for( j in 1:n ) {
-            centers[j] = sum( x[cluster == j] ) / length( cluster[cluster == j] )
+            centers[j] = sum( x[cluster == j] ) /
+                         length( cluster[cluster == j] )
         }
         centers[centers<0]    = centers[centers<0]    + 2*pi
         centers[centers>2*pi] = centers[centers>2*pi] - 2*pi
