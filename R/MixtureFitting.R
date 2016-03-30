@@ -1566,6 +1566,25 @@ digamma_approx <- function( x )
     return( ret )
 }
 
+# Finds one real polynomial root using Newton–Raphson method, implemented
+# according to Wikipedia:
+# https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=710342140
+polyroot_NR <- function( p, init = 0, epsilon = 1e-6 )
+{
+    x = init
+    x_prev = Inf
+
+    n = length(p)
+
+    d = p[2:n] * (1:(n-1))
+    while( abs( x - x_prev ) > epsilon ) {
+        x_prev = x
+        powers = x^(0:(n-1))
+        x = x - sum(p * powers) / sum(d * powers[1:(n-1)])
+    }
+    return( x )
+}
+
 # Kullback–Leibler divergence, using Dirac's delta function, implemented
 # according to:
 # Chen, S.; Wang, H. & Luo, B.
