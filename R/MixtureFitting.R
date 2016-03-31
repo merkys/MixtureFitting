@@ -1569,10 +1569,11 @@ digamma_approx <- function( x )
 # Finds one real polynomial root using Newton–Raphson method, implemented
 # according to Wikipedia:
 # https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=710342140
-polyroot_NR <- function( p, init = 0, epsilon = 1e-6 )
+polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
 {
     x = init
     x_prev = Inf
+    steps = 0
 
     n = length(p)
 
@@ -1581,7 +1582,13 @@ polyroot_NR <- function( p, init = 0, epsilon = 1e-6 )
         x_prev = x
         powers = x^(0:(n-1))
         x = x - sum(p * powers) / sum(d * powers[1:(n-1)])
+        steps = steps + 1
     }
+
+    if( debug ) {
+        cat( "Convergence reached after", steps, "iteration(s)\n" )
+    }
+
     return( x )
 }
 
