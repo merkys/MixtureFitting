@@ -564,3 +564,48 @@ void vmm_init_vector( int *m, double *ret )
         ret[2*(*m)+i] = (((double)*m)/(12*180))*(((double)*m)/(12*180));
     }
 }
+
+void polyroot_NR( double *p, int *plength,
+                  double *init, double *epsilon,
+                  int *debug, double *ret )
+{
+    double x = *init;
+    int steps = 0;
+
+    double d[*plength-1];
+    int i;
+    for( i = 0; i < *plength-1; i++ ) {
+        d[i] = p[i+1] * (i+1);
+    }
+
+    int run = 1;
+    while( run == 1 ) {
+        double powers[*plength];
+        powers[0] = 1;
+        for( i = 1; i < *plength; i++ ) {
+            powers[i] = powers[i-1] * x;
+        }
+
+        double numerator = 0.0;
+        double denominator = 0.0;
+        for( i = 0; i < *plength; i++ ) {
+            numerator = numerator + p[i] * powers[i];
+            if( i < *plength-1 ) {
+                denominator = denominator + d[i] * powers[i];
+            }
+        }
+
+        double diff = numerator / denominator;
+        x = x - diff;
+        steps++;
+        if( fabs( diff ) < *epsilon ) {
+            run = 0;
+        }
+    }
+
+    if( *debug > 0 ) {
+        printf( "Convergence reached after %u iteration(s)\n", steps );
+    }
+
+    *ret = x;
+}

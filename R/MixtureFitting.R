@@ -203,6 +203,18 @@ vmm_init_vector <- function( m )
     return( ret$retvec )
 }
 
+polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
+{
+    ret = .C( "polyroot_NR",
+              as.double(p),
+              as.integer( length(p) ),
+              as.double(init),
+              as.double(epsilon),
+              as.integer( debug ),
+              retvec = numeric(1) )
+    return( ret$retvec )
+}
+
 #=========================================================================
 # R counterparts of functions, rewritten in C
 #=========================================================================
@@ -568,6 +580,32 @@ cmm_init_vector_R <- function( x, m ) {
     start[(m+1):(2*m)]   = min(x) + (1:m)*(max(x)-min(x))/(m+1)
     start[(2*m+1):(3*m)] = 1
     return( start )
+}
+
+# Finds one real polynomial root using Newton–Raphson method, implemented
+# according to Wikipedia:
+# https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=710342140
+polyroot_NR_R <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
+{
+    x = init
+    x_prev = Inf
+    steps = 0
+
+    n = length(p)
+
+    d = p[2:n] * (1:(n-1))
+    while( abs( x - x_prev ) > epsilon ) {
+        x_prev = x
+        powers = x^(0:(n-1))
+        x = x - sum(p * powers) / sum(d * powers[1:(n-1)])
+        steps = steps + 1
+    }
+
+    if( debug ) {
+        cat( "Convergence reached after", steps, "iteration(s)\n" )
+    }
+
+    return( x )
 }
 
 #=========================================================================
@@ -1564,32 +1602,6 @@ digamma_approx <- function( x )
     }
 
     return( ret )
-}
-
-# Finds one real polynomial root using Newton–Raphson method, implemented
-# according to Wikipedia:
-# https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=710342140
-polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
-{
-    x = init
-    x_prev = Inf
-    steps = 0
-
-    n = length(p)
-
-    d = p[2:n] * (1:(n-1))
-    while( abs( x - x_prev ) > epsilon ) {
-        x_prev = x
-        powers = x^(0:(n-1))
-        x = x - sum(p * powers) / sum(d * powers[1:(n-1)])
-        steps = steps + 1
-    }
-
-    if( debug ) {
-        cat( "Convergence reached after", steps, "iteration(s)\n" )
-    }
-
-    return( x )
 }
 
 # Kullback–Leibler divergence, using Dirac's delta function, implemented
