@@ -1260,9 +1260,10 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 
             # Solution of Eqn. 17 is implemented via digamma function
             # approximation using asymptotic expression of digamma(x).
-            # R's polyroot() function is used to find the roots of the
-            # polynomial. Positive real root (should be single) is chosen
-            # as a solution.
+            # Jenkins-Taub (implemented in R's polyroot() function) or
+            # Newton-Raphson (implemented here) algorithm is used to find
+            # the roots of the polynomial. For Jenkins-Taub, a positive
+            # real root (should be single) is chosen as a solution.
 
             cl = length( digamma_approx_coefs )
             p = sum( rep( 2 / ( ni[j] + 1 ), cl )^(1:cl) *
@@ -1276,11 +1277,11 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                 newton_raphson = polyroot_NR( polynome, init = 2/ni[j] ),
                 NaN )
 
-            roots = switch(
+            roots = 2 / switch(
                 polyroot.solution,
-                jenkins_taub   = 2 / Re(roots[abs(Im(roots)) < 1e-10 &
-                                              abs(Re(roots)) > 1e-10]),
-                newton_raphson = 2 / roots,
+                jenkins_taub   = Re(roots[abs(Im(roots)) < 1e-10 &
+                                          abs(Re(roots)) > 1e-10]),
+                newton_raphson = roots,
                 NaN )
 
             if( ni[j] > max.df ) {
@@ -1329,7 +1330,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 # Greedy EM Algorithm for Robust T-Mixture Modeling
 # Third International Conference on Image and Graphics (ICIG’04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548--551
-smm_fit_em_CWL04 <- function( x, p, debug = TRUE, ... )
+smm_fit_em_CWL04 <- function( x, p, debug = FALSE, ... )
 {
     bic_prev = Inf
     p_prev = p
