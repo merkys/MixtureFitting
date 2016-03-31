@@ -1222,7 +1222,8 @@ digamma_approx_coefs = c( 1/2, 1/12, 0, -1/120, 0, 1/252, 0,
 smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               collect.history = FALSE, debug = FALSE,
                               min.sigma = 1e-256, min.ni = 1e-256,
-                              max.df = 1000 )
+                              max.df = 1000,
+                              polyroot.solution = 'jenkins_taub' )
 {
     m  = length(p)/4
     A  = p[1:m]
@@ -1266,10 +1267,21 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
             cl = length( digamma_approx_coefs )
             p = sum( rep( 2 / ( ni[j] + 1 ), cl )^(1:cl) *
                      digamma_approx_coefs )
-            roots = polyroot( c( sum( z * ( log( u ) - u ) ) / sum( z ) - p + 1,
-                              digamma_approx_coefs ) )
-            roots = 1/roots
-            ni[j] = 2 * Re(roots[abs(Im(roots)) < 1e-10 & Re(roots) > 1e-10])
+            polynome = c( sum( z * ( log( u ) - u ) ) / sum( z ) - p + 1,
+                          digamma_approx_coefs )
+
+            roots = switch(
+                polyroot.solution,
+                jenkins_taub   = polyroot( polynome ),
+                newton_raphson = polyroot_NR( polynome, init = 2/ni[j] ),
+                NaN )
+
+            roots = switch(
+                polyroot.solution,
+                jenkins_taub   = 2 / Re(roots[abs(Im(roots)) < 1e-10 &
+                                              abs(Re(roots)) > 1e-10]),
+                newton_raphson = 2 / roots,
+                NaN )
 
             if( ni[j] > max.df ) {
                 ni[j] = max.df
@@ -1317,7 +1329,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 # Greedy EM Algorithm for Robust T-Mixture Modeling
 # Third International Conference on Image and Graphics (ICIG’04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548--551
-smm_fit_em_CWL04 <- function( x, p, debug = TRUE )
+smm_fit_em_CWL04 <- function( x, p, debug = TRUE, ... )
 {
     bic_prev = Inf
     p_prev = p
@@ -1329,7 +1341,7 @@ smm_fit_em_CWL04 <- function( x, p, debug = TRUE )
         if( debug ) {
             cat( "Starting EM with", m, "components\n" )
         }
-        fit = smm_fit_em( x, p )
+        fit = smm_fit_em( x, p, ... )
         p = fit$p
         bic_now = bic( x, p, llsmm )
         if( debug ) {
