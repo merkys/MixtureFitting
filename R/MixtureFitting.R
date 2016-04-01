@@ -1236,7 +1236,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
     d_ni = c( Inf )
     steps = 0
     history = list()
-    if( collect.history == TRUE ) {
+    if( collect.history ) {
         history[[1]] = p
     }
     while( length( d_A[ d_A  > epsilon[1]] ) > 0 ||
@@ -1288,11 +1288,11 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                 ni[j] = max.df
             }
 
-            if( debug == TRUE ) {
+            if( debug ) {
                 cat( A[j], " ", c[j], " ", s[j], " ", ni[j], " " )
             }
         }
-        if( debug == TRUE ) {
+        if( debug ) {
             cat( "\n" )
         }
         d_A  = abs( A  - prev_A  )
@@ -1300,7 +1300,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
         d_s  = abs( s  - prev_s  )
         d_ni = abs( ni - prev_ni )
         steps = steps + 1
-        if( collect.history == TRUE ) {
+        if( collect.history ) {
             history[[steps+1]] = c( A, c, s, ni )
         }
         if( length( d_A[ is.na(d_A) ] ) +
@@ -1318,7 +1318,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
     }
 
     l = list( p = c( A, c, s, ni ), steps = steps )
-    if( collect.history == TRUE ) {
+    if( collect.history ) {
         l$history = history
     }
     return( l )
@@ -1330,12 +1330,14 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 # Greedy EM Algorithm for Robust T-Mixture Modeling
 # Third International Conference on Image and Graphics (ICIG’04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548--551
-smm_fit_em_CWL04 <- function( x, p, debug = FALSE, ... )
+smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
+                              debug = FALSE, ... )
 {
     bic_prev = Inf
     p_prev = p
     m = length(p) / 4
     run = TRUE
+    history = list()
 
     while( run ) {
         prev_p = p
@@ -1358,6 +1360,9 @@ smm_fit_em_CWL04 <- function( x, p, debug = FALSE, ... )
             if( debug ) {
                 cat( "Splitting component", split, "\n" )
             }
+            if( collect.history ) {
+                history[[m]] = p
+            }
             s = smm_split_component( p[0:3*m+split] )
             p = c( p[0*m+sort( c( 1:m, split ) )],
                    p[1*m+sort( c( 1:m, split ) )],
@@ -1376,7 +1381,11 @@ smm_fit_em_CWL04 <- function( x, p, debug = FALSE, ... )
             }
         }
     }
-    return( p )
+    l = list( p = p )
+    if( collect.history ) {
+        l$history = history
+    }
+    return( l )
 }
 
 # Fits the distribution of observations with t-distribution (Student's
