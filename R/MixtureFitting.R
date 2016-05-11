@@ -1277,10 +1277,10 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                 newton_raphson = polyroot_NR( polynome, init = 2/ni[j] ),
                 NaN )
 
-            roots = 2 / switch(
+            ni[j] = 2 / switch(
                 polyroot.solution,
                 jenkins_taub   = Re(roots[abs(Im(roots)) < 1e-10 &
-                                          abs(Re(roots)) > 1e-10]),
+                                          Re(roots) > 1e-10]),
                 newton_raphson = roots,
                 NaN )
 
