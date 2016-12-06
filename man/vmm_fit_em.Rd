@@ -7,7 +7,8 @@
     Maximisation algorithm.
 }
 \usage{
-    vmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ) )
+    vmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+                debug = FALSE )
 }
 \arguments{
     \item{x}{data vector}
@@ -25,6 +26,9 @@
         epsilon_A is threshold for component proportions,
         epsilon_mu is threshold for component centers and
         epsilon_k is threshold for component concentrations.
+    }
+    \item{debug}{
+        flag to turn the debug prints on/off.
     }
 }
 \value{
