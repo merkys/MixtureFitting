@@ -50,8 +50,7 @@ void llgmm( double *x, int *xlength,
     int m = *plength / 3;
     double * dgmms = calloc( *xlength, sizeof( double ) );
     if( !dgmms ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     dgmm( x, xlength, p, plength, dgmms );
     int i;
@@ -83,8 +82,7 @@ void gmm_fit_em( double *x, int *xlength,
     double sqrtdblpi = sqrt( 2 * M_PI );
     double * q = calloc( *xlength, sizeof( double ) );
     if( !q ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     int run = 1;
     *steps = 0;
@@ -197,8 +195,7 @@ void llcmm( double *x, int *xlength,
     int m = *plength / 3;
     double * dcmms = calloc( *xlength, sizeof( double ) );
     if( !dcmms ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     dcmm( x, xlength, p, plength, dcmms );
     int i;
@@ -231,13 +228,11 @@ void cmm_fit_em( double *x, int *xlength,
     }
     double * q = calloc( *xlength, sizeof( double ) );
     if( !q ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     double * h = calloc( *xlength, sizeof( double ) );
     if( !h ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     int run = 1;
     *steps = 0;
@@ -360,8 +355,7 @@ void llvmm( double *x, int *xlength,
 {
     double * dvmms = calloc( *xlength, sizeof( double ) );
     if( !dvmms ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     dvmm( x, xlength, p, plength, dvmms );
     int i;
@@ -394,13 +388,11 @@ void vmm_fit_em_by_diff( double *x, int *xlength,
     }
     double * q = calloc( *xlength, sizeof( double ) );
     if( !q ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     double * h = calloc( *xlength, sizeof( double ) );
     if( !h ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     int run = 1;
     *steps = 0;
@@ -486,13 +478,11 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
     }
     double * q = calloc( *xlength, sizeof( double ) );
     if( !q ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     double * h = calloc( *xlength, sizeof( double ) );
     if( !h ) {
-        fprintf( stderr, "can not allocate memory" );
-        exit( 1 );
+        error( "can not allocate memory" );
     }
     int run = 1;
     *steps = 0;
