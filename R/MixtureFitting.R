@@ -817,7 +817,7 @@ gmm_size_probability_nls <- function (x, n, bins = 100, trace = FALSE)
                    lower = l )
     par = coef( leastsq )
     prob = factorial( n ) * ( 4*pi )^n * exp( -sum(resid(leastsq)^2)/2 ) /
-           (((maximum-minimum) * 1 * max(par[(2*n+1):(3*n)]))^n *
+           (((lower-upper) * 1 * max(par[(2*n+1):(3*n)]))^n *
             sqrt(det(solve(vcov(leastsq)))))
     return( list( p = prob, par = par, residual = sum(resid(leastsq)^2),
                   hessian = solve(vcov(leastsq)), vcov = vcov(leastsq) ) )
