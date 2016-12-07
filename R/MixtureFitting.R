@@ -1334,13 +1334,12 @@ smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
                               debug = FALSE, ... )
 {
     bic_prev = Inf
-    p_prev = p
+    prev_p = p
     m = length(p) / 4
     run = TRUE
     history = list()
 
     while( run ) {
-        prev_p = p
         if( debug ) {
             cat( "Starting EM with", m, "components\n" )
         }
@@ -1364,6 +1363,7 @@ smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
                 history[[m]] = p
             }
             s = smm_split_component( p[0:3*m+split] )
+            prev_p = p
             p = c( p[0*m+sort( c( 1:m, split ) )],
                    p[1*m+sort( c( 1:m, split ) )],
                    p[2*m+sort( c( 1:m, split ) )],
