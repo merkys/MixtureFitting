@@ -1222,7 +1222,7 @@ digamma_approx_coefs = c( 1/2, 1/12, 0, -1/120, 0, 1/252, 0,
 smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               collect.history = FALSE, debug = FALSE,
                               min.sigma = 1e-256, min.ni = 1e-256,
-                              max.df = 1000,
+                              max.df = 1000, max.steps = Inf,
                               polyroot.solution = 'jenkins_taub' )
 {
     m  = length(p)/4
@@ -1239,10 +1239,11 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
     if( collect.history ) {
         history[[1]] = p
     }
-    while( length( d_A[ d_A  > epsilon[1]] ) > 0 ||
-           length( d_c[ d_c  > epsilon[2]] ) > 0 ||
-           length( d_s[ d_s  > epsilon[3]] ) > 0 ||
-           length( d_ni[d_ni > epsilon[4]] ) > 0 ) {
+    while( steps <= max.steps &&
+           ( length( d_A[ d_A  > epsilon[1]] ) > 0 ||
+             length( d_c[ d_c  > epsilon[2]] ) > 0 ||
+             length( d_s[ d_s  > epsilon[3]] ) > 0 ||
+             length( d_ni[d_ni > epsilon[4]] ) > 0 ) ) {
         prev_A  = A
         prev_c  = c
         prev_s  = s
