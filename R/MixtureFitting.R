@@ -1239,7 +1239,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
     if( collect.history ) {
         history[[1]] = p
     }
-    while( steps <= max.steps &&
+    while( steps < max.steps &&
            ( length( d_A[ d_A  > epsilon[1]] ) > 0 ||
              length( d_c[ d_c  > epsilon[2]] ) > 0 ||
              length( d_s[ d_s  > epsilon[3]] ) > 0 ||
