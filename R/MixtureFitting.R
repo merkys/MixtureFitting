@@ -1223,7 +1223,8 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               collect.history = FALSE, debug = FALSE,
                               min.sigma = 1e-256, min.ni = 1e-256,
                               max.df = 1000, max.steps = Inf,
-                              polyroot.solution = 'jenkins_taub' )
+                              polyroot.solution = 'jenkins_taub',
+                              unif.component = FALSE )
 {
     m  = length(p)/4
     A  = p[1:m]
@@ -1249,6 +1250,17 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
         prev_s  = s
         prev_ni = ni
         q = dsmm( x, c( A, c, s, ni ) )
+        if( unif.component ) {
+            # Allows additional component with uniform distribution for
+            # the modelling of outliers as suggested in:
+            # Cousineau, D. & Chartier, S.
+            # Outliers detection and treatment: a review
+            # International Journal of Psychological Research,
+            # 2010, 3, 58-67
+            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+
+            q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
+        }
         for( j in 1:m ) {
             h = A[j] * ds( x, c[j], s[j], ni[j] )
             z = h / q
