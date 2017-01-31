@@ -333,7 +333,7 @@ llcmm_R <- function( x, p )
 }
 
 gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                          collect.history = FALSE )
+                          collect.history = FALSE, unif.component = FALSE )
 {
     m     = length(p)/3
     A     = p[1:m]
@@ -356,6 +356,17 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
         q = vector( "numeric", length( x ) ) * 0
         for( j in 1:m ) {
             q = q + A[j] * dnorm( x, mu[j], sigma[j] )
+        }
+        if( unif.component ) {
+            # Allows additional component with uniform distribution for
+            # the modelling of outliers as suggested in:
+            # Cousineau, D. & Chartier, S.
+            # Outliers detection and treatment: a review
+            # International Journal of Psychological Research,
+            # 2010, 3, 58-67
+            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+
+            q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
         for( j in 1:m ) {
             h = A[j] * dnorm( x, mu[j], sigma[j] ) / q
@@ -500,7 +511,8 @@ vmm_fit_em_by_ll_R <- function( x, p, epsilon = .Machine$double.eps,
 # to Ferenc Nahy, Parameter Estimation of the Cauchy Distribution in
 # Information Theory Approach, Journal of Universal Computer Science, 2006.
 cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                          collect.history = FALSE, iter.cauchy = 20 )
+                          collect.history = FALSE, iter.cauchy = 20,
+                          unif.component = FALSE )
 {
     m = length(p)/3
     A = p[1:m]
@@ -523,6 +535,17 @@ cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
         q = numeric( length( x ) ) * 0
         for( j in 1:m ) {
             q = q + A[j] * dcauchy( x, c[j], s[j] )
+        }
+        if( unif.component ) {
+            # Allows additional component with uniform distribution for
+            # the modelling of outliers as suggested in:
+            # Cousineau, D. & Chartier, S.
+            # Outliers detection and treatment: a review
+            # International Journal of Psychological Research,
+            # 2010, 3, 58-67
+            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+
+            q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
         for( j in 1:m ) {
             h = A[j] * dcauchy( x, c[j], s[j] ) / q
