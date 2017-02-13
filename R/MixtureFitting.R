@@ -1686,7 +1686,11 @@ abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
             epsilon_now = c( epsilon_now, rep( epsilon[i], n ) )
         }
     }
-    return( all( abs( p_now - p_prev ) <= epsilon ) )
+    has_converged = all( abs( p_now - p_prev ) <= epsilon )
+    if( is.na( has_converged ) ) {
+        has_converged = TRUE
+    }
+    return( has_converged )
 }
 
 ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
@@ -1698,7 +1702,11 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
             epsilon_now = c( epsilon_now, rep( epsilon[i], n ) )
         }
     }
-    return( all( abs( p_now - p_prev ) / p_prev <= epsilon ) )
+    has_converged = all( abs( p_now - p_prev ) / p_prev <= epsilon );
+    if( is.na( has_converged ) ) {
+        has_converged = TRUE
+    }
+    return( has_converged )
 }
 
 MixtureFitting_version <- function()
