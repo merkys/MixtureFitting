@@ -333,23 +333,23 @@ llcmm_R <- function( x, p )
 }
 
 gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                          collect.history = FALSE, unif.component = FALSE )
+                          collect.history = FALSE, unif.component = FALSE,
+                          convergence = abs_convergence )
 {
     m     = length(p)/3
     A     = p[1:m]
     mu    = p[(m+1):(2*m)]
     sigma = p[(2*m+1):(3*m)]
-    d_A     = c( Inf )
-    d_mu    = c( Inf )
-    d_sigma = c( Inf )
+    prev_A     = rep( Inf, m )
+    prev_mu    = rep( Inf, m )
+    prev_sigma = rep( Inf, m )
     steps = 0
     history = list()
     if( collect.history == TRUE ) {
         history[[1]] = p
     }
-    while( length( d_A[    d_A     > epsilon[1]] ) > 0 ||
-           length( d_mu[   d_mu    > epsilon[2]] ) > 0 ||
-           length( d_sigma[d_sigma > epsilon[3]] ) > 0 ) {
+    while( !convergence( c( A, mu, sigma ), 
+                         c( prev_A, prev_mu, prev_sigma ), epsilon ) ) {
         prev_A     = A
         prev_mu    = mu
         prev_sigma = sigma
@@ -374,16 +374,13 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
             sigma[j] = sqrt( sum( h * ( x - mu[j] ) ^ 2 ) / sum( h ) )
             mu[j]    = sum( h * x ) / sum( h )
         }
-        d_A     = abs( A - prev_A )
-        d_mu    = abs( mu - prev_mu )
-        d_sigma = abs( sigma - prev_sigma )
         steps   = steps + 1
         if( collect.history == TRUE ) {
             history[[steps+1]] = c( A, mu, sigma )
         }
-        if( length( d_A[    is.na(d_A)] )   +
-            length( d_mu[   is.na(d_mu) ] ) +
-            length( d_sigma[is.na(d_sigma)] ) > 0 ) {
+        if( length( A[    is.na(A)] )   +
+            length( mu[   is.na(mu) ] ) +
+            length( sigma[is.na(sigma)] ) > 0 ) {
             break
         }
     }
@@ -1247,6 +1244,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               min.sigma = 1e-256, min.ni = 1e-256,
                               max.df = 1000, max.steps = Inf,
                               polyroot.solution = 'jenkins_taub',
+                              convergence = abs_convergence,
                               unif.component = FALSE )
 {
     m  = length(p)/4
@@ -1254,20 +1252,18 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
     c  = p[(m+1):(2*m)]
     s  = p[(2*m+1):(3*m)]
     ni = p[(3*m+1):(4*m)]
-    d_A  = c( Inf )
-    d_c  = c( Inf )
-    d_s  = c( Inf )
-    d_ni = c( Inf )
+    prev_A  = rep( Inf, m )
+    prev_c  = rep( Inf, m )
+    prev_s  = rep( Inf, m )
+    prev_ni = rep( Inf, m )
     steps = 0
     history = list()
     if( collect.history ) {
         history[[1]] = p
     }
     while( steps < max.steps &&
-           ( length( d_A[ d_A  > epsilon[1]] ) > 0 ||
-             length( d_c[ d_c  > epsilon[2]] ) > 0 ||
-             length( d_s[ d_s  > epsilon[3]] ) > 0 ||
-             length( d_ni[d_ni > epsilon[4]] ) > 0 ) ) {
+           !convergence( c( A, c, s, ni ),
+                         c( prev_A, prev_c, prev_s, prev_ni ), epsilon ) ) {
         prev_A  = A
         prev_c  = c
         prev_s  = s
@@ -1331,18 +1327,14 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
         if( debug ) {
             cat( "\n" )
         }
-        d_A  = abs( A  - prev_A  )
-        d_c  = abs( c  - prev_c  )
-        d_s  = abs( s  - prev_s  )
-        d_ni = abs( ni - prev_ni )
         steps = steps + 1
         if( collect.history ) {
             history[[steps+1]] = c( A, c, s, ni )
         }
-        if( length( d_A[ is.na(d_A) ] ) +
-            length( d_c[ is.na(d_c) ] ) +
-            length( d_s[ is.na(d_s) ] ) +
-            length( d_ni[is.na(d_ni)] ) +
+        if( length( A[ is.na(A) ] ) +
+            length( c[ is.na(c) ] ) +
+            length( s[ is.na(s) ] ) +
+            length( ni[is.na(ni)] ) +
             length(  s[s  <= min.sigma] ) +
             length( ni[ni <= min.ni] ) > 0 ) {
             A  = A  * NaN
@@ -1683,6 +1675,30 @@ kldiv <- function( x, p, k )
         kld = kld + pk * log( pk / fk )
     }
     return( kld )
+}
+
+abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
+{
+    if( length( epsilon ) > 1 && length( epsilon ) < length( p_now ) ) {
+        n = length( p_now ) / length( epsilon )
+        epsilon_now = numeric( 0 )
+        for( i in length( epsilon ) ) {
+            epsilon_now = c( epsilon_now, rep( epsilon[i], n ) )
+        }
+    }
+    return( all( abs( p_now - p_prev ) <= epsilon ) )
+}
+
+ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
+{
+    if( length( epsilon ) > 1 && length( epsilon ) < length( p_now ) ) {
+        n = length( p_now ) / length( epsilon )
+        epsilon_now = numeric( 0 )
+        for( i in length( epsilon ) ) {
+            epsilon_now = c( epsilon_now, rep( epsilon[i], n ) )
+        }
+    }
+    return( all( abs( p_now - p_prev ) / p_prev <= epsilon ) )
 }
 
 MixtureFitting_version <- function()
