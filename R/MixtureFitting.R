@@ -348,7 +348,8 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     if( collect.history == TRUE ) {
         history[[1]] = p
     }
-    while( !convergence( c( A, mu, sigma ), 
+    while( steps == 0 ||
+           !convergence( c( A, mu, sigma ), 
                          c( prev_A, prev_mu, prev_sigma ), epsilon ) ) {
         prev_A     = A
         prev_mu    = mu
@@ -1262,6 +1263,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
         history[[1]] = p
     }
     while( steps < max.steps &&
+           steps == 0 ||
            !convergence( c( A, c, s, ni ),
                          c( prev_A, prev_c, prev_s, prev_ni ), epsilon ) ) {
         prev_A  = A
