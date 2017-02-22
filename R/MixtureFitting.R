@@ -509,24 +509,25 @@ vmm_fit_em_by_ll_R <- function( x, p, epsilon = .Machine$double.eps,
 # to Ferenc Nahy, Parameter Estimation of the Cauchy Distribution in
 # Information Theory Approach, Journal of Universal Computer Science, 2006.
 cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                          collect.history = FALSE, iter.cauchy = 20,
-                          unif.component = FALSE )
+                          collect.history = FALSE,
+                          unif.component = FALSE,
+                          convergence = abs_convergence )
 {
     m = length(p)/3
     A = p[1:m]
     c = p[(m+1):(2*m)]
     s = p[(2*m+1):(3*m)]
-    d_A = c( Inf )
-    d_c = c( Inf )
-    d_s = c( Inf )
+    prev_A = rep( Inf, m )
+    prev_c = rep( Inf, m )
+    prev_s = rep( Inf, m )
     steps = 0
     history = list()
     if( collect.history == TRUE ) {
         history[[1]] = p
     }
-    while( length( d_A[d_A > epsilon[1]] ) > 0 ||
-           length( d_c[d_c > epsilon[2]] ) > 0 ||
-           length( d_s[d_s > epsilon[3]] ) > 0 ) {
+    while( steps == 0 ||
+           !convergence( c( A, c, s ), 
+                         c( prev_A, prev_c, prev_s ), epsilon ) ) {
         prev_A = A
         prev_c = c
         prev_s = s
@@ -548,24 +549,30 @@ cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
         for( j in 1:m ) {
             h = A[j] * dcauchy( x, c[j], s[j] ) / q
             A[j] = sum( h ) / length( x )
-            for( i in 1:iter.cauchy ) {
+            cauchy_steps = 0
+            prev_cj = Inf
+            prev_sj = Inf
+            while( cauchy_steps == 0 ||
+                   !convergence( c( c[j], s[j] ),
+                                 c( prev_cj, prev_sj ),
+                                 epsilon[2:3] ) ) {
+                prev_cj = c[j]
+                prev_sj = s[j]
                 e0k  = sum( h / (1+((x-c[j])/s[j])^2) ) / sum( h )
                 e1k  = sum( h * ((x-c[j])/s[j])/(1+((x-c[j])/s[j])^2) ) /
                        sum( h )
                 c[j] = c[j] + s[j] * e1k / e0k
                 s[j] = s[j] * sqrt( 1/e0k - 1 )
+                cauchy_steps = cauchy_steps + 1
             }
         }
-        d_A = abs( A - prev_A )
-        d_c = abs( c - prev_c )
-        d_s = abs( s - prev_s )
         steps = steps + 1
         if( collect.history == TRUE ) {
             history[[steps+1]] = c( A, c, s )
         }
-        if( length( d_A[is.na(d_A)] ) +
-            length( d_c[is.na(d_c)] ) +
-            length( d_s[is.na(d_s)] ) > 0 ) {
+        if( length( A[is.na(A)] ) +
+            length( c[is.na(c)] ) +
+            length( s[is.na(s)] ) > 0 ) {
             break
         }
     }
