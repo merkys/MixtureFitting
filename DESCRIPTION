@@ -1,9 +1,9 @@
 Package: MixtureFitting
-Version: 0.0
-Date: 2016-03-22
-Title: Fitting of mixtures to data using various approaches
+Version: 0.1.0
+Date: 2017-09-13
+Title: Fitting of mixture distributions to data using various approaches
 Author: Andrius Merkys <andrius.merkys@gmail.com>
 Maintainer: Andrius Merkys <andrius.merkys@gmail.com>
 Depends: R (>= 2.0.1)
-Description: Fitting of mixtures to data using various approaches.
+Description: Fitting of mixture distributions to data using various approaches.
 License: GPL-2
