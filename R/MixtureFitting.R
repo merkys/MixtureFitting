@@ -1445,15 +1445,15 @@ s_fit_primitive <- function( x )
 }
 
 mk_fit_images <- function( h, l, prefix = "img_" ) {
-    maxstrlen = ceiling( log( length( r ) ) / log( 10 ) )
+    maxstrlen = ceiling( log( length( l ) ) / log( 10 ) )
     for( i in 1:length( l ) ) {
         fname = paste( prefix,
-                       sprintf( paste("%0",maxstrlen,"d",sep=""), i ),
+                       sprintf( paste( "%0", maxstrlen, "d", sep = "" ), i ),
                        ".png", sep = "" )
         png( filename = fname )
-        plot(h)
+        plot( h )
         lines( h$mids,
-               sum(h$counts) * dgmm( h$mids, l[[i]] )/sum( h$density ),
+               sum( h$counts ) * dgmm( h$mids, l[[i]] )/sum( h$density ),
                col = "red", lwd = 2 )
         dev.off()
     }
