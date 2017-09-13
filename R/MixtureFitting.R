@@ -1717,8 +1717,3 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
     }
     return( has_converged )
 }
-
-MixtureFitting_version <- function()
-{
-    cat( "$Id$\n" )
-}
