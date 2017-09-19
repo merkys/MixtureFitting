@@ -19,7 +19,7 @@
 \arguments{
     \item{x}{data vector}
     \item{p}{
-        initialisation vector of 3*\emph{n} parameters, where \emph{n} is
+        initialisation vector of 4*\emph{n} parameters, where \emph{n} is
         number of mixture components. Structure of p vector is
         p = c( A1, A2, ..., A\emph{n}, mu1, mu2, ..., mu\emph{n}, k1, k2, ..., k\emph{n}, ni1, ni2, ..., ni\emph{n} ),
         where A\emph{i} is the proportion of \emph{i}-th component,
@@ -44,9 +44,9 @@
 }
 \references{
     Gerogiannis, D.; Nikou, C. & Likas, A.
-    The mixtures of Student’s t-distributions as a robust framework
+    The mixtures of Student's t-distributions as a robust framework
     for rigid registration.
-    Image and Vision Computing, Elsevier BV, 2009, 27, 1285-1294
+    Image and Vision Computing, Elsevier BV, 2009, 27, 1285--1294
     \url{http://www.cs.uoi.gr/~arly/papers/imavis09.pdf}
 }
 \author{Andrius Merkys}

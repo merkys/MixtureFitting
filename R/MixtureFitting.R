@@ -1357,7 +1357,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 # Implemented according to:
 # Chen, S.; Wang, H. & Luo, B.
 # Greedy EM Algorithm for Robust T-Mixture Modeling
-# Third International Conference on Image and Graphics (ICIG’04),
+# Third International Conference on Image and Graphics (ICIG'04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548--551
 smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
                               debug = FALSE, ... )
@@ -1659,7 +1659,7 @@ digamma_approx <- function( x )
 # according to:
 # Chen, S.; Wang, H. & Luo, B.
 # Greedy EM Algorithm for Robust T-Mixture Modeling
-# Third International Conference on Image and Graphics (ICIG’04),
+# Third International Conference on Image and Graphics (ICIG'04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548-551
 kldiv <- function( x, p, k )
 {
