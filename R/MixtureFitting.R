@@ -1239,14 +1239,6 @@ smm_fit_em_APK10 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 digamma_approx_coefs = c( 1/2, 1/12, 0, -1/120, 0, 1/252, 0,
                           -1/240, 0, 1/660, 0, -691/32760, 0, 1/12 )
 
-# Fits the distribution of observations with t-distribution (Student's
-# distribution) mixture model. Estimation of component parameters is
-# implemented according to Eqns. 12--17 of:
-# Gerogiannis, D.; Nikou, C. & Likas, A.
-# The mixtures of Student’s t-distributions as a robust framework for
-# rigid registration
-# Image and Vision Computing, Elsevier BV, 2009, 27, 1285-1294
-# http://www.cs.uoi.gr/~arly/papers/imavis09.pdf
 smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               collect.history = FALSE, debug = FALSE,
                               min.sigma = 1e-256, min.ni = 1e-256,
