@@ -1709,3 +1709,20 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
     }
     return( has_converged )
 }
+
+plot_density <- function( x, cuts = 400, main, model, density_f, filename,
+                          width, height, obs_good = c(), obs_bad = c() )
+{
+    png( filename, width = width, height = height )
+    h = hist( x, cuts, main = main,
+              xlim = c( min( c( x, obs_bad ) ), max( c( x, obs_bad ) ) ) )
+    xmids = seq( min( c( x, obs_bad )  ),
+                 max( c( x, obs_bad )  ),
+                 h$mids[2] - h$mids[1] )
+    lines( xmids, length(x) / sum(h$density) *
+           do.call( density_f, list( xmids, model ) ),
+           lwd = 2, col = 'green' )
+    rug( obs_good, lwd = 2, col = 'green' )
+    rug( obs_bad,  lwd = 2, col = 'red' )
+    dev.off()
+}
