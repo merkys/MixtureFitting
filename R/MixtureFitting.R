@@ -1722,7 +1722,11 @@ plot_density <- function( x, cuts = 400, main, model, density_f, filename,
     lines( xmids, length(x) / sum(h$density) *
            do.call( density_f, list( xmids, model ) ),
            lwd = 2, col = 'green' )
-    rug( obs_good, lwd = 2, col = 'green' )
-    rug( obs_bad,  lwd = 2, col = 'red' )
+    if( length( obs_good ) > 0 ) {
+        rug( obs_good, lwd = 2, col = 'green' )
+    }
+    if( length( obs_bad ) > 0 ) {
+        rug( obs_bad,  lwd = 2, col = 'red' )
+    }
     dev.off()
 }
