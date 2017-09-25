@@ -1710,8 +1710,10 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
     return( has_converged )
 }
 
-plot_density <- function( x, cuts = 400, main, model, density_f, filename,
-                          width, height, obs_good = c(), obs_bad = c() )
+plot_density <- function( x, cuts = 400, main = '', model, density_f,
+                          filename = '/dev/stdout',
+                          width, height, obs_good = c(), obs_bad = c(),
+                          scale_density = FALSE )
 {
     png( filename, width = width, height = height )
     h = hist( x, cuts, main = main,
@@ -1719,9 +1721,13 @@ plot_density <- function( x, cuts = 400, main, model, density_f, filename,
     xmids = seq( min( c( x, obs_bad )  ),
                  max( c( x, obs_bad )  ),
                  h$mids[2] - h$mids[1] )
-    lines( xmids, length(x) / sum(h$density) *
-           do.call( density_f, list( xmids, model ) ),
-           lwd = 2, col = 'green' )
+    density = do.call( density_f, list( xmids, model ) )
+    if( scale_density == TRUE ) {
+        density = density / max( density ) * max( h$counts )
+    } else {
+        density = length(x) / sum( h$density ) * density
+    }
+    lines( xmids, density, lwd = 2, col = 'green' )
     if( length( obs_good ) > 0 ) {
         rug( obs_good, lwd = 2, col = 'green' )
     }
