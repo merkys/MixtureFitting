@@ -1678,6 +1678,13 @@ kldiv <- function( x, p, k )
     return( kld )
 }
 
+bhattacharyya_dist <- function( mu1, mu2, sigma1, sigma2 )
+{
+    return( log( sum( c( sigma1, sigma2 )^2 /
+                      c( sigma2, sigma1 )^2, 2 ) / 4 ) / 4 +
+            ( mu1 - mu2 )^2 / ( 4 * ( sigma1^2 + sigma2^2 ) ) )
+}
+
 abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
 {
     if( length( epsilon ) > 1 && length( epsilon ) < length( p_now ) ) {
