@@ -1528,6 +1528,24 @@ smm_init_vector_kmeans <- function( x, m ) {
     return( start )
 }
 
+gmm_merge_components <- function( x, p, i, j ) {
+    P = matrix( p, ncol = 3 )
+    A = P[i,1] + P[j,1]
+
+    # Performing an iteration of EM to find new mean and sd
+    q = vector( "numeric", length( x ) ) * 0
+    for( k in 1:nrow( P ) ) {
+        q = q + P[k,1] * dnorm( x, P[k,2], P[k,3] )
+    }
+    h = ( P[i,1] * dnorm( x, P[i,2], P[i,3] ) +
+          P[j,1] * dnorm( x, P[j,2], P[j,3] ) ) / q
+    mu = sum( x * h ) / sum( h )
+    sigma = sqrt( sum( h * ( x - mu ) ^ 2 ) / sum( h ) )
+
+    P[i,] = c( A, mu, sigma )
+    return( as.vector( P[setdiff( 1:nrow( P ), j ),] ) )
+}
+
 # Splits a component of Student's t-distribution mixture. Implemented
 # according to Eqns. 30--36 of:
 # Chen, S.-B. & Luo, B.

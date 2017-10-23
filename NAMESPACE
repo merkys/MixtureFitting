@@ -38,7 +38,7 @@ export(cmm_init_vector_R)
 export(polyroot_NR_R)
 
 #=========================================================================
-# Functions, that are not yet rewritten in C
+# Functions in R only
 #=========================================================================
 
 export(ds)
@@ -75,6 +75,7 @@ export(gmm_init_vector_quantile)
 export(cmm_init_vector_kmeans)
 export(smm_init_vector)
 export(smm_init_vector_kmeans)
+export(gmm_merge_components)
 export(smm_split_component)
 export(plot_circular_hist)
 export(deg2rad)
