@@ -128,7 +128,7 @@ void gmm_fit_em( double *x, int *xlength,
             sigma[j] = sqrt( sumhdiff / sumh );
 
             if( *debug > 0 ) {
-                printf( "%f %f %f ", A[j], mu[j], sigma[j] );
+                Rprintf( "%f %f %f ", A[j], mu[j], sigma[j] );
             }
             if( fabs( A[j]     - prev_A )     > epsilon[0] ||
                 fabs( mu[j]    - prev_mu )    > epsilon[1] ||
@@ -143,7 +143,7 @@ void gmm_fit_em( double *x, int *xlength,
             run = 0;
         }
         if( *debug > 0 ) {
-            printf( "\n" );
+            Rprintf( "\n" );
         }
         *steps = *steps + 1;
     }
@@ -291,7 +291,7 @@ void cmm_fit_em( double *x, int *xlength,
                 k++;
             }
             if( *debug > 0 ) {
-                printf( "%f %f %f ", A[j], c[j], s[j] );
+                Rprintf( "%f %f %f ", A[j], c[j], s[j] );
             }
             if( fabs( A[j] - prev_A ) > epsilon[0] ||
                 fabs( c[j] - prev_c ) > epsilon[1] ||
@@ -306,7 +306,7 @@ void cmm_fit_em( double *x, int *xlength,
             run = 0;
         }
         if( *debug > 0 ) {
-            printf( "\n" );
+            Rprintf( "\n" );
         }
         *steps = *steps + 1;
     }
@@ -434,7 +434,7 @@ void vmm_fit_em_by_diff( double *x, int *xlength,
             k[j] = ( 2.0 * Rbar - Rbar*Rbar*Rbar ) / ( 1.0 - Rbar*Rbar );
             denom[j] = 2.0 * M_PI * bessi0( k[j] );
             if( *debug > 0 ) {
-                printf( "%f %f %f ", A[j], mu[j], k[j] );
+                Rprintf( "%f %f %f ", A[j], mu[j], k[j] );
             }
             if( fabs( A[j]  - prev_A )  > epsilon[0] ||
                 fabs( mu[j] - prev_mu ) > epsilon[1] ||
@@ -449,7 +449,7 @@ void vmm_fit_em_by_diff( double *x, int *xlength,
             run = 0;
         }
         if( *debug > 0 ) {
-            printf( "\n" );
+            Rprintf( "\n" );
         }
         *steps = *steps + 1;
     }
@@ -521,7 +521,7 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
             tp[2*m+j] = ( 2.0 * Rbar - Rbar*Rbar*Rbar ) / ( 1.0 - Rbar*Rbar );
             denom[j] = 2.0 * M_PI * bessi0( tp[2*m+j] );
             if( *debug > 0 ) {
-                printf( "%f %f %f ", tp[j], tp[m+j], tp[2*m+j] );
+                Rprintf( "%f %f %f ", tp[j], tp[m+j], tp[2*m+j] );
             }
             if( isnan( tp[2*m+j] ) ) {
                 is_nan = 1;
@@ -540,7 +540,7 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
         }
         prev_llog = llog;
         if( *debug > 0 ) {
-            printf( "\n" );
+            Rprintf( "\n" );
         }
         *steps = *steps + 1;
     }
@@ -602,7 +602,7 @@ void polyroot_NR( double *p, int *plength,
     }
 
     if( *debug > 0 ) {
-        printf( "Convergence reached after %u iteration(s)\n", steps );
+        Rprintf( "Convergence reached after %u iteration(s)\n", steps );
     }
 
     *ret = x;
