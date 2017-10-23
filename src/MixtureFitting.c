@@ -99,7 +99,6 @@ void gmm_fit_em( double *x, int *xlength,
         }
         for( j = 0; j < m; j++ ) {
             double sumh = 0.0;
-            double sumhdiff = 0.0;
             double sumhprod = 0.0;
 
             double factor = A[j] / (sigma[j] * sqrtdblpi);
@@ -110,15 +109,24 @@ void gmm_fit_em( double *x, int *xlength,
                 double sqdiff = diff * diff;
                 double weight = factor * exp( -sqdiff / twosqsigma ) / q[i];
                 sumh = sumh + weight;
-                sumhdiff = sumhdiff + weight * sqdiff;
                 sumhprod = sumhprod + weight * x[i];
             }
             double prev_A = A[j];
             A[j] = sumh / *xlength;
-            double prev_sigma = sigma[j];
-            sigma[j] = sqrt( sumhdiff / sumh );
             double prev_mu = mu[j];
             mu[j] = sumhprod / sumh;
+
+            double sumhdiff = 0.0;
+
+            for( i = 0; i < *xlength; i++ ) {
+                double diff = x[i] - mu[j];
+                double sqdiff = diff * diff;
+                double weight = factor * exp( -sqdiff / twosqsigma ) / q[i];
+                sumhdiff = sumhdiff + weight * sqdiff;
+            }
+            double prev_sigma = sigma[j];
+            sigma[j] = sqrt( sumhdiff / sumh );
+
             if( *debug > 0 ) {
                 printf( "%f %f %f ", A[j], mu[j], sigma[j] );
             }

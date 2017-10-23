@@ -372,8 +372,8 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
         for( j in 1:m ) {
             h = A[j] * dnorm( x, mu[j], sigma[j] ) / q
             A[j]     = sum( h ) / length( x )
-            sigma[j] = sqrt( sum( h * ( x - mu[j] ) ^ 2 ) / sum( h ) )
             mu[j]    = sum( h * x ) / sum( h )
+            sigma[j] = sqrt( sum( h * ( x - mu[j] ) ^ 2 ) / sum( h ) )
         }
         steps   = steps + 1
         if( collect.history == TRUE ) {
