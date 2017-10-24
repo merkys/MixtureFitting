@@ -203,10 +203,15 @@ gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
 
 vmm_fit_em <- function( x, p,
                         epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        debug = FALSE )
+                        debug = FALSE, implementation = "C" )
 {
-    l = vmm_fit_em_by_diff( x, p, epsilon, debug )
-    return( l )
+    if( implementation == "C" ) {
+        l = vmm_fit_em_by_diff( x, p, epsilon, debug )
+        return( l )
+    } else {
+        l = vmm_fit_em_by_diff_R( x, p, epsilon, debug )
+        return( l )
+    }
 }
 
 vmm_fit_em_by_diff <- function( x, p,
@@ -428,14 +433,9 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     return( l )
 }
 
-# Estimate von Mises Mixture parameters using expectation maximisation.
-# Implemented according to Banerjee et al., Expectation Maximization for
-# Clustering on Hyperspheres, manuscript, 2003.
-vmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                          debug = FALSE )
+vmm_fit_em_R <- function( ... ) # To be removed
 {
-    l = vmm_fit_em_by_diff_R( x, p, epsilon, debug )
-    return( l )
+    return( vmm_fit_em( ..., implementation = "R" ) )
 }
 
 vmm_fit_em_by_diff_R <- function( x, p,
