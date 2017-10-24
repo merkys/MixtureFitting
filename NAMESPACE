@@ -22,11 +22,6 @@ export(polyroot_NR)
 #=========================================================================
 
 export(dgmm_R)
-export(dvmm_R)
-export(dcmm_R)
-export(llgmm_R)
-export(llvmm_R)
-export(llcmm_R)
 export(gmm_fit_em_R)
 export(vmm_fit_em_R)
 export(vmm_fit_em_by_diff_R)
@@ -78,8 +73,6 @@ export(smm_init_vector_kmeans)
 export(gmm_merge_components)
 export(smm_split_component)
 export(plot_circular_hist)
-export(deg2rad)
-export(rad2deg)
 export(kmeans_circular)
 export(wmedian)
 export(digamma_approx)
@@ -88,3 +81,16 @@ export(bhattacharyya_dist)
 export(abs_convergence)
 export(ratio_convergence)
 export(plot_density)
+
+#=========================================================================
+# To be removed/made private in next minor release
+#=========================================================================
+
+export(dvmm_R)
+export(dcmm_R)
+export(llgmm_R)
+export(llvmm_R)
+export(llcmm_R)
+
+export(deg2rad)
+export(rad2deg)

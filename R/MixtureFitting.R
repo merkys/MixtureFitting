@@ -14,78 +14,175 @@ dgmm <- function( x, p )
     return( buffer )
 }
 
-dvmm <- function( x, p )
+dvmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
         return( rep( NaN, times = length( x ) ) )
     }
-    buffer = numeric( length(x) )
-    ret = .C( "dvmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric( length(x) ))$retvec
-    buffer[1:length(x)] <- ret[1:length(x)]
-    return( buffer )
+
+    if( implementation == "C" ) {
+
+        buffer = numeric( length(x) )
+        ret = .C( "dvmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric( length(x) ))$retvec
+        buffer[1:length(x)] <- ret[1:length(x)]
+        return( buffer )
+    } else {
+
+        m  = length(p)/3
+        A  = p[1:m]
+        mu = p[(m+1):(2*m)]
+        k  = p[(2*m+1):(3*m)]
+        sum = 0
+        for( i in 1:m ) {
+            sum = sum + A[i] * exp( k[i] * cos( deg2rad( x - mu[i] ) ) ) /
+                               ( 2 * pi * besselI( k[i], 0 ) )
+        }
+        return( sum )
+    }
 }
 
-dcmm <- function( x, p )
+dcmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
         return( rep( NaN, times = length( x ) ) )
     }
-    buffer = numeric( length(x) )
-    ret = .C( "dcmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric( length(x) ))$retvec
-    buffer[1:length(x)] <- ret[1:length(x)]
-    return( buffer )
+
+    if( implementation == "C" ) {
+
+        buffer = numeric( length(x) )
+        ret = .C( "dcmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric( length(x) ))$retvec
+        buffer[1:length(x)] <- ret[1:length(x)]
+        return( buffer )
+    } else {
+
+        m = length(p)/3
+        A = p[1:m]
+        c = p[(m+1):(2*m)]
+        s = p[(2*m+1):(3*m)]
+        sum = numeric( length( x ) ) * 0
+        for( i in 1:m ) {
+            sum = sum + A[i] * dcauchy( x, c[i], s[i] )
+        }
+        return( sum )
+    }
 }
 
-llgmm <- function( x, p )
+llgmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
-    ret = .C( "llgmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric(1) )$retvec
-    return( ret )
+
+    if( implementation == "C" ) {
+
+        ret = .C( "llgmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric(1) )$retvec
+        return( ret )
+    } else {
+
+        n     = length(x)
+        m     = length(p)/3
+        A     = p[1:m]
+        mu    = p[(m+1):(2*m)]
+        sigma = p[(2*m+1):(3*m)]
+        if( length(p[is.na(p)]) > 0 ) {
+            return( NaN )
+        }
+        if( length(A[A>=0]) < length(A) ||
+            length(sigma[sigma>=0]) < length(sigma) ) {
+            return( -Inf )
+        }
+        diff = matrix(data = 0, nrow = n, ncol = m )
+        ref_peak = vector( "numeric", n )
+        for (i in 1:n) {
+            diff[i,1:m] = ( x[i] - mu[1:m] ) ^ 2
+            ref_peak[i] = which.min( diff[i,1:m] )
+        }
+        sum = sum( log( A[ref_peak] / (sqrt(2*pi) * sigma[ref_peak]) ) )
+        for (i in 1:n) {
+            rp = ref_peak[i]
+            sum = sum - diff[i,rp] / ( 2 * sigma[rp]^2 )
+            expsum = sum( exp( log( (A[1:m]*sigma[rp])/(A[rp]*sigma[1:m]) )
+                                - diff[i,1:m] / (2*sigma[1:m]^2)
+                                + diff[i,rp] / (2*sigma[rp]^2) ) )
+            sum = sum + log( expsum )
+        }
+        return( sum )
+    }
 }
 
-llvmm <- function( x, p )
+llvmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
-    ret = .C( "llvmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric(1) )$retvec
-    return( ret )
+
+    if( implementation == "C" ) {
+
+        ret = .C( "llvmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric(1) )$retvec
+        return( ret )
+    } else {
+
+        n  = length(x)
+        m  = length(p)/3
+        A  = p[1:m]/sum(p[1:m])
+        mu = p[(m+1):(2*m)]
+        k  = p[(2*m+1):(3*m)]
+        y  = vector( "numeric", n ) * 0
+        for (i in 1:m) {
+            y = y + dvmm( x, c( A[i], mu[i], k[i] ) )
+        }
+        return( sum( log( y ) ) )
+    }
 }
 
-llcmm <- function( x, p )
+llcmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
-    ret = .C( "llcmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric(1) )$retvec
-    return( ret )
+
+    if( implementation == "C" ) {
+
+        ret = .C( "llcmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric(1) )$retvec
+        return( ret )
+    } else {
+
+        n = length(x)
+        m = length(p)/3
+        A = p[1:m]/sum(p[1:m])
+        c = p[(m+1):(2*m)]
+        s = p[(2*m+1):(3*m)]
+        y = numeric( n ) * 0
+        for (i in 1:m) {
+            y = y + dcmm( x, c( A[i], c[i], s[i] ) )
+        }
+        return( sum( log( y ) ) )
+    }
 }
 
 gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
@@ -243,93 +340,29 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
     return( sum )
 }
 
-dvmm_R <- function( x, p )
+dvmm_R <- function( x, p ) # To be removed
 {
-    m  = length(p)/3
-    A  = p[1:m]
-    mu = p[(m+1):(2*m)]
-    k  = p[(2*m+1):(3*m)]
-    sum = 0
-    for( i in 1:m ) {
-        sum = sum + A[i] * exp( k[i] * cos( deg2rad( x - mu[i] ) ) ) /
-                           ( 2 * pi * besselI( k[i], 0 ) )
-    }
-    return( sum )
+    return( dvmm( x, p, implementation = "R" ) )
 }
 
-dcmm_R <- function (x, p)
+dcmm_R <- function (x, p) # To be removed
 {
-    m = length(p)/3
-    A = p[1:m]
-    c = p[(m+1):(2*m)]
-    s = p[(2*m+1):(3*m)]
-    sum = numeric( length( x ) ) * 0
-    for( i in 1:m ) {
-        sum = sum + A[i] * dcauchy( x, c[i], s[i] )
-    }
-    return( sum )
+    return( dcmm( x, p, implementation = "R" ) )
 }
 
-# Log-likelihood of data x given Gaussian Mixture Model, described by
-# parameter vector p.
-llgmm_R <- function (x, p)
+llgmm_R <- function (x, p) # To be removed
 {
-    n     = length(x)
-    m     = length(p)/3
-    A     = p[1:m]
-    mu    = p[(m+1):(2*m)]
-    sigma = p[(2*m+1):(3*m)]
-    if( length(p[is.na(p)]) > 0 ) {
-        return( NaN )
-    }
-    if( length(A[A>=0]) < length(A) ||
-        length(sigma[sigma>=0]) < length(sigma) ) {
-        return( -Inf )
-    }
-    diff = matrix(data = 0, nrow = n, ncol = m )
-    ref_peak = vector( "numeric", n )
-    for (i in 1:n) {
-        diff[i,1:m] = ( x[i] - mu[1:m] ) ^ 2
-        ref_peak[i] = which.min( diff[i,1:m] )
-    }
-    sum = sum( log( A[ref_peak] / (sqrt(2*pi) * sigma[ref_peak]) ) )
-    for (i in 1:n) {
-        rp = ref_peak[i]
-        sum = sum - diff[i,rp] / ( 2 * sigma[rp]^2 )
-        expsum = sum( exp( log( (A[1:m]*sigma[rp])/(A[rp]*sigma[1:m]) )
-                            - diff[i,1:m] / (2*sigma[1:m]^2)
-                            + diff[i,rp] / (2*sigma[rp]^2) ) )
-        sum = sum + log( expsum )
-    }
-    return( sum )
+    return( llgmm( x, p, implementation = "R" ) )
 }
 
 llvmm_R <- function( x, p )
 {
-    n  = length(x)
-    m  = length(p)/3
-    A  = p[1:m]/sum(p[1:m])
-    mu = p[(m+1):(2*m)]
-    k  = p[(2*m+1):(3*m)]
-    y  = vector( "numeric", n ) * 0
-    for (i in 1:m) {
-        y = y + dvmm( x, c( A[i], mu[i], k[i] ) )
-    }
-    return( sum( log( y ) ) )
+    return( llvmm( x, p, implementation = "R" ) )
 }
 
 llcmm_R <- function( x, p )
 {
-    n = length(x)
-    m = length(p)/3
-    A = p[1:m]/sum(p[1:m])
-    c = p[(m+1):(2*m)]
-    s = p[(2*m+1):(3*m)]
-    y = numeric( n ) * 0
-    for (i in 1:m) {
-        y = y + dcmm( x, c( A[i], c[i], s[i] ) )
-    }
-    return( sum( log( y ) ) )
+    return( llcmm( x, p, implementation = "R" ) )
 }
 
 gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
