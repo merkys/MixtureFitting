@@ -896,6 +896,27 @@ gmm_fit_kmeans <- function(x, n)
     return( p )
 }
 
+# Calculate intersection of two normal distributions by finding roots
+# of quadratic equation.
+gmm_intersections <- function( p )
+{
+    P = matrix( p, ncol = 3 )
+    b = -2 * ( P[1,2] * P[2,3]^2 - P[2,2] * P[1,3]^2 )
+    D = b^2 - 4 *
+              ( P[2,3]^2 - P[1,3]^2 ) *
+              ( P[1,2]^2 * P[2,3]^2 - P[2,2]^2 * P[1,3]^2 -
+                2 * (P[1,3]*P[2,3])^2 * log( P[1,1]*P[2,3] / P[2,1]/P[1,3] ) )
+    if( D < 0 ) {         # Discriminant is less than zero, no intersections
+        return( c() )
+    } else if( D == 0 ) { # Single root
+        return( ( -b + sqrt( D ) ) / 
+                ( 2 * ( P[2,3]^2 - P[1,3]^2 ) ) )
+    } else {              # Two roots
+        return( ( -b + c( 1, -1 ) * sqrt( D ) ) / 
+                ( 2 * ( P[2,3]^2 - P[1,3]^2 ) ) )
+    }
+}
+
 ssd_gradient <- function(x, y, p)
 {
     n     = length(x)
