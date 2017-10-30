@@ -901,19 +901,19 @@ gmm_fit_kmeans <- function(x, n)
 gmm_intersections <- function( p )
 {
     P = matrix( p, ncol = 3 )
+    a = P[2,3]^2 - P[1,3]^2
     b = -2 * ( P[1,2] * P[2,3]^2 - P[2,2] * P[1,3]^2 )
-    D = b^2 - 4 *
-              ( P[2,3]^2 - P[1,3]^2 ) *
-              ( P[1,2]^2 * P[2,3]^2 - P[2,2]^2 * P[1,3]^2 -
-                2 * (P[1,3]*P[2,3])^2 * log( P[1,1]*P[2,3] / P[2,1]/P[1,3] ) )
+    c = ( P[1,2]^2 * P[2,3]^2 - P[2,2]^2 * P[1,3]^2 -
+          2 * (P[1,3]*P[2,3])^2 * log( P[1,1]*P[2,3] / P[2,1]/P[1,3] ) )
+    D = b^2 - 4 * a * c
     if( D < 0 ) {         # Discriminant is less than zero, no intersections
         return( c() )
+    } else if( D == 0 & a == 0 & b == 0 & c == 0 ) { # Identical
+        return( NaN )
     } else if( D == 0 ) { # Single root
-        return( ( -b + sqrt( D ) ) / 
-                ( 2 * ( P[2,3]^2 - P[1,3]^2 ) ) )
+        return( -b / ( 2 * a ) )
     } else {              # Two roots
-        return( ( -b + c( 1, -1 ) * sqrt( D ) ) / 
-                ( 2 * ( P[2,3]^2 - P[1,3]^2 ) ) )
+        return( ( -b + c( 1, -1 ) * sqrt( D ) ) / ( 2 * a ) )
     }
 }
 
