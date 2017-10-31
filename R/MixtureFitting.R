@@ -82,8 +82,8 @@ dcgmm <- function( x, p )
     P = matrix( p, ncol = 5 )
     sum = numeric( length( x ) ) * 0
     for( i in 1:nrow( P ) ) {
-        sum = sum + P[i,1] * ( ( 1 - P[i,2] ) * dnorm(   x, P[i,3], P[i,4] ) +
-                                     P[i,2]   * dcauchy( x, P[i,3], P[i,4] ) )
+        sum = sum + P[i,1] * (       P[i,2]   * dcauchy( x, P[i,3], P[i,4] ) +
+                               ( 1 - P[i,2] ) * dnorm(   x, P[i,3], P[i,5] ) )
     }
     return( sum )
 }
