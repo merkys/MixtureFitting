@@ -10,6 +10,8 @@ test2 = all.equal( gmm_intersections( P[c(2,3),] ),
                    c() )
 test3 = all.equal( gmm_intersections( P[c(1,1),] ),
                    NaN )
+test4 = all.equal( gmm_intersections( c( 0.5, 0.5, 1, 2, 1, 1 ) ),
+                   c( 1.5 ) )
 
 if( test1 != TRUE ) {
     stop( test1 )
@@ -19,4 +21,7 @@ if( test2 != TRUE ) {
 }
 if( test3 != TRUE ) {
     stop( test3 )
+}
+if( test4 != TRUE ) {
+    stop( test4 )
 }
