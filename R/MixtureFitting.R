@@ -77,6 +77,17 @@ dcmm <- function( x, p, implementation = "C" )
     }
 }
 
+dcgmm <- function( x, p )
+{
+    P = matrix( p, ncol = 5 )
+    sum = numeric( length( x ) ) * 0
+    for( i in 1:nrow( P ) ) {
+        sum = sum + P[i,1] * ( ( 1 - P[i,2] ) * dnorm(   x, P[i,3], P[i,4] ) +
+                                     P[i,2]   * dcauchy( x, P[i,3], P[i,4] ) )
+    }
+    return( sum )
+}
+
 llgmm <- function( x, p, implementation = "C" )
 {
     if( length( p[is.na(p)] ) > 0 ) {
