@@ -4,6 +4,6 @@ Date: 2017-10-24
 Title: Fitting of univariate mixture distributions to data using various approaches
 Author: Andrius Merkys <andrius.merkys@gmail.com>
 Maintainer: Andrius Merkys <andrius.merkys@gmail.com>
-Depends: R (>= 3.0.0)
+Depends: R (>= 2.0.1)
 Description: Fitting of univariate mixture distributions to data using various approaches.
 License: GPL-2
