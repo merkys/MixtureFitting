@@ -1,3 +1,17 @@
+#=========================================================================
+# Global functions or variables
+#=========================================================================
+importFrom("grDevices", "dev.off", "png")
+importFrom("graphics", "hist", "lines", "plot", "rug")
+importFrom("stats", "coef", "dcauchy", "dnorm", "dt", "dunif",
+           "kmeans", "median", "nls", "optim", "rcauchy", "resid",
+           "rnorm", "runif", "var", "vcov")
+importFrom("utils", "head")
+
+#=========================================================================
+# MixtureFitting
+#=========================================================================
+
 useDynLib(MixtureFitting)
 
 export(dgmm)
