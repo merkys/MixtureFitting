@@ -8,7 +8,7 @@
 }
 \usage{
     vmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                debug = FALSE )
+                debug = FALSE, implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -29,6 +29,9 @@
     }
     \item{debug}{
         flag to turn the debug prints on/off.
+    }
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
     }
 }
 \value{
