@@ -107,6 +107,3 @@ export(llgmm_R)
 export(llvmm_R)
 export(llcmm_R)
 export(vmm_fit_em_R)
-
-export(deg2rad)
-export(rad2deg)
