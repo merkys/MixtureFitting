@@ -1,17 +1,25 @@
-dgmm <- function( x, p )
+dgmm <- function( x, p, normalise_proportions = FALSE,
+                  restrict_sigmas = FALSE,
+                  implementation = "C" )
 {
-    if( length( p[is.na(p)] ) > 0 ) {
-        return( rep( NaN, times = length( x ) ) )
+    if( implementation == "C" ) {
+        if( length( p[is.na(p)] ) > 0 ) {
+            return( rep( NaN, times = length( x ) ) )
+        }
+        buffer = numeric( length(x) )
+        ret = .C( "dgmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric( length(x) ))$retvec
+        buffer[1:length(x)] <- ret[1:length(x)]
+        return( buffer )
+    } else {
+        buffer = dgmm_R( x, p,
+                         normalise_proportions = normalise_proportions,
+                         restrict_sigmas = restrict_sigmas )
     }
-    buffer = numeric( length(x) )
-    ret = .C( "dgmm",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              retvec = numeric( length(x) ))$retvec
-    buffer[1:length(x)] <- ret[1:length(x)]
-    return( buffer )
 }
 
 dvmm <- function( x, p, implementation = "C" )
