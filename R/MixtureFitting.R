@@ -293,14 +293,19 @@ cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     }
 }
 
-gmm_init_vector <- function( x, m )
+gmm_init_vector <- function( x, m, implementation = "C" )
 {
-    ret = .C( "gmm_init_vector",
-              as.double(x),
-              as.integer( length(x) ),
-              as.integer(m),
-              retvec = numeric( 3*m ) )
-    return( ret$retvec )
+    if( implementation == "C" ) {
+        ret = .C( "gmm_init_vector",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.integer(m),
+                  retvec = numeric( 3*m ) )
+        return( ret$retvec )
+    } else {
+        ret = gmm_init_vector_R( x, m )
+        return( ret )
+    }
 }
 
 cmm_init_vector <- function( x, m )
