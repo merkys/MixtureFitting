@@ -6,7 +6,7 @@
     Density function for the Cauchy mixture distribution.
 }
 \usage{
-    dcmm( x, p )
+    dcmm( x, p, implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -17,6 +17,9 @@
         where A\emph{i} is the proportion of \emph{i}-th component,
         mu\emph{i} is the location of \emph{i}-th component,
         gamma\emph{i} is the Cauchy scale of \emph{i}-th component.
+    }
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
     }
 }
 \value{A vector.}

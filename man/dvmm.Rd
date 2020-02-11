@@ -6,7 +6,7 @@
     Density function for the von Mises Mixture Model.
 }
 \usage{
-    dvmm( x, p )
+    dvmm( x, p, implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -17,6 +17,9 @@
         where A\emph{i} is the proportion of \emph{i}-th component,
         mu\emph{i} is the center of \emph{i}-th component and
         k\emph{i} is the concentration of \emph{i}-th component.
+    }
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
     }
 }
 \value{A vector.}

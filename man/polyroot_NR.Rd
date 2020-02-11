@@ -7,13 +7,16 @@
     implemented according to Wikipedia.
 }
 \usage{
-    polyroot_NR( p, init = 0, epsilon = 1e-6, debug = FALSE )
+    polyroot_NR( p, init = 0, epsilon = 1e-6, debug = FALSE, implementation = "C" )
 }
 \arguments{
     \item{p}{vector of polynomial coeficients.}
     \item{init}{initial value.}
     \item{epsilon}{tolerance threshold for convergence.}
     \item{debug}{flag to turn the debug prints on/off.}
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
+    }
 }
 \value{
     Real polynomial root.
