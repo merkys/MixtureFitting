@@ -381,16 +381,6 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
     return( sum )
 }
 
-llvmm_R <- function( x, p )
-{
-    return( llvmm( x, p, implementation = "R" ) )
-}
-
-llcmm_R <- function( x, p )
-{
-    return( llcmm( x, p, implementation = "R" ) )
-}
-
 gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                           collect.history = FALSE, unif.component = FALSE,
                           convergence = abs_convergence )
