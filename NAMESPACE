@@ -90,9 +90,3 @@ export(bhattacharyya_dist)
 export(abs_convergence)
 export(ratio_convergence)
 export(plot_density)
-
-#=========================================================================
-# To be removed/made private in next minor release
-#=========================================================================
-
-export(vmm_fit_em_R)

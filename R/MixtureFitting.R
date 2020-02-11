@@ -452,11 +452,6 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     return( l )
 }
 
-vmm_fit_em_R <- function( ... ) # To be removed
-{
-    return( vmm_fit_em( ..., implementation = "R" ) )
-}
-
 vmm_fit_em_by_diff_R <- function( x, p,
                                   epsilon = c( 0.000001, 0.000001, 0.000001 ),
                                   debug = FALSE )
