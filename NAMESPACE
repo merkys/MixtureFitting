@@ -40,7 +40,6 @@ export(gmm_fit_em_R)
 export(vmm_fit_em_by_diff_R)
 export(vmm_fit_em_by_ll_R)
 export(vmm_init_vector_R)
-export(cmm_init_vector_R)
 export(polyroot_NR_R)
 
 #=========================================================================

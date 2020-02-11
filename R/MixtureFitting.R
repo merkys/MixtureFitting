@@ -308,14 +308,19 @@ gmm_init_vector <- function( x, m, implementation = "C" )
     }
 }
 
-cmm_init_vector <- function( x, m )
+cmm_init_vector <- function( x, m, implementation = "C" )
 {
-    ret = .C( "cmm_init_vector",
-              as.double(x),
-              as.integer( length(x) ),
-              as.integer(m),
-              retvec = numeric( 3*m ) )
-    return( ret$retvec )
+    if( implementation == "C" ) {
+        ret = .C( "cmm_init_vector",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.integer(m),
+                  retvec = numeric( 3*m ) )
+        return( ret$retvec )
+    } else {
+        ret = cmm_init_vector_R( x, m )
+        return( ret )
+    }
 }
 
 vmm_init_vector <- function( m )
