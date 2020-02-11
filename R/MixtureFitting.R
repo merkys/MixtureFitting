@@ -323,12 +323,17 @@ cmm_init_vector <- function( x, m, implementation = "C" )
     }
 }
 
-vmm_init_vector <- function( m )
+vmm_init_vector <- function( m, implementation = "C" )
 {
-    ret = .C( "vmm_init_vector",
-              as.integer(m),
-              retvec = numeric( 3*m ) )
-    return( ret$retvec )
+    if( implementation == "C" ) {
+        ret = .C( "vmm_init_vector",
+                  as.integer(m),
+                  retvec = numeric( 3*m ) )
+        return( ret$retvec )
+    } else {
+        ret = vmm_init_vector_R( m )
+        return( ret )
+    }
 }
 
 polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
