@@ -266,23 +266,27 @@ vmm_fit_em_by_diff <- function( x, p,
 
 vmm_fit_em_by_ll <- function( x, p,
                               epsilon = .Machine$double.eps,
-                              debug = FALSE )
+                              debug = FALSE, implementation = "C" )
 {
-    debugflag = 0
-    if( debug == TRUE ) {
-        debugflag = 1
+    if( implementation == "C" ) {
+        debugflag = 0
+        if( debug == TRUE ) {
+            debugflag = 1
+        }
+        ret = .C( "vmm_fit_em_by_ll",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  as.double( epsilon ),
+                  as.integer( debug ),
+                  retvec = numeric( length(p) ),
+                  steps = integer(1) )
+        l = list( p = ret$retvec, steps = ret$steps )
+        return( l )
+    } else {
+        l = vmm_fit_em_by_ll_R( x, p, epsilon, debug )
     }
-    ret = .C( "vmm_fit_em_by_ll",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              as.double( epsilon ),
-              as.integer( debug ),
-              retvec = numeric( length(p) ),
-              steps = integer(1) )
-    l = list( p = ret$retvec, steps = ret$steps )
-    return( l )
 }
 
 cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
