@@ -268,24 +268,29 @@ vmm_fit_em_by_ll <- function( x, p,
 }
 
 cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        iter.cauchy = 20, debug = FALSE )
+                        iter.cauchy = 20, debug = FALSE, implementation = "C" )
 {
-    debugflag = 0
-    if( debug == TRUE ) {
-        debugflag = 1
+    if( implementation == "C" ) {
+        debugflag = 0
+        if( debug == TRUE ) {
+            debugflag = 1
+        }
+        ret = .C( "cmm_fit_em",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  as.double( epsilon ),
+                  as.integer( iter.cauchy ),
+                  as.integer( debug ),
+                  retvec = numeric( length(p) ),
+                  steps = integer(1) )
+        l = list( p = ret$retvec, steps = ret$steps )
+        return( l )
+    } else {
+        l = cmm_fit_em_R( x, p, epsilon )
+        return( l )
     }
-    ret = .C( "cmm_fit_em",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              as.double( epsilon ),
-              as.integer( iter.cauchy ),
-              as.integer( debug ),
-              retvec = numeric( length(p) ),
-              steps = integer(1) )
-    l = list( p = ret$retvec, steps = ret$steps )
-    return( l )
 }
 
 gmm_init_vector <- function( x, m )
