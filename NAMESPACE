@@ -37,7 +37,6 @@ export(polyroot_NR)
 
 export(gmm_fit_em_R)
 export(vmm_fit_em_by_ll_R)
-export(polyroot_NR_R)
 
 #=========================================================================
 # Functions in R only

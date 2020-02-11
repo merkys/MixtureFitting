@@ -349,16 +349,21 @@ vmm_init_vector <- function( m, implementation = "C" )
     }
 }
 
-polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
+polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE,
+                         implementation = "C" )
 {
-    ret = .C( "polyroot_NR",
-              as.double(p),
-              as.integer( length(p) ),
-              as.double(init),
-              as.double(epsilon),
-              as.integer( debug ),
-              retvec = numeric(1) )
-    return( ret$retvec )
+    if( implementation == "C" ) {
+        ret = .C( "polyroot_NR",
+                  as.double(p),
+                  as.integer( length(p) ),
+                  as.double(init),
+                  as.double(epsilon),
+                  as.integer( debug ),
+                  retvec = numeric(1) )
+        return( ret$retvec )
+    } else {
+        ret = polyroot_NR_R( p, init, epsilon, debug )
+    }
 }
 
 #=========================================================================
