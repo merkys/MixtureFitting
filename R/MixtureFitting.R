@@ -381,11 +381,6 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
     return( sum )
 }
 
-llgmm_R <- function (x, p) # To be removed
-{
-    return( llgmm( x, p, implementation = "R" ) )
-}
-
 llvmm_R <- function( x, p )
 {
     return( llvmm( x, p, implementation = "R" ) )

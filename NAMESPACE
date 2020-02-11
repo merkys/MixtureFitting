@@ -96,7 +96,6 @@ export(plot_density)
 # To be removed/made private in next minor release
 #=========================================================================
 
-export(llgmm_R)
 export(llvmm_R)
 export(llcmm_R)
 export(vmm_fit_em_R)
