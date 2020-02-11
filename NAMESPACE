@@ -35,7 +35,6 @@ export(polyroot_NR)
 # R counterparts of functions, rewritten in C
 #=========================================================================
 
-export(gmm_fit_em_R)
 export(vmm_fit_em_by_ll_R)
 
 #=========================================================================

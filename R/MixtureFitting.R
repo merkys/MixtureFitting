@@ -205,19 +205,24 @@ llcmm <- function( x, p, implementation = "C" )
 }
 
 gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        debug = FALSE )
+                        debug = FALSE, implementation = "C", ... )
 {
-    ret = .C( "gmm_fit_em",
-              as.double(x),
-              as.integer( length(x) ),
-              as.double(p),
-              as.integer( length(p) ),
-              as.double( epsilon ),
-              as.integer( debug ),
-              retvec = numeric( length(p) ),
-              steps = integer(1) )
-    l = list( p = ret$retvec, steps = ret$steps )
-    return( l )
+    if( implementation == "C" ) {
+        ret = .C( "gmm_fit_em",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  as.double( epsilon ),
+                  as.integer( debug ),
+                  retvec = numeric( length(p) ),
+                  steps = integer(1) )
+        l = list( p = ret$retvec, steps = ret$steps )
+        return( l )
+    } else {
+        l = gmm_fit_em_R( x, p, epsilon, ... )
+        return( l )
+    }
 }
 
 vmm_fit_em <- function( x, p,
