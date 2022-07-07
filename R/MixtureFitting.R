@@ -299,6 +299,7 @@ vmm_fit_em_by_ll <- function( x, p,
 cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                         iter.cauchy = 20, debug = FALSE, implementation = "C" )
 {
+    l = NULL
     if( implementation == "C" ) {
         debugflag = 0
         if( debug == TRUE ) {
@@ -315,11 +316,17 @@ cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                   retvec = numeric( length(p) ),
                   steps = integer(1) )
         l = list( p = ret$retvec, steps = ret$steps )
-        return( l )
     } else {
         l = cmm_fit_em_R( x, p, epsilon )
-        return( l )
     }
+    if( all( !is.na( l$p ) ) ) {
+        N = length(p) / 3
+        order = order( l$p[(N+1):(2*N)] )
+        for (i in 0:2) {
+            l$p[(i*N+1):(i*N+N)] = l$p[order+i*N]
+        }
+    }
+    return( l )
 }
 
 gmm_init_vector <- function( x, m, implementation = "C" )
