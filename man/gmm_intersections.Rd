@@ -11,7 +11,7 @@
 \arguments{
     \item{p}{
         parameter vector of 6 parameters. Structure of p vector is
-        p = c( A1, A2, ..., A\emph{n}, mu1, mu2, ..., mu\emph{n}, sigma1, sigma2, ..., sigma\emph{n} ),
+        p = c( A1, A2, mu1, mu2, sigma1, sigma2 ),
         where A\emph{i} is the proportion of \emph{i}-th component,
         mu\emph{i} is the location of \emph{i}-th component,
         sigma\emph{i} is the scale of \emph{i}-th component.
