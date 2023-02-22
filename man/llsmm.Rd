@@ -6,7 +6,7 @@
     Calculates log-likelihood for a given data vector using a Student's t mixture distribution.
 }
 \usage{
-    llsmm( x, p, implementation = "C" )
+    llsmm( x, p )
 }
 \arguments{
     \item{x}{data vector}
@@ -18,9 +18,6 @@
         mu\emph{i} is the center of \emph{i}-th component,
         k\emph{i} is the concentration of \emph{i}-th component and
         ni\emph{i} is the degrees of freedom of \emph{i}-th component.
-    }
-    \item{implementation}{
-        flag to switch between C (default) and R implementations.
     }
 }
 \value{log-likelihood}
