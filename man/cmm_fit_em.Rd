@@ -26,6 +26,9 @@
         epsilon_mu is threshold for component centers and
         epsilon_gamma is threshold for component Cauchy scales.
     }
+    \item{iter.cauchy}{
+        number of iterations to fit a single Cauchy component.
+    }
     \item{debug}{
         flag to turn the debug prints on/off.
     }
