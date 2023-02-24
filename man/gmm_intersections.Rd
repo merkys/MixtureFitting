@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Intersections of Two Gaussian Distributions}
 \description{
-    Finds intersections of two Gaussian distributions.
+    Finds intersections of two Gaussian distributions by finding roots of a quadratic equation.
 }
 \usage{
     gmm_intersections( p )

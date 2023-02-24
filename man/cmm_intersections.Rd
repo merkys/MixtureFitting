@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Intersections of Two Cauchy Distributions}
 \description{
-    Finds intersections of two Cauchy distributions.
+    Finds intersections of two Cauchy distributions by finding roots of a quadratic equation.
 }
 \usage{
     cmm_intersections( p )
