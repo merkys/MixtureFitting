@@ -7,7 +7,7 @@
 }
 \usage{
     gmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                debug = FALSE, implementation = "C" )
+                debug = FALSE, implementation = "C", ... )
 }
 \arguments{
     \item{x}{data vector}
@@ -31,6 +31,10 @@
     }
     \item{implementation}{
         flag to switch between C (default) and R implementations.
+    }
+    \item{...}{
+        additional arguments passed to gmm_fit_em_R() when R implementation
+        is used.
     }
 }
 \value{
