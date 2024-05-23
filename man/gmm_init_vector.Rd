@@ -1,7 +1,7 @@
 \name{gmm_init_vector}
 \alias{gmm_init_vector}
 \docType{methods}
-\title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
+\title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
 \description{
     Estimate an initialisation vector for Gaussian mixture fitting via Expectation Maximisation.
     Proportions and scales are set to equal, centers are equispaced through the whole domain of input sample.
