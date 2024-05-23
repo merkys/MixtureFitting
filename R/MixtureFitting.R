@@ -1618,12 +1618,12 @@ cmm_init_vector_kmeans <- function( x, m, iter.cauchy = 20 ) {
     return( start )
 }
 
-smm_init_vector <- function( x, m ) {
-    start = numeric( 4 * m )
-    start[1:m]           = 1/m
-    start[(m+1):(2*m)]   = min(x) + (1:m)*(max(x)-min(x))/(m+1)
-    start[(2*m+1):(3*m)] = 1
-    start[(3*m+1):(4*m)] = 1
+smm_init_vector <- function( x, n ) {
+    start = numeric( 4 * n )
+    start[1:n]           = 1/n
+    start[(n+1):(2*n)]   = min(x) + (1:n)*(max(x)-min(x))/(n+1)
+    start[(2*n+1):(3*n)] = 1
+    start[(3*n+1):(4*n)] = 1
     return( start )
 }
 
