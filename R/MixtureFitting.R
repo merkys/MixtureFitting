@@ -204,7 +204,7 @@ llcmm <- function( x, p, implementation = "C" )
     }
 }
 
-gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                         debug = FALSE, implementation = "C", ... )
 {
     l = NULL
@@ -417,7 +417,7 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
     return( sum )
 }
 
-gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                           collect.history = FALSE, unif.component = FALSE,
                           convergence = abs_convergence )
 {
@@ -428,6 +428,9 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     prev_A     = rep( Inf, m )
     prev_mu    = rep( Inf, m )
     prev_sigma = rep( Inf, m )
+    if( length(w) == 0 ) {
+        w = numeric( length(x) ) + 1
+    }
     steps = 0
     history = list()
     if( collect.history == TRUE ) {
@@ -455,7 +458,7 @@ gmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
             q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
         for( j in 1:m ) {
-            h = A[j] * dnorm( x, mu[j], sigma[j] ) / q
+            h = w * A[j] * dnorm( x, mu[j], sigma[j] ) / q
             A[j]     = sum( h ) / length( x )
             mu[j]    = sum( h * x ) / sum( h )
             sigma[j] = sqrt( sum( h * ( x - mu[j] ) ^ 2 ) / sum( h ) )
