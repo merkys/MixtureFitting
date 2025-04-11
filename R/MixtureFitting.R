@@ -204,13 +204,18 @@ llcmm <- function( x, p, implementation = "C" )
     }
 }
 
-gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+gmm_fit_em <- function( x, w = numeric(), p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                         debug = FALSE, implementation = "C", ... )
 {
+    if( length(w) < length(x) ) {
+        w = numeric(length(x)) + 1
+    }
+
     l = NULL
     if( implementation == "C" ) {
         ret = .C( "gmm_fit_em",
                   as.double(x),
+                  as.double(w)
                   as.integer( length(x) ),
                   as.double(p),
                   as.integer( length(p) ),
@@ -220,7 +225,7 @@ gmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                   steps = integer(1) )
         l = list( p = ret$retvec, steps = ret$steps )
     } else {
-        l = gmm_fit_em_R( x, p, epsilon, ... )
+        l = gmm_fit_em_R( x, w, p, epsilon, ... )
     }
     if( all( !is.na( l$p ) ) ) {
         N = length(p) / 3
@@ -428,9 +433,6 @@ gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 
     prev_A     = rep( Inf, m )
     prev_mu    = rep( Inf, m )
     prev_sigma = rep( Inf, m )
-    if( length(w) == 0 ) {
-        w = numeric( length(x) ) + 1
-    }
     steps = 0
     history = list()
     if( collect.history == TRUE ) {

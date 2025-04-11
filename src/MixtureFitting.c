@@ -61,7 +61,7 @@ void llgmm( double *x, int *xlength,
     free( dgmms );
 }
 
-void gmm_fit_em( double *x, int *xlength,
+void gmm_fit_em( double *x, double *w, int *xlength,
                  double *p, int *plength,
                  double *epsilon,
                  int *debug,
@@ -107,7 +107,7 @@ void gmm_fit_em( double *x, int *xlength,
             for( i = 0; i < *xlength; i++ ) {
                 double diff = x[i] - mu[j];
                 double sqdiff = diff * diff;
-                double weight = factor * exp( -sqdiff / twosqsigma ) / q[i];
+                double weight = w[i] * factor * exp( -sqdiff / twosqsigma ) / q[i];
                 sumh = sumh + weight;
                 sumhprod = sumhprod + weight * x[i];
             }
@@ -121,7 +121,7 @@ void gmm_fit_em( double *x, int *xlength,
             for( i = 0; i < *xlength; i++ ) {
                 double diff = x[i] - mu[j];
                 double sqdiff = diff * diff;
-                double weight = factor * exp( -sqdiff / twosqsigma ) / q[i];
+                double weight = w[i] * factor * exp( -sqdiff / twosqsigma ) / q[i];
                 sumhdiff = sumhdiff + weight * sqdiff;
             }
             double prev_sigma = sigma[j];
