@@ -25,3 +25,15 @@ gf = gmm_fit_em( x, init, x * 0 + 0.5, implementation = "R" )
 if( !all( abs( gf$p - c( 0.5, 0.5, 1.5, 10, 3, 1 ) ) < 0.1 ) ) {
     stop( 4, gf$p - p )
 }
+
+init = gmm_init_vector( x, 1 )
+
+gf = gmm_fit_em( x, init, c( numeric(1000)+1, numeric(1000)) )
+if( !all( abs( gf$p - c( 1, 1.5, 3 ) ) < 0.1 ) ) {
+    stop( 5, gf$p - p )
+}
+
+gf = gmm_fit_em( x, init, c( numeric(1000), numeric(1000)+1) )
+if( !all( abs( gf$p - c( 1, 10, 1 ) ) < 0.1 ) ) {
+    stop( 6, gf$p - p )
+}
