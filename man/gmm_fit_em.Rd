@@ -6,7 +6,7 @@
     Estimates parameters for Gaussian mixture using Expectation Maximisation algorithm.
 }
 \usage{
-    gmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+    gmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                 debug = FALSE, implementation = "C", ... )
 }
 \arguments{
@@ -18,6 +18,11 @@
         where A\emph{i} is the proportion of \emph{i}-th component,
         mu\emph{i} is the center of \emph{i}-th component and
         sigma\emph{i} is the scale of \emph{i}-th component.
+    }
+    \item{w}{
+        weights of data points, must have the same length as the data
+        vector; if not given or has different length, equal weights are
+        assumed.
     }
     \item{epsilon}{
         tolerance threshold for convergence. Structure of epsilon is

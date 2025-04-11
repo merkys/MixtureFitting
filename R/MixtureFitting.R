@@ -207,7 +207,7 @@ llcmm <- function( x, p, implementation = "C" )
 gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                         debug = FALSE, implementation = "C", ... )
 {
-    if( length(w) < length(x) ) {
+    if( length(w) != length(x) ) {
         w = numeric(length(x)) + 1
     }
 
