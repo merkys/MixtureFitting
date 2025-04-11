@@ -204,7 +204,7 @@ llcmm <- function( x, p, implementation = "C" )
     }
 }
 
-gmm_fit_em <- function( x, w = numeric(), p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
+gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                         debug = FALSE, implementation = "C", ... )
 {
     if( length(w) < length(x) ) {
@@ -215,17 +215,17 @@ gmm_fit_em <- function( x, w = numeric(), p, epsilon = c( 0.000001, 0.000001, 0.
     if( implementation == "C" ) {
         ret = .C( "gmm_fit_em",
                   as.double(x),
-                  as.double(w)
                   as.integer( length(x) ),
                   as.double(p),
                   as.integer( length(p) ),
+                  as.double(w),
                   as.double( epsilon ),
                   as.integer( debug ),
                   retvec = numeric( length(p) ),
                   steps = integer(1) )
         l = list( p = ret$retvec, steps = ret$steps )
     } else {
-        l = gmm_fit_em_R( x, w, p, epsilon, ... )
+        l = gmm_fit_em_R( x, p, w, epsilon, ... )
     }
     if( all( !is.na( l$p ) ) ) {
         N = length(p) / 3

@@ -61,8 +61,9 @@ void llgmm( double *x, int *xlength,
     free( dgmms );
 }
 
-void gmm_fit_em( double *x, double *w, int *xlength,
+void gmm_fit_em( double *x, int *xlength,
                  double *p, int *plength,
+                 double *w,
                  double *epsilon,
                  int *debug,
                  double *ret,
