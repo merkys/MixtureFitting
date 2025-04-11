@@ -461,7 +461,7 @@ gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 
         }
         for( j in 1:m ) {
             h = w * A[j] * dnorm( x, mu[j], sigma[j] ) / q
-            A[j]     = sum( h ) / length( x )
+            A[j]     = sum( h ) / sum( w )
             mu[j]    = sum( h * x ) / sum( h )
             sigma[j] = sqrt( sum( h * ( x - mu[j] ) ^ 2 ) / sum( h ) )
         }
