@@ -80,6 +80,9 @@ void gmm_fit_em( double *x, int *xlength,
         mu[i] = p[m+i];
         sigma[i] = p[2*m+i];
     }
+    double wsum = 0;
+    for( i = 0; i < *xlength; i++ )
+        wsum += w[i];
     double sqrtdblpi = sqrt( 2 * M_PI );
     double * q = calloc( *xlength, sizeof( double ) );
     if( !q ) {
@@ -113,7 +116,7 @@ void gmm_fit_em( double *x, int *xlength,
                 sumhprod = sumhprod + weight * x[i];
             }
             double prev_A = A[j];
-            A[j] = sumh / *xlength;
+            A[j] = sumh / wsum;
             double prev_mu = mu[j];
             mu[j] = sumhprod / sumh;
 
