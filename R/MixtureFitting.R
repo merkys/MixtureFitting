@@ -208,7 +208,7 @@ gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.
                         debug = FALSE, implementation = "C", ... )
 {
     if( length(w) != length(x) ) {
-        w = numeric(length(x)) + 1
+        w = x * 0 + 1
     }
 
     l = NULL
@@ -1590,11 +1590,23 @@ gmm_init_vector_kmeans <- function( x, m ) {
     return( start )
 }
 
-gmm_init_vector_quantile <- function( x, m ) {
-    sorted = sort( x )
+gmm_init_vector_quantile <- function( x, m, w = numeric() ) {
+    if( length(x) != length(w) ) {
+        w = x * 0 + 1
+    }
+    w = w[order(x)]
+    x = x[order(x)]
     start = numeric( 3 * m )
-    start[1:m]           = 1/m
-    start[(m+1):(2*m)]   = sorted[floor(length(x) / (m+1) * 1:m)]
+    start[1:m] = 1/m
+    n = 1
+    wsum = 0
+    for( i in 1:length(x) ) {
+        wsum = wsum + w[i]
+        if( wsum > n * sum(w)/(m+1) ) {
+            start[m+n] = x[i]
+            n = n + 1
+        }
+    }
     start[(2*m+1):(3*m)] = sqrt( sum( (x-mean(x))^2 ) / length(x) )
     return( start )
 }
