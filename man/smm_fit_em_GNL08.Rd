@@ -38,6 +38,12 @@
     \item{debug}{
         flag to turn the debug prints on/off.
     }
+    \item{max.steps}{maximum number of steps, may be infinity}
+    \item{convergence}{
+        function to use for convergence checking.
+        Must accept function values of the last two iterations and return TRUE or FALSE.
+    }
+    \item{unif.component}{should a uniform component for outliers be added?}
 }
 \value{
     A list.
