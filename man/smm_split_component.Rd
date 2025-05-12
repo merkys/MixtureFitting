@@ -19,6 +19,9 @@
         k\emph{i} is the concentration of \emph{i}-th component and
         ni\emph{i} is the degrees of freedom of \emph{i}-th component.
     }
+    \item{alpha}{split proportion for component proportions}
+    \item{beta}{split proportion for component concentrations}
+    \item{u}{split proportion for component centers}
 }
 \value{
     Vector of parameters for resulting two-component mixture, whose
