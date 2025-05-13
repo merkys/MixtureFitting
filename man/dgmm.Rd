@@ -1,7 +1,7 @@
 \name{dgmm}
 \alias{dgmm}
 \docType{methods}
-\title{Density of The Gaussian Mixture Distribution}
+\title{The Gaussian Mixture Distribution}
 \description{
     Density function for the Gaussian mixture distribution.
 }
