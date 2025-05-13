@@ -477,7 +477,7 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
         }
         double llog;
         llvmm( x, xlength, tp, plength, &llog );
-        if( is_nan == 1 || llog - prev_llog < *epsilon ) {
+        if (is_nan == 1 || llog - prev_llog < *epsilon) {
             run = 0;
         } else {
             for (int j = 0; j < m; j++) {
@@ -502,7 +502,7 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
 
 void vmm_init_vector( int *m, double *ret )
 {
-    for( int i = 0; i < *m; i++ ) {
+    for (int i = 0; i < *m; i++) {
         ret[i] = 1.0/(*m);
         ret[*m+i] = 360/(*m) * i;
         ret[2*(*m)+i] = (((double)*m)/(12*180))*(((double)*m)/(12*180));
@@ -521,7 +521,7 @@ void polyroot_NR( double *p, int *plength,
         d[i] = p[i+1] * (i+1);
 
     int run = 1;
-    while( run == 1 ) {
+    while (run == 1) {
         double powers[*plength];
         powers[0] = 1;
         for (int i = 1; i < *plength; i++)
@@ -531,7 +531,7 @@ void polyroot_NR( double *p, int *plength,
         double denominator = 0.0;
         for (int i = 0; i < *plength; i++) {
             numerator = numerator + p[i] * powers[i];
-            if( i < *plength-1 )
+            if (i < *plength-1)
                 denominator = denominator + d[i] * powers[i];
         }
 
@@ -542,7 +542,7 @@ void polyroot_NR( double *p, int *plength,
             run = 0;
     }
 
-    if( *debug > 0 )
+    if (*debug > 0)
         Rprintf( "Convergence reached after %u iteration(s)\n", steps );
 
     *ret = x;
