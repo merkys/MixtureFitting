@@ -36,6 +36,6 @@
     Banerjee et al.
     Expectation Maximization for Clustering on Hyperspheres (2003),
     manuscript, accesible on:
-    \url{http://www.lans.ece.utexas.edu/~abanerjee/papers/05/banerjee05a.pdf}
+    \url{https://web.archive.org/web/20130120061240/http://www.lans.ece.utexas.edu/~abanerjee/papers/05/banerjee05a.pdf}
 }
 \author{Andrius Merkys}
