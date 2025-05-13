@@ -4,7 +4,7 @@
 \title{Ratio Convergence Check.}
 \description{
     Compare two values to tell whether an optimization process has converged.
-    The absolute difference between values of two iteractions is divided by the value of previous iteration and compared to the epsilon value.
+    The absolute difference between values of two iterations is divided by the value of previous iteration and compared to the epsilon value.
 }
 \usage{
     ratio_convergence( p_now, p_prev, epsilon = 1e-6 )
