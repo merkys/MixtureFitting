@@ -1,10 +1,10 @@
 \name{smm_fit_em_CWL04}
 \alias{smm_fit_em_CWL04}
 \docType{methods}
-\title{Greedily estimate Student's t Mixture parameters using Expectation Maximisation.}
+\title{Greedily estimate Student's t Mixture parameters using Expectation Maximization.}
 \description{
     Estimates (greedily) parameters for univariate Student's t mixture
-    using Expectation Maximisation algorithm, implemented according to
+    using Expectation Maximization algorithm, implemented according to
     Chen et al. (2004). The algorithm relies upon smm_fit_em_GNL08()
     to estimate mixture parameters iteratively.
 }

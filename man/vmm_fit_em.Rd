@@ -1,10 +1,9 @@
 \name{vmm_fit_em}
 \alias{vmm_fit_em}
 \docType{methods}
-\title{Estimate von Mises Mixture parameters using Expectation Maximisation.}
+\title{Estimate von Mises Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for univariate von Mises mixture using Expectation
-    Maximisation algorithm.
+    Estimates parameters for univariate von Mises mixture using Expectation Maximization algorithm.
 }
 \usage{
     vmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),

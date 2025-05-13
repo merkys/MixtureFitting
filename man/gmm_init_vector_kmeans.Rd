@@ -1,7 +1,7 @@
 \name{gmm_init_vector_kmeans}
 \alias{gmm_init_vector_kmeans}
 \docType{methods}
-\title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
+\title{Estimate Gaussian Mixture parameters using Expectation Maximization.}
 \description{
     Estimate an initialization vector for Gaussian mixture fitting using k-means.
     R implementation of k-means in kmeans() is used to find data point assignment to clusters.

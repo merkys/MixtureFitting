@@ -1,10 +1,10 @@
 \name{smm_fit_em_APK10}
 \alias{smm_fit_em_APK10}
 \docType{methods}
-\title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
+\title{Estimate Student's t Mixture parameters using Expectation Maximization.}
 \description{
     Estimates parameters for univariate Student's t mixture using
-    Expectation Maximisation algorithm, according to Fig. 2 of
+    Expectation Maximization algorithm, according to Fig. 2 of
     Aeschliman et al. (2010).
 }
 \usage{

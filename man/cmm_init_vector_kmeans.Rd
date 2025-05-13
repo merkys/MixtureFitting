@@ -1,7 +1,7 @@
 \name{cmm_init_vector_kmeans}
 \alias{cmm_init_vector_kmeans}
 \docType{methods}
-\title{Estimate Cauchy Mixture parameters using Expectation Maximisation.}
+\title{Estimate Cauchy Mixture parameters using Expectation Maximization.}
 \description{
     Estimate an initialization vector for Cauchy mixture fitting using k-means.
     R implementation of k-means in kmeans() is used to find data point assignment to clusters.

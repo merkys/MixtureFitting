@@ -1,9 +1,9 @@
 \name{cmm_fit_em}
 \alias{cmm_fit_em}
 \docType{methods}
-\title{Estimate Cauchy Mixture parameters using Expectation Maximisation.}
+\title{Estimate Cauchy Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for Caucy mixture using Expectation Maximisation algorithm.
+    Estimates parameters for Caucy mixture using Expectation Maximization algorithm.
 }
 \usage{
     cmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),

@@ -1,10 +1,10 @@
 \name{smm_fit_em_GNL08}
 \alias{smm_fit_em_GNL08}
 \docType{methods}
-\title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
+\title{Estimate Student's t Mixture parameters using Expectation Maximization.}
 \description{
     Estimates parameters for univariate Student's t mixture using
-    Expectation Maximisation algorithm, according to Eqns. 12--17 of
+    Expectation Maximization algorithm, according to Eqns. 12--17 of
     Gerogiannis et al. (2009).
 }
 \usage{

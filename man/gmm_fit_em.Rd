@@ -1,9 +1,9 @@
 \name{gmm_fit_em}
 \alias{gmm_fit_em}
 \docType{methods}
-\title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
+\title{Estimate Gaussian Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for Gaussian mixture using Expectation Maximisation algorithm.
+    Estimates parameters for Gaussian mixture using Expectation Maximization algorithm.
 }
 \usage{
     gmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),

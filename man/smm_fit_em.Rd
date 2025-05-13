@@ -1,9 +1,9 @@
 \name{smm_fit_em}
 \alias{smm_fit_em}
 \docType{methods}
-\title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
+\title{Estimate Student's t Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for Student's t mixture using Expectation Maximisation algorithm.
+    Estimates parameters for Student's t mixture using Expectation Maximization algorithm.
     Calls smm_fit_em_APK10().
 }
 \usage{

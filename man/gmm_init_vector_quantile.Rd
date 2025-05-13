@@ -1,7 +1,7 @@
 \name{gmm_init_vector_quantile}
 \alias{gmm_init_vector_quantile}
 \docType{methods}
-\title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
+\title{Estimate Gaussian Mixture parameters using Expectation Maximization.}
 \description{
     Estimate an initialization vector for Gaussian mixture fitting using (weighted) quantiles.
     Proportions and scales are set to equal, centers are placed at equispaced quantiles.

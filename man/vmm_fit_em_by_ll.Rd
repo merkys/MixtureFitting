@@ -1,9 +1,9 @@
 \name{vmm_fit_em_by_ll}
 \alias{vmm_fit_em_by_ll}
 \docType{methods}
-\title{Estimate von Mises Mixture parameters using Expectation Maximisation.}
+\title{Estimate von Mises Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for univariate von Mises mixture using Expectation Maximisation algorithm.
+    Estimates parameters for univariate von Mises mixture using Expectation Maximization algorithm.
     In this version stopping criterion is the difference between log-likelihood estimates of subsequent iterations.
 }
 \usage{

@@ -1,9 +1,9 @@
 \name{vmm_fit_em_by_diff}
 \alias{vmm_fit_em_by_diff}
 \docType{methods}
-\title{Estimate von Mises Mixture parameters using Expectation Maximisation.}
+\title{Estimate von Mises Mixture parameters using Expectation Maximization.}
 \description{
-    Estimates parameters for univariate von Mises mixture using Expectation Maximisation algorithm.
+    Estimates parameters for univariate von Mises mixture using Expectation Maximization algorithm.
     In this version stopping criterion is the difference between parameters in the subsequent iterations.
 }
 \usage{
