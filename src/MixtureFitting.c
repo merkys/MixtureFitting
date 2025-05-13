@@ -47,17 +47,13 @@ void llgmm( double *x, int *xlength,
             double *p, int *plength,
             double *ret )
 {
-    int m = *plength / 3;
     double * dgmms = calloc( *xlength, sizeof( double ) );
-    if( !dgmms ) {
+    if( !dgmms )
         error( "cannot allocate memory" );
-    }
     dgmm( x, xlength, p, plength, dgmms );
-    int i;
     *ret = 0.0;
-    for( i = 0; i < *xlength; i++ ) {
+    for( int i = 0; i < *xlength; i++ )
         *ret = *ret + log( dgmms[i] );
-    }
     free( dgmms );
 }
 
@@ -187,13 +183,9 @@ void dcmm( double *x, int *xlength,
            double *ret )
 {
     int m = *plength / 3;
-    double mu[m];
-    int i;
-    int j;
-    double sqrtdblpi = sqrt( 2 * M_PI );
-    for( i = 0; i < *xlength; i++ ) {
+    for( int i = 0; i < *xlength; i++ ) {
         ret[i] = 0.0;
-        for( j = 0; j < m; j++ ) {
+        for( int j = 0; j < m; j++ ) {
             double normdiff = ( x[i] - p[j+m] ) / p[j+2*m];
             ret[i] = ret[i] + p[j] / ( M_PI * p[j+2*m] * ( 1 + normdiff*normdiff ) );
         }
@@ -204,17 +196,13 @@ void llcmm( double *x, int *xlength,
             double *p, int *plength,
             double *ret )
 {
-    int m = *plength / 3;
     double * dcmms = calloc( *xlength, sizeof( double ) );
-    if( !dcmms ) {
+    if( !dcmms )
         error( "cannot allocate memory" );
-    }
     dcmm( x, xlength, p, plength, dcmms );
-    int i;
     *ret = 0.0;
-    for( i = 0; i < *xlength; i++ ) {
+    for( int i = 0; i < *xlength; i++ )
         *ret = *ret + log( dcmms[i] );
-    }
     free( dcmms );
 }
 
@@ -239,13 +227,11 @@ void cmm_fit_em( double *x, int *xlength,
         s[i] = p[2*m+i];
     }
     double * q = calloc( *xlength, sizeof( double ) );
-    if( !q ) {
+    if( !q )
         error( "cannot allocate memory" );
-    }
     double * h = calloc( *xlength, sizeof( double ) );
-    if( !h ) {
+    if( !h )
         error( "cannot allocate memory" );
-    }
     int run = 1;
     *steps = 0;
     while( run == 1 ) {
@@ -327,14 +313,13 @@ void cmm_init_vector( double *x, int *xlength,
                     int *m,
                     double *ret )
 {
-    int i;
     double min = x[0];
     double max = x[0];
-    for( i = 1; i < *xlength; i++ ) {
+    for( int i = 1; i < *xlength; i++ ) {
         if( x[i] < min ) { min = x[i]; }
         if( x[i] > max ) { max = x[i]; }
     }
-    for( i = 0; i < *m; i++ ) {
+    for( int i = 0; i < *m; i++ ) {
         ret[i] = 1.0/(*m);
         ret[*m+i] = min + (i+1)*(max-min)/(*m+1);
         ret[2*(*m)+i] = 1;
@@ -366,15 +351,12 @@ void llvmm( double *x, int *xlength,
             double *ret )
 {
     double * dvmms = calloc( *xlength, sizeof( double ) );
-    if( !dvmms ) {
+    if( !dvmms )
         error( "cannot allocate memory" );
-    }
     dvmm( x, xlength, p, plength, dvmms );
-    int i;
     *ret = 0.0;
-    for( i = 0; i < *xlength; i++ ) {
+    for( int i = 0; i < *xlength; i++ )
         *ret = *ret + log( dvmms[i] );
-    }
     free( dvmms );
 }
 
