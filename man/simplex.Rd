@@ -17,6 +17,7 @@
     \item{alpha}{reflection coefficient}
     \item{gamma}{expansion coefficient}
     \item{rho}{contraction coefficient}
+    \item{delta}{shrink coefficient}
     \item{trace}{should debug trace be printed?}
 }
 \value{Vector yielding the minimum value of the minimized function}
@@ -24,5 +25,9 @@
     Nelder, J. A. & Mead, R.
     A Simplex Method For Function Minimization.
     The Computer Journal, 1965, 308-313.
+
+    Users of Wikipedia.
+    Nelder-Mead method.
+    \url{https://en.wikipedia.org/w/index.php?title=Nelder%E2%80%93Mead_method&oldid=1287347131}
 }
 \author{Andrius Merkys}
