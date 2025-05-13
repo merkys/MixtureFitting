@@ -19,9 +19,6 @@
         mu\emph{i} is the center of \emph{i}-th component and
         sigma\emph{i} is the scale of \emph{i}-th component.
     }
-    \item{implementation}{
-        flag to switch between C (default) and R implementations.
-    }
 }
 \value{log-likelihood}
 \author{Andrius Merkys}
