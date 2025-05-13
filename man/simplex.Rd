@@ -28,6 +28,6 @@
 
     Users of Wikipedia.
     Nelder-Mead method.
-    \url{https://en.wikipedia.org/w/index.php?title=Nelder%E2%80%93Mead_method&oldid=1287347131}
+    \url{https://en.wikipedia.org/w/index.php?title=Nelder\%E2\%80\%93Mead_method&oldid=1287347131}
 }
 \author{Andrius Merkys}
