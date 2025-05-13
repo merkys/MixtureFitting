@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Bhattacharyya distance for univariate Gaussian distributions.}
 \description{
-    Measures Bhattacharyya distance for two univatiate Gaussian
+    Measures Bhattacharyya distance for two univariate Gaussian
     distributions.
 }
 \usage{
