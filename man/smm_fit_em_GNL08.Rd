@@ -65,7 +65,7 @@
     Gerogiannis, D.; Nikou, C. & Likas, A.
     The mixtures of Student's t-distributions as a robust framework for rigid registration.
     Image and Vision Computing, Elsevier BV, 2009, 27, 1285--1294
-    \url{http://www.cs.uoi.gr/~arly/papers/imavis09.pdf}
+    \url{https://www.cs.uoi.gr/~arly/papers/imavis09.pdf}
 
     Cousineau, D. & Chartier, S.
     Outliers detection and treatment: a review.
