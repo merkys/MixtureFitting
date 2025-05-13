@@ -25,16 +25,16 @@ void dgmm( double *x, int *xlength,
     double factor[m];
     double divisor[m];
     double sqrtdblpi = sqrt( 2 * M_PI );
-    for( int i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         double A = p[i];
         mu[i]    = p[m+i];
         double sigma = p[2*m+i];
         factor[i]  = A / (sigma * sqrtdblpi);
         divisor[i] = 2 * sigma * sigma;
     }
-    for( int i = 0; i < *xlength; i++ ) {
+    for (int i = 0; i < *xlength; i++) {
         ret[i] = 0.0;
-        for( int j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double diff = x[i] - mu[j];
             ret[i] = ret[i] + factor[j] * exp( -(diff * diff) / divisor[j] );
         }
@@ -46,11 +46,11 @@ void llgmm( double *x, int *xlength,
             double *ret )
 {
     double * dgmms = calloc( *xlength, sizeof( double ) );
-    if( !dgmms )
+    if (!dgmms)
         error( "cannot allocate memory" );
     dgmm( x, xlength, p, plength, dgmms );
     *ret = 0.0;
-    for( int i = 0; i < *xlength; i++ )
+    for (int i = 0; i < *xlength; i++)
         *ret = *ret + log( dgmms[i] );
     free( dgmms );
 }
@@ -67,41 +67,39 @@ void gmm_fit_em( double *x, int *xlength,
     double A[m];
     double mu[m];
     double sigma[m];
-    int i;
-    int j;
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         A[i]  = p[i];
         mu[i] = p[m+i];
         sigma[i] = p[2*m+i];
     }
     double wsum = 0;
-    for( i = 0; i < *xlength; i++ )
+    for (int i = 0; i < *xlength; i++)
         wsum += w[i];
     double sqrtdblpi = sqrt( 2 * M_PI );
     double * q = calloc( *xlength, sizeof( double ) );
-    if( !q )
+    if (!q)
         error( "cannot allocate memory" );
     int run = 1;
     *steps = 0;
-    while( run == 1 ) {
+    while (run == 1) {
         int is_nan = 0;
         run = 0;
-        for( i = 0; i < *xlength; i++ ) {
+        for (int i = 0; i < *xlength; i++) {
             q[i] = 0.0;
-            for( j = 0; j < m; j++ ) {
+            for (int j = 0; j < m; j++) {
                 double diff = x[i] - mu[j];
                 q[i] = q[i] + A[j] / (sigma[j] * sqrtdblpi) *
                        exp( -(diff * diff) / (2 * sigma[j] * sigma[j]) );
             }
         }
-        for( j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double sumh = 0.0;
             double sumhprod = 0.0;
 
             double factor = A[j] / (sigma[j] * sqrtdblpi);
             double twosqsigma = 2 * sigma[j] * sigma[j];
 
-            for( i = 0; i < *xlength; i++ ) {
+            for (int i = 0; i < *xlength; i++) {
                 double diff = x[i] - mu[j];
                 double sqdiff = diff * diff;
                 double weight = w[i] * factor * exp( -sqdiff / twosqsigma ) / q[i];
@@ -115,7 +113,7 @@ void gmm_fit_em( double *x, int *xlength,
 
             double sumhdiff = 0.0;
 
-            for( i = 0; i < *xlength; i++ ) {
+            for (int i = 0; i < *xlength; i++) {
                 double diff = x[i] - mu[j];
                 double sqdiff = diff * diff;
                 double weight = w[i] * factor * exp( -sqdiff / twosqsigma ) / q[i];
@@ -124,23 +122,22 @@ void gmm_fit_em( double *x, int *xlength,
             double prev_sigma = sigma[j];
             sigma[j] = sqrt( sumhdiff / sumh );
 
-            if( *debug > 0 )
+            if (*debug > 0)
                 Rprintf( "%f %f %f ", A[j], mu[j], sigma[j] );
-            if( fabs( A[j]     - prev_A )     > epsilon[0] ||
+            if (fabs( A[j]     - prev_A )     > epsilon[0] ||
                 fabs( mu[j]    - prev_mu )    > epsilon[1] ||
-                fabs( sigma[j] - prev_sigma ) > epsilon[2] ) {
+                fabs( sigma[j] - prev_sigma ) > epsilon[2])
                 run = 1;
-            }
-            if( isnan( sigma[j] ) )
+            if (isnan(sigma[j]))
                 is_nan = 1;
         }
-        if( is_nan == 1 )
+        if (is_nan == 1)
             run = 0;
-        if( *debug > 0 )
+        if (*debug > 0)
             Rprintf( "\n" );
         *steps = *steps + 1;
     }
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         ret[i] = A[i];
         ret[m+i] = mu[i];
         ret[2*m+i] = sigma[i];
@@ -154,11 +151,11 @@ void gmm_init_vector( double *x, int *xlength,
 {
     double min = x[0];
     double max = x[0];
-    for( int i = 1; i < *xlength; i++ ) {
+    for (int i = 1; i < *xlength; i++) {
         if (x[i] < min) min = x[i];
         if (x[i] > max) max = x[i];
     }
-    for( int i = 0; i < *m; i++ ) {
+    for (int i = 0; i < *m; i++) {
         ret[i] = 1.0/(*m);
         ret[*m+i] = min + (i+1)*(max-min)/(*m+1);
         ret[2*(*m)+i] = (max-min)/(*m+1)/6;
@@ -175,9 +172,9 @@ void dcmm( double *x, int *xlength,
            double *ret )
 {
     int m = *plength / 3;
-    for( int i = 0; i < *xlength; i++ ) {
+    for (int i = 0; i < *xlength; i++) {
         ret[i] = 0.0;
-        for( int j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double normdiff = ( x[i] - p[j+m] ) / p[j+2*m];
             ret[i] = ret[i] + p[j] / ( M_PI * p[j+2*m] * ( 1 + normdiff*normdiff ) );
         }
@@ -189,11 +186,11 @@ void llcmm( double *x, int *xlength,
             double *ret )
 {
     double * dcmms = calloc( *xlength, sizeof( double ) );
-    if( !dcmms )
+    if (!dcmms)
         error( "cannot allocate memory" );
     dcmm( x, xlength, p, plength, dcmms );
     *ret = 0.0;
-    for( int i = 0; i < *xlength; i++ )
+    for (int i = 0; i < *xlength; i++)
         *ret = *ret + log( dcmms[i] );
     free( dcmms );
 }
@@ -210,39 +207,36 @@ void cmm_fit_em( double *x, int *xlength,
     double A[m];
     double c[m];
     double s[m];
-    int i;
-    int j;
-    int k;
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         A[i] = p[i];
         c[i] = p[m+i];
         s[i] = p[2*m+i];
     }
     double * q = calloc( *xlength, sizeof( double ) );
-    if( !q )
+    if (!q)
         error( "cannot allocate memory" );
     double * h = calloc( *xlength, sizeof( double ) );
-    if( !h )
+    if (!h)
         error( "cannot allocate memory" );
     int run = 1;
     *steps = 0;
-    while( run == 1 ) {
+    while (run == 1) {
         int is_nan = 0;
         run = 0;
-        for( i = 0; i < *xlength; i++ ) {
+        for (int i = 0; i < *xlength; i++) {
             q[i] = 0.0;
-            for( j = 0; j < m; j++ ) {
+            for (int j = 0; j < m; j++) {
                 double diff = x[i] - c[j];
                 q[i] = q[i] + A[j] * s[j] / ( M_PI * ( diff*diff + s[j]*s[j] ) );
             }
         }
-        for( j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double sumh = 0.0;
 
             double factor = A[j] * s[j] / M_PI;
             double sqs = s[j] * s[j];
 
-            for( i = 0; i < *xlength; i++ ) {
+            for (int i = 0; i < *xlength; i++) {
                 double diff = x[i] - c[j];
                 h[i] = factor / ( diff*diff + sqs ) / q[i];
                 sumh = sumh + h[i];
@@ -252,11 +246,11 @@ void cmm_fit_em( double *x, int *xlength,
             double prev_c = c[j];
             double prev_s = s[j];
             int is_converged = 0;
-            k = 0;
-            while( is_converged == 0 && k < *itercauchy ) {
+            int k = 0;
+            while (is_converged == 0 && k < *itercauchy) {
                 double hdiv  = 0.0;
                 double hprod = 0.0;
-                for( i = 0; i < *xlength; i++ ) {
+                for (int i = 0; i < *xlength; i++) {
                     double chi = (x[i] - c[j]) / s[j];
                     double sqchi = chi * chi;
                     hdiv  = hdiv  + h[i] / (1+sqchi);
@@ -286,7 +280,7 @@ void cmm_fit_em( double *x, int *xlength,
             Rprintf( "\n" );
         *steps = *steps + 1;
     }
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         ret[i] = A[i];
         ret[m+i] = c[i];
         ret[2*m+i] = s[i];
@@ -355,37 +349,35 @@ void vmm_fit_em_by_diff( double *x, int *xlength,
     double mu[m];
     double k[m];
     double denom[m];
-    int i;
-    int j;
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         A[i] = p[i];
         mu[i] = p[m+i];
         k[i] = p[2*m+i];
         denom[i] = 2.0 * M_PI * bessi0( k[i] );
     }
     double * q = calloc( *xlength, sizeof( double ) );
-    if( !q )
+    if (!q)
         error( "cannot allocate memory" );
     double * h = calloc( *xlength, sizeof( double ) );
-    if( !h )
+    if (!h)
         error( "cannot allocate memory" );
     int run = 1;
     *steps = 0;
-    while( run == 1 ) {
+    while (run == 1) {
         int is_nan = 0;
         run = 0;
-        for( i = 0; i < *xlength; i++ ) {
+        for (int i = 0; i < *xlength; i++) {
             q[i] = 0.0;
-            for( j = 0; j < m; j++ ) {
+            for (int j = 0; j < m; j++) {
                 double diffcos = cos( deg2rad( x[i] - mu[j] ) );
                 q[i] = q[i] + A[j] * exp( k[j] * diffcos ) / denom[j];
             }
         }
-        for( j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double sumh = 0.0;
             double sumsin = 0.0;
             double sumcos = 0.0;
-            for( i = 0; i < *xlength; i++ ) {
+            for (int i = 0; i < *xlength; i++) {
                 double diffcos = cos( deg2rad( x[i] - mu[j] ) );
                 h[i] = A[j] * exp( k[j] * diffcos ) / ( denom[j] * q[i] );
                 sumh = sumh + h[i];
@@ -400,23 +392,22 @@ void vmm_fit_em_by_diff( double *x, int *xlength,
             double prev_k = k[j];
             k[j] = ( 2.0 * Rbar - Rbar*Rbar*Rbar ) / ( 1.0 - Rbar*Rbar );
             denom[j] = 2.0 * M_PI * bessi0( k[j] );
-            if( *debug > 0 )
+            if (*debug > 0)
                 Rprintf( "%f %f %f ", A[j], mu[j], k[j] );
-            if( fabs( A[j]  - prev_A )  > epsilon[0] ||
+            if (fabs( A[j]  - prev_A )  > epsilon[0] ||
                 fabs( mu[j] - prev_mu ) > epsilon[1] ||
-                fabs( k[j]  - prev_k )  > epsilon[2] ) {
+                fabs( k[j]  - prev_k )  > epsilon[2])
                 run = 1;
-            }
-            if( isnan( k[j] ) )
+            if (isnan(k[j]))
                 is_nan = 1;
         }
-        if( is_nan == 1 )
+        if (is_nan == 1)
             run = 0;
-        if( *debug > 0 )
+        if (*debug > 0)
             Rprintf( "\n" );
         *steps = *steps + 1;
     }
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         ret[i] = A[i];
         ret[m+i] = mu[i];
         ret[2*m+i] = k[i];
@@ -439,37 +430,35 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
     double denom[m];
     double prev_llog;
     llvmm( x, xlength, p, plength, &prev_llog );
-    int i;
-    int j;
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         A[i] = p[i];
         mu[i] = p[m+i];
         k[i] = p[2*m+i];
         denom[i] = 2.0 * M_PI * bessi0( k[i] );
     }
     double * q = calloc( *xlength, sizeof( double ) );
-    if( !q )
+    if (!q)
         error( "cannot allocate memory" );
     double * h = calloc( *xlength, sizeof( double ) );
-    if( !h )
+    if (!h)
         error( "cannot allocate memory" );
     int run = 1;
     *steps = 0;
-    while( run == 1 ) {
+    while (run == 1) {
         int is_nan = 0;
-        for( i = 0; i < *xlength; i++ ) {
+        for (int i = 0; i < *xlength; i++) {
             q[i] = 0.0;
-            for( j = 0; j < m; j++ ) {
+            for (int j = 0; j < m; j++) {
                 double diffcos = cos( deg2rad( x[i] - mu[j] ) );
                 q[i] = q[i] + A[j] * exp( k[j] * diffcos ) / denom[j];
             }
         }
         double tp[3*m];
-        for( j = 0; j < m; j++ ) {
+        for (int j = 0; j < m; j++) {
             double sumh = 0.0;
             double sumsin = 0.0;
             double sumcos = 0.0;
-            for( i = 0; i < *xlength; i++ ) {
+            for (int i = 0; i < *xlength; i++) {
                 double diffcos = cos( deg2rad( x[i] - mu[j] ) );
                 h[i] = A[j] * exp( k[j] * diffcos ) / ( denom[j] * q[i] );
                 sumh = sumh + h[i];
@@ -481,9 +470,9 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
             double Rbar = sqrt( sumsin*sumsin + sumcos*sumcos ) / sumh;
             tp[2*m+j] = ( 2.0 * Rbar - Rbar*Rbar*Rbar ) / ( 1.0 - Rbar*Rbar );
             denom[j] = 2.0 * M_PI * bessi0( tp[2*m+j] );
-            if( *debug > 0 )
+            if (*debug > 0)
                 Rprintf( "%f %f %f ", tp[j], tp[m+j], tp[2*m+j] );
-            if( isnan( tp[2*m+j] ) )
+            if (isnan( tp[2*m+j] ))
                 is_nan = 1;
         }
         double llog;
@@ -491,18 +480,18 @@ void vmm_fit_em_by_ll( double *x, int *xlength,
         if( is_nan == 1 || llog - prev_llog < *epsilon ) {
             run = 0;
         } else {
-            for( j = 0; j < m; j++ ) {
+            for (int j = 0; j < m; j++) {
                 A[j]  = tp[j];
                 mu[j] = tp[m+j];
                 k[j]  = tp[2*m+j];
             }
         }
         prev_llog = llog;
-        if( *debug > 0 )
+        if (*debug > 0)
             Rprintf( "\n" );
         *steps = *steps + 1;
     }
-    for( i = 0; i < m; i++ ) {
+    for (int i = 0; i < m; i++) {
         ret[i] = A[i];
         ret[m+i] = mu[i];
         ret[2*m+i] = k[i];
