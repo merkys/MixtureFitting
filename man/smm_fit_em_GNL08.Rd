@@ -35,24 +35,41 @@
         epsilon_k is threshold for component concentrations and
         epsilon_ni is threshold for component degrees of freedom.
     }
+    \item{collect.history}{
+        logical. If set to TRUE, a list of parameter values of all
+        iterations is returned.
+    }
     \item{debug}{
         flag to turn the debug prints on/off.
     }
+    \item{min.sigma}{minimum value of sigma}
+    \item{min.ni}{minimum value of degrees of freedom}
+    \item{max.df}{maximum value of degrees of freedom}
     \item{max.steps}{maximum number of steps, may be infinity}
+    \item{polyroot.solution}{
+        polyroot finding method used to approximate digamma function.
+        Possible values are 'jenkins_taub' and 'newton_raphson'.
+    }
     \item{convergence}{
         function to use for convergence checking.
         Must accept function values of the last two iterations and return TRUE or FALSE.
     }
-    \item{unif.component}{should a uniform component for outliers be added?}
+    \item{unif.component}{
+        should a uniform component for outliers be added, as suggested by Cousineau & Chartier (2010)?
+    }
 }
 \value{
     A list.
 }
 \references{
     Gerogiannis, D.; Nikou, C. & Likas, A.
-    The mixtures of Student's t-distributions as a robust framework
-    for rigid registration.
+    The mixtures of Student's t-distributions as a robust framework for rigid registration.
     Image and Vision Computing, Elsevier BV, 2009, 27, 1285--1294
     \url{http://www.cs.uoi.gr/~arly/papers/imavis09.pdf}
+
+    Cousineau, D. & Chartier, S.
+    Outliers detection and treatment: a review.
+    International Journal of Psychological Research, 2010, 3, 58--67
+    \url{http://revistas.usb.edu.co/index.php/IJPR/article/view/844}
 }
 \author{Andrius Merkys}
