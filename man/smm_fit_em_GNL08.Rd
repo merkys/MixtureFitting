@@ -70,6 +70,6 @@
     Cousineau, D. & Chartier, S.
     Outliers detection and treatment: a review.
     International Journal of Psychological Research, 2010, 3, 58--67
-    \url{http://revistas.usb.edu.co/index.php/IJPR/article/view/844}
+    \url{https://revistas.usb.edu.co/index.php/IJPR/article/view/844}
 }
 \author{Andrius Merkys}

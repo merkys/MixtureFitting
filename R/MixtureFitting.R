@@ -455,7 +455,7 @@ gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 
             # Outliers detection and treatment: a review
             # International Journal of Psychological Research,
             # 2010, 3, 58-67
-            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+            # https://revistas.usb.edu.co/index.php/IJPR/article/view/844
 
             q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
@@ -622,7 +622,7 @@ cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
             # Outliers detection and treatment: a review
             # International Journal of Psychological Research,
             # 2010, 3, 58-67
-            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+            # https://revistas.usb.edu.co/index.php/IJPR/article/view/844
 
             q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
@@ -1401,7 +1401,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
             # Outliers detection and treatment: a review
             # International Journal of Psychological Research,
             # 2010, 3, 58-67
-            # http://revistas.usb.edu.co/index.php/IJPR/article/view/844
+            # https://revistas.usb.edu.co/index.php/IJPR/article/view/844
 
             q = q + ( 1 - sum( A ) ) * dunif( x, min(x), max(x) )
         }
