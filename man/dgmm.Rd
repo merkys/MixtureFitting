@@ -6,7 +6,8 @@
     Density function for the Gaussian mixture distribution.
 }
 \usage{
-    dgmm( x, p, normalise_proportions = FALSE, restrict_sigmas = FALSE, implementation = "C" )
+    dgmm( x, p, normalise_proportions = FALSE, restrict_sigmas = FALSE,
+          implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
