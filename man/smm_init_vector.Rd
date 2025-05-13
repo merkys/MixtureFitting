@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Student's t mixture fitting via Expectation Maximisation.
+    Estimate an initialization vector for Student's t mixture fitting via Expectation Maximisation.
     Proportions are set to be equal, centers are equispaced through the whole domain of input sample, concentrations and degrees of freedom are set to 1.
 }
 \usage{

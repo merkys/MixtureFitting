@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Student's t Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Student's t mixture fitting via Expectation Maximisation.
+    Estimate an initialization vector for Student's t mixture fitting via Expectation Maximisation.
     R implementation of k-means in kmeans() is used to find data point assignment to clusters.
     s_fit_primitive() is then used to estimate component parameters for each cluster.
 }

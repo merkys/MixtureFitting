@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Gaussian mixture fitting using (weighted) quantiles.
+    Estimate an initialization vector for Gaussian mixture fitting using (weighted) quantiles.
     Proportions and scales are set to equal, centers are placed at equispaced quantiles.
 }
 \usage{

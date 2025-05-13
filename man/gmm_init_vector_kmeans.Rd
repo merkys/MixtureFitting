@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Gaussian mixture fitting using k-means.
+    Estimate an initialization vector for Gaussian mixture fitting using k-means.
     R implementation of k-means in kmeans() is used to find data point assignment to clusters.
 }
 \usage{

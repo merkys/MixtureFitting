@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Cauchy Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Cauchy mixture fitting using k-means.
+    Estimate an initialization vector for Cauchy mixture fitting using k-means.
     R implementation of k-means in kmeans() is used to find data point assignment to clusters.
     Then several iterations of Cauchy mixture fitting (per Nahy 2006) is used to derive mixture parameters.
 }

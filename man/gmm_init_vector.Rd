@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Gaussian Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Gaussian mixture fitting via Expectation Maximisation.
+    Estimate an initialization vector for Gaussian mixture fitting via Expectation Maximisation.
     Proportions and scales are set to equal, centers are equispaced through the whole domain of input sample.
 }
 \usage{

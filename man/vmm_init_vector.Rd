@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate von Mises Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for von Mises mixture fitting via Expectation Maximisation.
+    Estimate an initialization vector for von Mises mixture fitting via Expectation Maximisation.
     Proportions are set to equal, centers are equispaced through the whole domain of input sample, and concentrations are set to (m/(12*180))^2.
 }
 \usage{

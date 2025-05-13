@@ -3,7 +3,7 @@
 \docType{methods}
 \title{Estimate Cauchy Mixture parameters using Expectation Maximisation.}
 \description{
-    Estimate an initialisation vector for Cauchy mixture fitting via Expectation Maximisation.
+    Estimate an initialization vector for Cauchy mixture fitting via Expectation Maximisation.
     Proportions are set to equal, centers are equispaced through the whole domain of input sample, and scales are set to 1.
 }
 \usage{
