@@ -1,5 +1,5 @@
-\name{cmm_fit_hwhm_spline_derivatives}
-\alias{cmm_fit_hwhm_spline_derivatives}
+\name{cmm_fit_hwhm_spline_deriv}
+\alias{cmm_fit_hwhm_spline_deriv}
 \docType{methods}
 \title{Estimate Cauchy Mixture Parameters Using Derivatives and Half-Width at Half-Maximum Method.}
 \description{
@@ -8,7 +8,7 @@
     Then it describes them using HWHM.
 }
 \usage{
-    cmm_fit_hwhm_spline_derivatives( x, y )
+    cmm_fit_hwhm_spline_deriv( x, y )
 }
 \arguments{
     \item{x}{data vector}

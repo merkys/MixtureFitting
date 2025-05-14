@@ -742,7 +742,7 @@ dsmm <- function( x, p )
 
 # Generates random sample of size n from Gaussian Mixture Model.
 # GMM is parametrised using p vector, as described in dgmm.
-rgmm <- function (n,p)
+rgmm <- function(n, p)
 {
     m     = length(p)/3
     A     = p[1:m]/sum(p[1:m])
@@ -769,7 +769,7 @@ rgmm <- function (n,p)
 # Simulation of random sampling is implemented according to
 # Best & Fisher, Efficient Simulation of the von Mises Distribution,
 # Journal of the RSS, Series C, 1979, 28, 152-157.
-rvmm <- function (n,p)
+rvmm <- function(n, p)
 {
     m  = length(p)/3
     A  = p[1:m]
@@ -805,7 +805,7 @@ rvmm <- function (n,p)
     return( rad2deg( x ) )
 }
 
-rcmm <- function (n,p)
+rcmm <- function(n, p)
 {
     m     = length(p)/3
     A     = p[1:m]/sum(p[1:m])
@@ -825,7 +825,7 @@ rcmm <- function (n,p)
     return( x )
 }
 
-llgmm_conservative <- function (x, p)
+llgmm_conservative <- function(x, p)
 {
     n     = length(x)
     m     = length(p)/3
@@ -874,7 +874,7 @@ bic <- function( x, p, llf )
 
 # Calculate posterior probability of given number of peaks in
 # Gaussian Mixture Model
-gmm_size_probability <- function (x, n, method = "SANN")
+gmm_size_probability <- function(x, n, method = "SANN")
 {
     p = vector( "numeric", n * 3 )
     l = vector( "numeric", n * 3 )
@@ -895,7 +895,7 @@ gmm_size_probability <- function (x, n, method = "SANN")
 # Fit Gaussian Mixture Model to binned data (histogram).
 # Lower bounds for mixture proportions and dispersions are fixed in order
 # to avoid getting NaNs.
-gmm_size_probability_nls <- function (x, n, bins = 100, trace = FALSE)
+gmm_size_probability_nls <- function(x, n, bins = 100, trace = FALSE)
 {
     lower = min( x )
     upper = max( x )
@@ -1198,7 +1198,7 @@ gmm_fit_hwhm <- function( x, y, n )
     return( p )
 }
 
-gmm_fit_hwhm_spline_derivatives <- function( x, y )
+gmm_fit_hwhm_spline_deriv <- function( x, y )
 {
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]
@@ -1233,7 +1233,7 @@ gmm_fit_hwhm_spline_derivatives <- function( x, y )
     return( p )
 }
 
-cmm_fit_hwhm_spline_derivatives <- function( x, y )
+cmm_fit_hwhm_spline_deriv <- function( x, y )
 {
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]

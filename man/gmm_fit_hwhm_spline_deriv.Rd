@@ -1,5 +1,5 @@
-\name{gmm_fit_hwhm_spline_derivatives}
-\alias{gmm_fit_hwhm_spline_derivatives}
+\name{gmm_fit_hwhm_spline_deriv}
+\alias{gmm_fit_hwhm_spline_deriv}
 \docType{methods}
 \title{Estimate Gaussian Mixture Parameters Using Derivatives and Half-Width at Half-Maximum Method.}
 \description{
@@ -8,7 +8,7 @@
     Then it describes them using HWHM.
 }
 \usage{
-    gmm_fit_hwhm_spline_derivatives( x, y )
+    gmm_fit_hwhm_spline_deriv( x, y )
 }
 \arguments{
     \item{x}{data vector}
