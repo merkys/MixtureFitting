@@ -219,7 +219,7 @@ gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.
     } else {
         l = gmm_fit_em_R( x, p, w, epsilon, ... )
     }
-    if( all( !is.na( l$p ) ) ) {
+    if( !any( is.na( l$p ) ) ) {
         N = length(p) / 3
         order = order( l$p[(N+1):(2*N)] )
         for (i in 0:2) {
@@ -312,7 +312,7 @@ cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     } else {
         l = cmm_fit_em_R( x, p, epsilon )
     }
-    if( all( !is.na( l$p ) ) ) {
+    if( !any( is.na( l$p ) ) ) {
         N = length(p) / 3
         order = order( l$p[(N+1):(2*N)] )
         for (i in 0:2) {
@@ -394,11 +394,11 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
     mu    = p[(m+1):(2*m)]
     sigma = p[(2*m+1):(3*m)]
     if( normalise_proportions == TRUE ) {
-        A = A/sum(A)
+        A = A / sum(A)
     }
     sum = numeric( length(x) )
     for( i in 1:m ) {
-        if( sigma[i] > 0 | restrict_sigmas == FALSE ) {
+        if( sigma[i] > 0 || restrict_sigmas == FALSE ) {
             sum = sum + A[i] * dnorm( x, mu[i], sigma[i] )
         }
     }
@@ -421,7 +421,7 @@ gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 
         history[[1]] = p
     }
     while( steps == 0 ||
-           !convergence( c( A, mu, sigma ), 
+           !convergence( c( A, mu, sigma ),
                          c( prev_A, prev_mu, prev_sigma ), epsilon ) ) {
         prev_A     = A
         prev_mu    = mu
@@ -585,7 +585,7 @@ cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
         history[[1]] = p
     }
     while( steps == 0 ||
-           !convergence( c( A, c, s ), 
+           !convergence( c( A, c, s ),
                          c( prev_A, prev_c, prev_s ), epsilon ) ) {
         prev_A = A
         prev_c = c
@@ -762,8 +762,8 @@ rvmm <- function(n, p) {
         tau = 1 + sqrt( 1 + 4 * k[i]^2 )
         rho = ( tau - sqrt( 2 * tau ) ) / ( 2 * k[i] )
         r   = ( 1 + rho^2 ) / ( 2 * rho )
-        c   = vector( "numeric", quant ) * NaN;
-        f   = vector( "numeric", quant ) * NaN;
+        c   = vector( "numeric", quant ) * NaN
+        f   = vector( "numeric", quant ) * NaN
         while( length( c[is.na(c)] ) > 0 ) {
             na_count = length( c[is.na(c)] )
             z  = cos( pi * runif( na_count, 0, 1 ) )
@@ -915,7 +915,7 @@ gmm_intersections <- function( p ) {
     c = ( P[1,2]^2 * P[2,3]^2 - P[2,2]^2 * P[1,3]^2 -
           2 * (P[1,3]*P[2,3])^2 * log( P[1,1]*P[2,3] / P[2,1]/P[1,3] ) )
     D = b^2 - 4 * a * c
-    if( a == 0 & b == 0 & c == 0 ) { # Components are identical
+    if( a == 0 && b == 0 && c == 0 ) { # Components are identical
         return( NaN )
     } else if( a == 0 ) {   # Not a quadratic equation
         return( -c / b )
@@ -935,7 +935,7 @@ cmm_intersections <- function( p ) {
     c = ( P[2,1] * P[1,2]^2 * P[2,3] - P[1,1] * P[2,2]^2 * P[1,3] +
           P[2,1] * P[1,3]^2 * P[2,3] - P[1,1] * P[2,3]^2 * P[1,3] )
     D = b^2 - 4 * a * c
-    if( a == 0 & b == 0 & c == 0 ) { # Components are identical
+    if( a == 0 && b == 0 && c == 0 ) { # Components are identical
         return( NaN )
     } else if( a == 0 ) {   # Not a quadratic equation
         return( -c / b )
@@ -1043,11 +1043,11 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
         for (i in 2:length( A )) {
             diff = sqrt( sum( (as.vector(A[[i]])-as.vector(A[[1]]))^2 ) )
             if( diff > maxdiff ) {
-                maxdiff = diff;
+                maxdiff = diff
             }
         }
         if( maxdiff / max( 1, sqrt( sum(as.vector(A[[1]])^2) ) ) <= epsilon ) {
-            break;
+            break
         }
         x0 = vector( "numeric", length( A[[1]] ) ) * 0  # gravity center
         for (i in 1:(length( A )-1)) {
@@ -1099,7 +1099,6 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
                 cat( "Reducing\n" )
             }
         }
-        
     }
     v = vector( "numeric", length( A ) )
     for (i in 1:length( A )) {
@@ -1650,7 +1649,7 @@ plot_circular_hist <- function( x, breaks = 72, ball = 0.5, ... ) {
     for( i in 1:breaks ) {
         xx[((i-1)*3+1):((i-1)*3+2)] = (i-1) * 2*pi / breaks
         yy[((i-1)*3+2):(i*3)] =
-            length( x[x >= 360 / breaks * (i-1) & x < 360 / breaks * i] )
+            length( x[x >= 360 / breaks * (i-1) && x < 360 / breaks * i] )
     }
     yy = (yy / max(yy)) * (1-ball) + ball
     plot( yy * cos( xx ), yy * sin( xx ), type = "l", asp = 1,
@@ -1687,7 +1686,7 @@ kmeans_circular <- function( x, centers, iter.max = 10 ) {
         } else {
             cluster[x >= (centers[n-1] + centers[n])/2] = n
             cluster[x <  midpoint] = n
-            cluster[x < (centers[1] + centers[2])/2 & x >= midpoint] = 1
+            cluster[x < (centers[1] + centers[2])/2 && x >= midpoint] = 1
             x[x < midpoint] = x[x < midpoint] + 2*pi
         }
         for( j in 1:n ) {
@@ -1727,7 +1726,7 @@ wmedian <- function( x, w, start = 1, end = length( x ) ) {
     w_left  = sum( w[start:(q-1)] )
     w_right = sum( w[(q+1):end] )
 
-    if( w_left < 0.5 & w_right < 0.5 ) {
+    if( w_left < 0.5 && w_right < 0.5 ) {
         return( x[q] )
     }
 
@@ -1803,7 +1802,7 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
             epsilon_now = c( epsilon_now, rep( epsilon[i], n ) )
         }
     }
-    has_converged = all( abs( p_now - p_prev ) / p_prev <= epsilon );
+    has_converged = all( abs( p_now - p_prev ) / p_prev <= epsilon )
     if( is.na( has_converged ) ) {
         has_converged = TRUE
     }
@@ -1812,7 +1811,7 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
 
 plot_density <- function( x, model, density_f, width, height,
                           cuts = 400, main = "",
-                          filename = '/dev/stdout',
+                          filename = "/dev/stdout",
                           obs_good = c(), obs_bad = c(),
                           scale_density = FALSE ) {
     png( filename, width = width, height = height )
