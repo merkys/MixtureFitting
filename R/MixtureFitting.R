@@ -1367,7 +1367,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               collect.history = FALSE, debug = FALSE,
                               min.sigma = 1e-256, min.ni = 1e-256,
                               max.df = 1000, max.steps = Inf,
-                              polyroot.solution = 'jenkins_taub',
+                              polyroot.solution = "jenkins_taub",
                               convergence = abs_convergence,
                               unif.component = FALSE )
 {
@@ -1871,7 +1871,7 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
     return( has_converged )
 }
 
-plot_density <- function( x, cuts = 400, main = '', model, density_f,
+plot_density <- function( x, cuts = 400, main = "", model, density_f,
                           filename = '/dev/stdout',
                           width, height, obs_good = c(), obs_bad = c(),
                           scale_density = FALSE )
@@ -1888,12 +1888,12 @@ plot_density <- function( x, cuts = 400, main = '', model, density_f,
     } else {
         density = length(x) / sum( h$density ) * density
     }
-    lines( xmids, density, lwd = 2, col = 'green' )
+    lines( xmids, density, lwd = 2, col = "green" )
     if( length( obs_good ) > 0 ) {
-        rug( obs_good, lwd = 2, col = 'green' )
+        rug( obs_good, lwd = 2, col = "green" )
     }
     if( length( obs_bad ) > 0 ) {
-        rug( obs_bad,  lwd = 2, col = 'red' )
+        rug( obs_bad,  lwd = 2, col = "red" )
     }
     dev.off()
 }
