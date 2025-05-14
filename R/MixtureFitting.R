@@ -877,8 +877,6 @@ bic <- function( x, p, llf )
 gmm_size_probability <- function(x, n, method = "SANN")
 {
     p = vector( "numeric", n * 3 )
-    l = vector( "numeric", n * 3 )
-    u = vector( "numeric", n * 3 )
     for (i in 1:n) {
         p[i]     = 1
         p[n+i]   = min(x)+(max(x)-min(x))/n*i-(max(x)-min(x))/n/2
@@ -1016,7 +1014,6 @@ ssd_gradient <- function(x, y, p)
 pssd_gradient <- function(x, y, p)
 {
     grad = ssd_gradient( x, y, p )
-    n     = length(x)
     m     = length(p)/3
     A     = p[1:m]
     mu    = p[(m+1):(2*m)]
@@ -1075,7 +1072,7 @@ pssd <- function( x, y, p )
 }
 
 simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
-                     gamma = 2, rho = 0.5, delta = 0.5, trace = F )
+                     gamma = 2, rho = 0.5, delta = 0.5, trace = FALSE )
 {
     A = start
     while( TRUE ) {
@@ -1083,7 +1080,7 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
         for (i in 1:length( A )) {
             v[i] = fn( A[[i]], ... )
         }
-        A  = A[sort( v, index.return = T )$ix]
+        A  = A[sort( v, index.return = TRUE )$ix]
         v  = sort( v )
         maxdiff = 0
         for (i in 2:length( A )) {
@@ -1107,12 +1104,12 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
             fe = fn( xe, ... )
             if( fe < fr ) {
                 A[[length( A )]] = xe
-                if( trace == T ) {
+                if( trace == TRUE ) {
                     cat( "Expanding towards ", xe, " (", fe, ")\n" )
                 }
             } else {
                 A[[length( A )]] = xr
-                if( trace == T ) {
+                if( trace == TRUE ) {
                     cat( "Reflecting towards ", xr, " (", fr, ")\n" )
                 }
             }
@@ -1121,27 +1118,27 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
             fc = fn( xc, ... )
             if( fc < v[length( A )] ) {
                 A[[length( A )]] = xc
-                if( trace == T ) {
+                if( trace == TRUE ) {
                     cat( "Contracting towards ", xc, " (", fc, ")\n" )
                 }
             } else {
                 for (i in 2:length( A )) {  # reduction
                     A[[i]] = A[[1]] + delta * ( A[[i]] - A[[1]] )
                 }
-                if( trace == T ) {
+                if( trace == TRUE ) {
                     cat( "Reducing\n" )
                 }
             }
         } else if( fr < v[length(v)-1] ) {
             A[[length( A )]] = xr       # reflection
-            if( trace == T ) {
+            if( trace == TRUE ) {
                 cat( "Reflecting towards ", xr, " (", fr, ")\n" )
             }
         } else {
             for (i in 2:length( A )) {  # reduction
                 A[[i]] = A[[1]] + delta * ( A[[i]] - A[[1]] )
             }
-            if( trace == T ) {
+            if( trace == TRUE ) {
                 cat( "Reducing\n" )
             }
         }
@@ -1151,7 +1148,7 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
     for (i in 1:length( A )) {
         v[i] = fn( A[[i]], ... )
     }
-    A  = A[sort( v, index.return = T )$ix]
+    A  = A[sort( v, index.return = TRUE )$ix]
     v  = sort( v )
     return( list( best = A[[1]], score = v[1] ) )
 }
