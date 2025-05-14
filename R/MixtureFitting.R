@@ -1,7 +1,6 @@
 dgmm <- function( x, p, normalise_proportions = FALSE,
                   restrict_sigmas = FALSE,
-                  implementation = "C" )
-{
+                  implementation = "C" ) {
     if( implementation == "C" ) {
         if( length( p[is.na(p)] ) > 0 ) {
             return( rep( NaN, times = length( x ) ) )
@@ -22,8 +21,7 @@ dgmm <- function( x, p, normalise_proportions = FALSE,
     }
 }
 
-dvmm <- function( x, p, implementation = "C" )
-{
+dvmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( rep( NaN, times = length( x ) ) )
     }
@@ -54,8 +52,7 @@ dvmm <- function( x, p, implementation = "C" )
     }
 }
 
-dcmm <- function( x, p, implementation = "C" )
-{
+dcmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( rep( NaN, times = length( x ) ) )
     }
@@ -85,8 +82,7 @@ dcmm <- function( x, p, implementation = "C" )
     }
 }
 
-dcgmm <- function( x, p )
-{
+dcgmm <- function( x, p ) {
     P = matrix( p, ncol = 5 )
     sum = numeric( length( x ) ) * 0
     for( i in 1:nrow( P ) ) {
@@ -96,8 +92,7 @@ dcgmm <- function( x, p )
     return( sum )
 }
 
-llgmm <- function( x, p, implementation = "C" )
-{
+llgmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
@@ -144,8 +139,7 @@ llgmm <- function( x, p, implementation = "C" )
     }
 }
 
-llvmm <- function( x, p, implementation = "C" )
-{
+llvmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
@@ -174,8 +168,7 @@ llvmm <- function( x, p, implementation = "C" )
     }
 }
 
-llcmm <- function( x, p, implementation = "C" )
-{
+llcmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
     }
@@ -205,8 +198,7 @@ llcmm <- function( x, p, implementation = "C" )
 }
 
 gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        debug = FALSE, implementation = "C", ... )
-{
+                        debug = FALSE, implementation = "C", ... ) {
     if( length(w) != length(x) ) {
         w = x * 0 + 1
     }
@@ -239,8 +231,7 @@ gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.
 
 vmm_fit_em <- function( x, p,
                         epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        debug = FALSE, implementation = "C" )
-{
+                        debug = FALSE, implementation = "C" ) {
     if( implementation == "C" ) {
         l = vmm_fit_em_by_diff( x, p, epsilon, debug )
         return( l )
@@ -252,8 +243,7 @@ vmm_fit_em <- function( x, p,
 
 vmm_fit_em_by_diff <- function( x, p,
                                 epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                                debug = FALSE, implementation = "C" )
-{
+                                debug = FALSE, implementation = "C" ) {
     if( implementation == "C" ) {
         debugflag = 0
         if( debug == TRUE ) {
@@ -278,8 +268,7 @@ vmm_fit_em_by_diff <- function( x, p,
 
 vmm_fit_em_by_ll <- function( x, p,
                               epsilon = .Machine$double.eps,
-                              debug = FALSE, implementation = "C" )
-{
+                              debug = FALSE, implementation = "C" ) {
     if( implementation == "C" ) {
         debugflag = 0
         if( debug == TRUE ) {
@@ -302,8 +291,7 @@ vmm_fit_em_by_ll <- function( x, p,
 }
 
 cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                        iter.cauchy = 20, debug = FALSE, implementation = "C" )
-{
+                        iter.cauchy = 20, debug = FALSE, implementation = "C" ) {
     l = NULL
     if( implementation == "C" ) {
         debugflag = 0
@@ -334,8 +322,7 @@ cmm_fit_em <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
     return( l )
 }
 
-gmm_init_vector <- function( x, n, implementation = "C" )
-{
+gmm_init_vector <- function( x, n, implementation = "C" ) {
     if( implementation == "C" ) {
         ret = .C( "gmm_init_vector",
                   as.double(x),
@@ -349,8 +336,7 @@ gmm_init_vector <- function( x, n, implementation = "C" )
     }
 }
 
-cmm_init_vector <- function( x, m, implementation = "C" )
-{
+cmm_init_vector <- function( x, m, implementation = "C" ) {
     if( implementation == "C" ) {
         ret = .C( "cmm_init_vector",
                   as.double(x),
@@ -364,8 +350,7 @@ cmm_init_vector <- function( x, m, implementation = "C" )
     }
 }
 
-vmm_init_vector <- function( m, implementation = "C" )
-{
+vmm_init_vector <- function( m, implementation = "C" ) {
     if( implementation == "C" ) {
         ret = .C( "vmm_init_vector",
                   as.integer(m),
@@ -378,8 +363,7 @@ vmm_init_vector <- function( m, implementation = "C" )
 }
 
 polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE,
-                         implementation = "C" )
-{
+                         implementation = "C" ) {
     if( implementation == "C" ) {
         ret = .C( "polyroot_NR",
                   as.double(p),
@@ -404,8 +388,7 @@ polyroot_NR <- function( p, init = 0, epsilon = 1e-6, debug = FALSE,
 # p[(m+1):(2*m)] -- means of the peaks
 # p[(2*m+1):(3*m)] -- dispersions of the peaks
 dgmm_R <- function( x, p, normalise_proportions = FALSE,
-                    restrict_sigmas = FALSE )
-{
+                    restrict_sigmas = FALSE ) {
     m     = length(p)/3
     A     = p[1:m]
     mu    = p[(m+1):(2*m)]
@@ -424,8 +407,7 @@ dgmm_R <- function( x, p, normalise_proportions = FALSE,
 
 gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
                           collect.history = FALSE, unif.component = FALSE,
-                          convergence = abs_convergence )
-{
+                          convergence = abs_convergence ) {
     m     = length(p)/3
     A     = p[1:m]
     mu    = p[(m+1):(2*m)]
@@ -487,8 +469,7 @@ gmm_fit_em_R <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 
 
 vmm_fit_em_by_diff_R <- function( x, p,
                                   epsilon = c( 0.000001, 0.000001, 0.000001 ),
-                                  debug = FALSE )
-{
+                                  debug = FALSE ) {
     m  = length(p)/3
     A  = p[1:m]
     mu = p[(m+1):(2*m)]
@@ -539,8 +520,7 @@ vmm_fit_em_by_diff_R <- function( x, p,
 }
 
 vmm_fit_em_by_ll_R <- function( x, p, epsilon = .Machine$double.eps,
-                                debug = FALSE )
-{
+                                debug = FALSE ) {
     m  = length(p)/3
     A  = p[1:m]
     mu = p[(m+1):(2*m)]
@@ -591,8 +571,7 @@ vmm_fit_em_by_ll_R <- function( x, p, epsilon = .Machine$double.eps,
 cmm_fit_em_R <- function( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ),
                           collect.history = FALSE,
                           unif.component = FALSE,
-                          convergence = abs_convergence )
-{
+                          convergence = abs_convergence ) {
     m = length(p)/3
     A = p[1:m]
     c = p[(m+1):(2*m)]
@@ -693,8 +672,7 @@ cmm_init_vector_R <- function( x, m ) {
 # Finds one real polynomial root using Newton--Raphson method, implemented
 # according to Wikipedia:
 # https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=710342140
-polyroot_NR_R <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
-{
+polyroot_NR_R <- function( p, init = 0, epsilon = 1e-6, debug = FALSE ) {
     x = init
     x_prev = Inf
     steps = 0
@@ -720,13 +698,11 @@ polyroot_NR_R <- function( p, init = 0, epsilon = 1e-6, debug = FALSE )
 # Functions, that are not yet rewritten in C
 #=========================================================================
 
-ds <- function( x, c, s, ni )
-{
+ds <- function( x, c, s, ni ) {
     return( dt( ( x - c ) / s, ni ) / s )
 }
 
-dsmm <- function( x, p )
-{
+dsmm <- function( x, p ) {
     m = length( p ) / 4
     A  = p[1:m]
     c  = p[(m+1):(2*m)]
@@ -742,8 +718,7 @@ dsmm <- function( x, p )
 
 # Generates random sample of size n from Gaussian Mixture Model.
 # GMM is parametrised using p vector, as described in dgmm.
-rgmm <- function(n, p)
-{
+rgmm <- function(n, p) {
     m     = length(p)/3
     A     = p[1:m]/sum(p[1:m])
     mu    = p[(m+1):(2*m)]
@@ -769,8 +744,7 @@ rgmm <- function(n, p)
 # Simulation of random sampling is implemented according to
 # Best & Fisher, Efficient Simulation of the von Mises Distribution,
 # Journal of the RSS, Series C, 1979, 28, 152-157.
-rvmm <- function(n, p)
-{
+rvmm <- function(n, p) {
     m  = length(p)/3
     A  = p[1:m]
     mu = deg2rad( p[(m+1):(2*m)] )
@@ -805,8 +779,7 @@ rvmm <- function(n, p)
     return( rad2deg( x ) )
 }
 
-rcmm <- function(n, p)
-{
+rcmm <- function(n, p) {
     m     = length(p)/3
     A     = p[1:m]/sum(p[1:m])
     mu    = p[(m+1):(2*m)]
@@ -825,8 +798,7 @@ rcmm <- function(n, p)
     return( x )
 }
 
-llgmm_conservative <- function(x, p)
-{
+llgmm_conservative <- function(x, p) {
     n     = length(x)
     m     = length(p)/3
     A     = p[1:m]
@@ -840,8 +812,7 @@ llgmm_conservative <- function(x, p)
     return( sum )
 }
 
-llsmm <- function( x, p )
-{
+llsmm <- function( x, p ) {
     n = length(x)
     m = length(p)/4
     A  = p[1:m]/sum(p[1:m])
@@ -855,27 +826,23 @@ llsmm <- function( x, p )
     return( sum( log( y ) ) )
 }
 
-llgmm_opposite <- function( x, p )
-{
+llgmm_opposite <- function( x, p ) {
     return( -llgmm( x, p ) )
 }
 
-llvmm_opposite <- function( x, p )
-{
+llvmm_opposite <- function( x, p ) {
     return( -llvmm( x, p ) )
 }
 
 # Calculate Bayesian Information Criterion (BIC) for any type of mixture
 # model. Log-likelihood function has to be provided.
-bic <- function( x, p, llf )
-{
+bic <- function( x, p, llf ) {
     return( -2 * llf( x, p ) + (length( p ) - 1) * log( length( x ) ) )
 }
 
 # Calculate posterior probability of given number of peaks in
 # Gaussian Mixture Model
-gmm_size_probability <- function(x, n, method = "SANN")
-{
+gmm_size_probability <- function(x, n, method = "SANN") {
     p = vector( "numeric", n * 3 )
     for (i in 1:n) {
         p[i]     = 1
@@ -893,8 +860,7 @@ gmm_size_probability <- function(x, n, method = "SANN")
 # Fit Gaussian Mixture Model to binned data (histogram).
 # Lower bounds for mixture proportions and dispersions are fixed in order
 # to avoid getting NaNs.
-gmm_size_probability_nls <- function(x, n, bins = 100, trace = FALSE)
-{
+gmm_size_probability_nls <- function(x, n, bins = 100, trace = FALSE) {
     lower = min( x )
     upper = max( x )
     p = vector( "numeric", n * 3 )
@@ -929,8 +895,7 @@ gmm_size_probability_nls <- function(x, n, bins = 100, trace = FALSE)
                   hessian = solve(vcov(leastsq)), vcov = vcov(leastsq) ) )
 }
 
-gmm_fit_kmeans <- function(x, n)
-{
+gmm_fit_kmeans <- function(x, n) {
     p = vector( "numeric", 3*n )
     km = kmeans( x, n )
     for( i in 1:n ) {
@@ -943,8 +908,7 @@ gmm_fit_kmeans <- function(x, n)
 
 # Calculate intersection of two normal distributions by finding roots
 # of quadratic equation.
-gmm_intersections <- function( p )
-{
+gmm_intersections <- function( p ) {
     P = matrix( p, ncol = 3 )
     a = P[2,3]^2 - P[1,3]^2
     b = -2 * ( P[1,2] * P[2,3]^2 - P[2,2] * P[1,3]^2 )
@@ -964,8 +928,7 @@ gmm_intersections <- function( p )
     }
 }
 
-cmm_intersections <- function( p )
-{
+cmm_intersections <- function( p ) {
     P = matrix( p, ncol = 3 )
     a = P[2,1] * P[2,3] - P[1,1] * P[1,3]
     b = 2 * ( P[1,1] * P[2,2] * P[1,3] - P[2,1] * P[1,2] * P[2,3] )
@@ -985,8 +948,7 @@ cmm_intersections <- function( p )
     }
 }
 
-ssd_gradient <- function(x, y, p)
-{
+ssd_gradient <- function(x, y, p) {
     n     = length(x)
     m     = length(p)/3
     A     = p[1:m]
@@ -1011,8 +973,7 @@ ssd_gradient <- function(x, y, p)
     return( grad )
 }
 
-pssd_gradient <- function(x, y, p)
-{
+pssd_gradient <- function(x, y, p) {
     grad = ssd_gradient( x, y, p )
     m     = length(p)/3
     A     = p[1:m]
@@ -1037,8 +998,7 @@ pssd_gradient <- function(x, y, p)
 }
 
 gradient_descent <- function( gradfn, start, gamma = 0.1, ...,
-                              epsilon = 0.01 )
-{
+                              epsilon = 0.01 ) {
     a = start
     while( TRUE ) {
         grad = gradfn( a, ... )
@@ -1051,13 +1011,11 @@ gradient_descent <- function( gradfn, start, gamma = 0.1, ...,
     return( a )
 }
 
-ssd <- function( x, y, p )
-{
+ssd <- function( x, y, p ) {
     return( sum( ( y - dgmm( x, p ) )^2 ) )
 }
 
-pssd <- function( x, y, p )
-{
+pssd <- function( x, y, p ) {
     m     = length(p)/3
     A     = p[1:m]
     mu    = p[(m+1):(2*m)]
@@ -1072,8 +1030,7 @@ pssd <- function( x, y, p )
 }
 
 simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
-                     gamma = 2, rho = 0.5, delta = 0.5, trace = FALSE )
-{
+                     gamma = 2, rho = 0.5, delta = 0.5, trace = FALSE ) {
     A = start
     while( TRUE ) {
         v = vector( "numeric", length( A ) )
@@ -1153,8 +1110,7 @@ simplex <- function( fn, start, ..., epsilon = 0.000001, alpha = 1,
     return( list( best = A[[1]], score = v[1] ) )
 }
 
-rsimplex_start <- function(seed, n, lower, upper)
-{
+rsimplex_start <- function(seed, n, lower, upper) {
     set.seed( seed )
     l   = list()
     for( i in 1:(length(lower) * n + 1) ) {
@@ -1168,8 +1124,7 @@ rsimplex_start <- function(seed, n, lower, upper)
     return( l )
 }
 
-gmm_fit_hwhm <- function( x, y, n )
-{
+gmm_fit_hwhm <- function( x, y, n ) {
     a = y
     p = vector( "numeric", 3 * n )
     for( i in 1:n ) {
@@ -1195,8 +1150,7 @@ gmm_fit_hwhm <- function( x, y, n )
     return( p )
 }
 
-gmm_fit_hwhm_spline_deriv <- function( x, y )
-{
+gmm_fit_hwhm_spline_deriv <- function( x, y ) {
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]
     seq = 2:(length(y)-1)
@@ -1230,8 +1184,7 @@ gmm_fit_hwhm_spline_deriv <- function( x, y )
     return( p )
 }
 
-cmm_fit_hwhm_spline_deriv <- function( x, y )
-{
+cmm_fit_hwhm_spline_deriv <- function( x, y ) {
     a = y
     diff = y[2:length(y)]-y[1:(length(y)-1)]
     seq = 2:(length(y)-1)
@@ -1264,8 +1217,7 @@ cmm_fit_hwhm_spline_deriv <- function( x, y )
     return( p )
 }
 
-smm_fit_em <- function( x, p, ... )
-{
+smm_fit_em <- function( x, p, ... ) {
     return( smm_fit_em_GNL08( x, p, ... ) )
 }
 
@@ -1278,8 +1230,7 @@ smm_fit_em <- function( x, p, ... )
 # European Conference on Computer Vision 2010, 2010
 # https://engineering.purdue.edu/RVL/Publications/Aeschliman2010ANovel.pdf
 smm_fit_em_APK10 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
-                              collect.history = FALSE, debug = FALSE )
-{
+                              collect.history = FALSE, debug = FALSE ) {
     m  = length(p)/4
     A  = p[1:m]
     c  = p[(m+1):(2*m)]
@@ -1366,8 +1317,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
                               max.df = 1000, max.steps = Inf,
                               polyroot.solution = "jenkins_taub",
                               convergence = abs_convergence,
-                              unif.component = FALSE )
-{
+                              unif.component = FALSE ) {
     m  = length(p)/4
     A  = p[1:m]
     c  = p[(m+1):(2*m)]
@@ -1481,8 +1431,7 @@ smm_fit_em_GNL08 <- function( x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ),
 # Third International Conference on Image and Graphics (ICIG'04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548--551
 smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
-                              debug = FALSE, ... )
-{
+                              debug = FALSE, ... ) {
     bic_prev = Inf
     prev_p = p
     m = length(p) / 4
@@ -1546,8 +1495,7 @@ smm_fit_em_CWL04 <- function( x, p, collect.history = FALSE,
 # and Its Application to Computer Vision
 # European Conference on Computer Vision 2010, 2010
 # https://engineering.purdue.edu/RVL/Publications/Aeschliman2010ANovel.pdf
-s_fit_primitive <- function( x )
-{
+s_fit_primitive <- function( x ) {
     xbar = median( x )
     z = log( ( x - xbar )^2 )
     zbar = sum( z ) / length( x )
@@ -1757,8 +1705,7 @@ kmeans_circular <- function( x, centers, iter.max = 10 ) {
 
 # Weighted median function, implemented according to Wikipedia:
 # https://en.wikipedia.org/w/index.php?title=Weighted_median&oldid=690896947
-wmedian <- function( x, w, start = 1, end = length( x ) )
-{
+wmedian <- function( x, w, start = 1, end = length( x ) ) {
     # base case for single element
     if( start == end ) {
         return( x[start] )
@@ -1793,8 +1740,7 @@ wmedian <- function( x, w, start = 1, end = length( x ) )
     }
 }
 
-digamma_approx <- function( x )
-{
+digamma_approx <- function( x ) {
     cl = length( digamma_approx_coefs )
     ret = numeric( length( x ) )
 
@@ -1812,8 +1758,7 @@ digamma_approx <- function( x )
 # Greedy EM Algorithm for Robust T-Mixture Modeling
 # Third International Conference on Image and Graphics (ICIG'04),
 # Institute of Electrical & Electronics Engineers (IEEE), 2004, 548-551
-kldiv <- function( x, p, k )
-{
+kldiv <- function( x, p, k ) {
     m  = length( p ) / 4
     A  = p[k]
     c  = p[m+k]
@@ -1829,15 +1774,13 @@ kldiv <- function( x, p, k )
     return( kld )
 }
 
-bhattacharyya_dist <- function( mu1, mu2, sigma1, sigma2 )
-{
+bhattacharyya_dist <- function( mu1, mu2, sigma1, sigma2 ) {
     return( log( sum( c( sigma1, sigma2 )^2 /
                       c( sigma2, sigma1 )^2, 2 ) / 4 ) / 4 +
             ( mu1 - mu2 )^2 / ( 4 * ( sigma1^2 + sigma2^2 ) ) )
 }
 
-abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
-{
+abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
     if( length( epsilon ) > 1 && length( epsilon ) < length( p_now ) ) {
         n = length( p_now ) / length( epsilon )
         epsilon_now = numeric( 0 )
@@ -1852,8 +1795,7 @@ abs_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
     return( has_converged )
 }
 
-ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
-{
+ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
     if( length( epsilon ) > 1 && length( epsilon ) < length( p_now ) ) {
         n = length( p_now ) / length( epsilon )
         epsilon_now = numeric( 0 )
@@ -1871,8 +1813,7 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 )
 plot_density <- function( x, cuts = 400, main = "", model, density_f,
                           filename = '/dev/stdout',
                           width, height, obs_good = c(), obs_bad = c(),
-                          scale_density = FALSE )
-{
+                          scale_density = FALSE ) {
     png( filename, width = width, height = height )
     h = hist( x, cuts, main = main,
               xlim = c( min( c( x, obs_bad ) ), max( c( x, obs_bad ) ) ) )
