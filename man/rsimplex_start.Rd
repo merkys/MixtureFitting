@@ -14,5 +14,5 @@
     \item{lower}{vector with lower bounds of each dimension}
     \item{upper}{vector with upper bounds of each dimension}
 }
-\value{A list with \emph{n} simplexes.}
+\value{A list with \emph{n} simplices.}
 \author{Andrius Merkys}

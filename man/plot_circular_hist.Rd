@@ -1,7 +1,7 @@
 \name{plot_circular_hist}
 \alias{plot_circular_hist}
 \docType{methods}
-\title{Mixture Distribution Modelling}
+\title{Mixture Distribution Modeling}
 \description{
     Plot a circular histogram.
 }

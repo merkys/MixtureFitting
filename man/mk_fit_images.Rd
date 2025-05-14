@@ -1,7 +1,7 @@
 \name{mk_fit_images}
 \alias{mk_fit_images}
 \docType{methods}
-\title{Mixture Distribution Modelling}
+\title{Mixture Distribution Modeling}
 \description{
     Draw a PNG histogram with a mixture density on top of it for each iteration of mixture optimization process.
 }

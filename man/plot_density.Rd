@@ -1,7 +1,7 @@
 \name{plot_density}
 \alias{plot_density}
 \docType{methods}
-\title{Mixture Distribution Modelling}
+\title{Mixture Distribution Modeling}
 \description{
     Draw a PNG histogram with a mixture density on top of it.
 }
