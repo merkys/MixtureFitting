@@ -7,8 +7,8 @@
 }
 \usage{
     plot_density( x, model, density_f, width, height,
-                  cuts = 400, main = '',
-                  filename = '/dev/stdout',
+                  cuts = 400, main = "",
+                  filename = NULL,
                   obs_good = c(), obs_bad = c(),
                   scale_density = FALSE )
 

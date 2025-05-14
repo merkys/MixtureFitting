@@ -1811,7 +1811,7 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
 
 plot_density <- function( x, model, density_f, width, height,
                           cuts = 400, main = "",
-                          filename = "/dev/stdout",
+                          filename = NULL,
                           obs_good = c(), obs_bad = c(),
                           scale_density = FALSE ) {
     png( filename, width = width, height = height )
