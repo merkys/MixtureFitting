@@ -7,7 +7,7 @@
 }
 \usage{
     simplex( fn, start, ..., epsilon = 0.000001, alpha = 1,
-             gamma = 2, rho = 0.5, delta = 0.5, trace = F )
+             gamma = 2, rho = 0.5, delta = 0.5, trace = FALSE )
 }
 \arguments{
     \item{fn}{minimized function, has to accept the argmin vector as first parameter}

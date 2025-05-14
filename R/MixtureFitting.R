@@ -1810,9 +1810,10 @@ ratio_convergence <- function( p_now, p_prev, epsilon = 1e-6 ) {
     return( has_converged )
 }
 
-plot_density <- function( x, cuts = 400, main = "", model, density_f,
+plot_density <- function( x, model, density_f, width, height,
+                          cuts = 400, main = "",
                           filename = '/dev/stdout',
-                          width, height, obs_good = c(), obs_bad = c(),
+                          obs_good = c(), obs_bad = c(),
                           scale_density = FALSE ) {
     png( filename, width = width, height = height )
     h = hist( x, cuts, main = main,

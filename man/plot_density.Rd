@@ -6,9 +6,10 @@
     Draw a PNG histogram with a mixture density on top of it.
 }
 \usage{
-    plot_density( x, cuts = 400, main = '', model, density_f,
+    plot_density( x, model, density_f, width, height,
+                  cuts = 400, main = '',
                   filename = '/dev/stdout',
-                  width, height, obs_good = c(), obs_bad = c(),
+                  obs_good = c(), obs_bad = c(),
                   scale_density = FALSE )
 
 }
