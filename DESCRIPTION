@@ -1,9 +1,11 @@
 Package: MixtureFitting
-Version: 0.5.0
-Date: 2025-05-09
+Version: 0.6.0
+Date: 2025-05-15
 Title: Fitting of Univariate Mixture Distributions to Data using Various Approaches
-Author: Andrius Merkys <andrius.merkys@gmail.com>
-Maintainer: Andrius Merkys <andrius.merkys@gmail.com>
+Authors@R: person(given = "Andrius",
+                  family = "Merkys",
+                  role = c("aut", "cre"),
+                  email = "andrius.merkys@gmail.com")
 Depends: R (>= 2.0.1)
 Description: Fitting of univariate mixture distributions to data using various approaches.
 License: GPL-2
