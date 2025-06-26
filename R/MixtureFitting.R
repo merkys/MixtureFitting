@@ -834,6 +834,12 @@ llvmm_opposite <- function( x, p ) {
     return( -llvmm( x, p ) )
 }
 
+# Calculate Akaike Information Criterion (AIC) for any type of mixture
+# model. Log-likelihood function has to be provided.
+aic <- function( x, p, llf ) {
+    return( -2 * llf( x, p ) + 2 * (length( p ) - 1) )
+}
+
 # Calculate Bayesian Information Criterion (BIC) for any type of mixture
 # model. Log-likelihood function has to be provided.
 bic <- function( x, p, llf ) {
