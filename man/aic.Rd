@@ -7,7 +7,7 @@
     Log-likelihood function has to be provided.
 }
 \usage{
-    bic( x, p, llf )
+    aic( x, p, llf )
 }
 \arguments{
     \item{x}{data vector}
