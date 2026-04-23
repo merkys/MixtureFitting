@@ -59,6 +59,7 @@ void gmm_fit_em( double *x, int *xlength,
                  double *p, int *plength,
                  double *w,
                  double *epsilon,
+                 int *max_steps,
                  int *debug,
                  double *ret,
                  int *steps )
@@ -136,6 +137,8 @@ void gmm_fit_em( double *x, int *xlength,
         if (*debug > 0)
             Rprintf( "\n" );
         *steps = *steps + 1;
+        if (*max_steps && *steps >= *max_steps)
+            run = 0;
     }
     for (int i = 0; i < m; i++) {
         ret[i] = A[i];

@@ -197,7 +197,7 @@ llcmm <- function( x, p, implementation = "C" ) {
     }
 }
 
-gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
+gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ), max_steps = 0,
                         debug = FALSE, implementation = "C", ... ) {
     if( length(w) != length(x) ) {
         w = x * 0 + 1
@@ -212,6 +212,7 @@ gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.
                   as.integer( length(p) ),
                   as.double(w),
                   as.double( epsilon ),
+                  as.integer( max_steps ),
                   as.integer( debug ),
                   retvec = numeric( length(p) ),
                   steps = integer(1) )
