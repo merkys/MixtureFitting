@@ -197,6 +197,16 @@ llcmm <- function( x, p, implementation = "C" ) {
     }
 }
 
+llsnmm <- function( x, p ) {
+    m = length(p)/4
+
+    ll = 0
+    for (i in 1:m) {
+        ll = ll + sum(log(p[i] * dsn(x, p[m+i], sqrt(p[2*m+i]), p[3*m+i])))
+    }
+    return( ll )
+}
+
 gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ), max_steps = 0,
                         debug = FALSE, implementation = "C", ... ) {
     if( length(w) != length(x) ) {
