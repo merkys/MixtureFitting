@@ -5,8 +5,8 @@ importFrom("grDevices", "dev.off", "png")
 importFrom("graphics", "hist", "lines", "plot", "rug")
 importFrom("sn", "dsn")
 importFrom("stats", "coef", "dcauchy", "dnorm", "dt", "dunif",
-           "kmeans", "median", "nls", "optim", "rcauchy", "resid",
-           "rnorm", "runif", "var", "vcov")
+           "kmeans", "median", "nls", "optim", "pnorm", "rcauchy",
+           "resid", "rnorm", "runif", "var", "vcov")
 importFrom("utils", "head")
 
 #=========================================================================
