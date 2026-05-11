@@ -1521,6 +1521,72 @@ s_fit_primitive <- function( x ) {
     return( c( xbar, alpha, ni ) )
 }
 
+# According to https://www3.stat.sinica.edu.tw/statistica/oldpdf/A17n35.pdf
+snmm_fit_em <- function(x, p) {
+    m = length(p) / 4
+    omega   = p[1:m]
+    dzeta   = p[(m+1):(2*m)]
+    sigmasq = p[(2*m+1):(3*m)]
+    lambda  = p[(3*m+1):(4*m)]
+
+    # (12)
+    z = matrix( nrow = m, ncol = length(x) )
+    zsum = numeric( length = length(x) )
+    for (i in 1:m) {
+        z[i,] = omega[i] * dsn(x, dzeta[i], sqrt(sigmasq[i]), lambda[i])
+        zsum = zsum + z[i,]
+    }
+    for (i in 1:m) {
+        z[i,] = z[i,] / zsum
+    }
+
+    # (13) and (14)
+    muT = matrix( nrow = m, ncol = length(x) )
+    for (i in 1:m) {
+        muT[i,] = sn_delta(lambda[i]) * (x - dzeta[i])
+    }
+    s1 = matrix( nrow = m, ncol = length(x) )
+    s2 = matrix( nrow = m, ncol = length(x) )
+    for (i in 1:m) {
+        sigmaT = sqrt(sigmasq[i]) * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
+        arg = lambda[i] * (x - dzeta[i]) / sqrt(sigmasq[i])
+        s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
+        s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
+    }
+
+    # CM-step 1
+    for (i in 1:m) {
+        omega[i] = sum(z[i,]) / length(x)
+    }
+
+    # CM-step 2
+    for (i in 1:m) {
+        dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1[i,])) / sum(z[i,])
+    }
+
+    # CM-step 3
+    for (i in 1:m) {
+        sigmasq[i] = (sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,]))
+    }
+
+    # CM-step 4
+    for (i in 1:m) {
+        a = sigmasq[i] * sum(z[i,])
+        b = sum((x - dzeta[i]) * s1[i,])
+        c = sum(s2[i,])
+        d = sum(z[i,] * (x - dzeta[i]) ^ 2)
+        roots_orig = polyroot( c( b, a - c - d, b, -a ) ) # a root must have absolute value < 1
+        roots = roots_orig[abs(Im(roots_orig)) < 1e-6 & abs(Re(roots_orig)) < 1]
+        if( length(roots) == 0 ) {
+            stop( "no roots found" )
+        }
+        root = Re(roots[1])
+        lambda[i] = sqrt( (root ^ 2) / (1 - root ^ 2) )
+    }
+
+    return( c(omega, dzeta, sigmasq, lambda) )
+}
+
 mk_fit_images <- function( h, l, prefix = "img_" ) {
     maxstrlen = ceiling( log( length( l ) ) / log( 10 ) )
     for( i in 1:length( l ) ) {
@@ -1623,6 +1689,44 @@ smm_init_vector_kmeans <- function( x, m ) {
         }
     }
     return( start )
+}
+
+# Cubic root in R. Somewhat complicated.
+curt <- function( x ) {
+    return( sign(x) * abs(x) ^ (1/3) )
+}
+
+# Need to be fed a partition of data
+snmm_init_vector <- function( x ) {
+    a1 = sqrt( 2 / pi )
+    b1 = (4 / pi - 1 ) * a1
+    m1 = mean(x)
+    m2 = sum((x - m1)^2) / (length(x) - 1)
+    m3 = sum((x - m1)^3) / (length(x) - 1)
+
+    arg = a1 ^ 2 + m2 * curt(b1 / m3) ^ 2
+
+    # (3)
+    dzeta = m1 - a1 * curt(m3 / b1)
+    sigmasq = m2 + a1 ^ 2 * curt(m3 / b1) ^ 2
+    lambda = arg / sqrt(arg)
+
+    return( c( dzeta, sigmasq, lambda ) )
+}
+
+snmm_init_vector_kmeans <- function( x, n ) {
+    k = kmeans( x, n )
+
+    p = numeric( n * 4 )
+    p[1:n] = k$size / length( x )
+    for (i in 1:n) {
+        ret = snmm_init_vector( x[k$cluster == i] )
+        p[n+i]   = ret[1]
+        p[2*n+i] = ret[2]
+        p[3*n+i] = ret[3]
+    }
+
+    return( p )
 }
 
 gmm_merge_components <- function( x, p, i, j ) {
@@ -1767,6 +1871,8 @@ digamma_approx <- function( x ) {
 
     return( ret )
 }
+
+sn_delta <- function(x) { return( x / sqrt( 1 + x * x ) ) }
 
 # Kullback--Leibler divergence, using Dirac's delta function, implemented
 # according to:
