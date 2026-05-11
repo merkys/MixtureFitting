@@ -1584,6 +1584,12 @@ snmm_fit_em <- function(x, p) {
         lambda[i] = sqrt( (root ^ 2) / (1 - root ^ 2) )
     }
 
+    # Order the model's components by their location
+    omega   = omega[order(dzeta)]
+    sigmasq = sigmasq[order(dzeta)]
+    lambda  = lambda[order(dzeta)]
+    dzeta   = dzeta[order(dzeta)]
+
     return( c(omega, dzeta, sigmasq, lambda) )
 }
 
@@ -1725,6 +1731,12 @@ snmm_init_vector_kmeans <- function( x, n ) {
         p[2*n+i] = ret[2]
         p[3*n+i] = ret[3]
     }
+
+    # Order the model's components by their location
+    p[1:n]           = p[order(p[(n+1):(2*n)])]
+    p[(2*n+1):(3*n)] = p[order(p[(n+1):(2*n)]) + 2*n]
+    p[(3*n+1):(4*n)] = p[order(p[(n+1):(2*n)]) + 3*n]
+    p[(n+1):(2*n)]   = p[order(p[(n+1):(2*n)]) + n]
 
     return( p )
 }
