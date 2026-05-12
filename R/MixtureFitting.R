@@ -1718,41 +1718,40 @@ curt <- function( x ) {
     return( sign(x) * abs(x) ^ (1/3) )
 }
 
-# Need to be fed a partition of data
-snmm_init_vector <- function( x ) {
-    a1 = sqrt( 2 / pi )
-    b1 = (4 / pi - 1 ) * a1
-    m1 = mean(x)
-    m2 = sum((x - m1)^2) / (length(x) - 1)
-    m3 = sum((x - m1)^3) / (length(x) - 1)
+snmm_init_vector <- function( x, n = 1 ) {
+    if (n == 1) {
+        a1 = sqrt( 2 / pi )
+        b1 = (4 / pi - 1 ) * a1
+        m1 = mean(x)
+        m2 = sum((x - m1)^2) / (length(x) - 1)
+        m3 = sum((x - m1)^3) / (length(x) - 1)
 
-    # (3)
-    dzeta = m1 - a1 * curt(m3 / b1)
-    sigma = sqrt(m2 + a1 ^ 2 * curt(m3 / b1) ^ 2)
-    lambda = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 ) # (18c) of Arnold et al. (1993)
+        # (3)
+        dzeta = m1 - a1 * curt(m3 / b1)
+        sigma = sqrt(m2 + a1 ^ 2 * curt(m3 / b1) ^ 2)
+        lambda = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 ) # (18c) of Arnold et al. (1993)
 
-    return( c( dzeta, sigma, lambda ) )
-}
+        return( c( 1, dzeta, sigma, lambda ) )
+    } else {
+        k = kmeans( x, n )
 
-snmm_init_vector_kmeans <- function( x, n ) {
-    k = kmeans( x, n )
+        p = numeric( n * 4 )
+        p[1:n] = k$size / length( x )
+        for (i in 1:n) {
+            ret = snmm_init_vector( x[k$cluster == i] )
+            p[n+i]   = ret[2]
+            p[2*n+i] = ret[3]
+            p[3*n+i] = ret[4]
+        }
 
-    p = numeric( n * 4 )
-    p[1:n] = k$size / length( x )
-    for (i in 1:n) {
-        ret = snmm_init_vector( x[k$cluster == i] )
-        p[n+i]   = ret[1]
-        p[2*n+i] = ret[2]
-        p[3*n+i] = ret[3]
+        # Order the model's components by their location
+        p[1:n]           = p[order(p[(n+1):(2*n)])]
+        p[(2*n+1):(3*n)] = p[order(p[(n+1):(2*n)]) + 2*n]
+        p[(3*n+1):(4*n)] = p[order(p[(n+1):(2*n)]) + 3*n]
+        p[(n+1):(2*n)]   = p[order(p[(n+1):(2*n)]) + n]
+
+        return( p )
     }
-
-    # Order the model's components by their location
-    p[1:n]           = p[order(p[(n+1):(2*n)])]
-    p[(2*n+1):(3*n)] = p[order(p[(n+1):(2*n)]) + 2*n]
-    p[(3*n+1):(4*n)] = p[order(p[(n+1):(2*n)]) + 3*n]
-    p[(n+1):(2*n)]   = p[order(p[(n+1):(2*n)]) + n]
-
-    return( p )
 }
 
 gmm_merge_components <- function( x, p, i, j ) {
