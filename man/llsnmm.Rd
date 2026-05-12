@@ -1,0 +1,24 @@
+\name{llsnmm}
+\alias{llsnmm}
+\docType{methods}
+\title{Log-likelihood for Skew-Normal Mixture}
+\description{
+    Calculates log-likelihood for a given data vector using a skew-normal mixture distribution.
+}
+\usage{
+    llsnmm( x, p )
+}
+\arguments{
+    \item{x}{data vector}
+    \item{p}{
+        parameter vector of 4*\emph{n} parameters, where \emph{n} is
+        number of mixture components. Structure of p vector is
+        p = c( omega1, omega2, ..., omega\emph{n}, dzeta1, dzeta2, ..., dzeta\emph{n}, sigma1, sigma2, ..., sigma\emph{n}, lambda1, lambda2, ..., lambda\emph{n} ),
+        where omega\emph{i} is the proportion of \emph{i}-th component,
+        dzeta\emph{i} is the location of \emph{i}-th component,
+        sigma\emph{i} is the scale of \emph{i}-th component and
+        lambda\emph{i} is the shape of \emph{i}-th component.
+    }
+}
+\value{log-likelihood}
+\author{Andrius Merkys}
