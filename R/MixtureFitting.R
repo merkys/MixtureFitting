@@ -200,11 +200,11 @@ llcmm <- function( x, p, implementation = "C" ) {
 llsnmm <- function( x, p ) {
     m = length(p)/4
 
-    ll = 0
+    y = numeric( length(x) )
     for (i in 1:m) {
-        ll = ll + sum(log(p[i] * dsn(x, p[m+i], p[2*m+i], p[3*m+i])))
+        y = y + p[i] * dsn(x, p[m+i], p[2*m+i], p[3*m+i])
     }
-    return( ll )
+    return( sum( log( y ) ) )
 }
 
 gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ), max_steps = 0,
