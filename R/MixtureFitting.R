@@ -1726,10 +1726,10 @@ snmm_init_vector <- function( x, n = 1 ) {
         m2 = sum((x - m1)^2) / (length(x) - 1)
         m3 = sum((x - m1)^3) / (length(x) - 1)
 
-        # (3)
+        # Equation 3 from Lin et al. (2007)
         dzeta = m1 - a1 * curt(m3 / b1)
         sigma = sqrt(m2 + a1 ^ 2 * curt(m3 / b1) ^ 2)
-        lambda = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 ) # (18c) of Arnold et al. (1993)
+        lambda = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 ) # Equation 18c of Arnold et al. (1993)
 
         return( c( 1, dzeta, sigma, lambda ) )
     } else {
