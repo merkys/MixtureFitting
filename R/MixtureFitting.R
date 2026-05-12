@@ -1725,7 +1725,7 @@ curt <- function( x ) {
 snmm_init_vector <- function( x, n = 1 ) {
     if (n == 1) {
         a1 = sqrt( 2 / pi )
-        b1 = (4 / pi - 1 ) * a1
+        b1 = (4 / pi - 1) * a1
         m1 = mean(x)
         m2 = sum((x - m1)^2) / (length(x) - 1)
         m3 = sum((x - m1)^3) / (length(x) - 1)
@@ -1733,7 +1733,15 @@ snmm_init_vector <- function( x, n = 1 ) {
         # Equation 3 from Lin et al. (2007)
         dzeta = m1 - a1 * curt(m3 / b1)
         sigma = sqrt(m2 + a1 ^ 2 * curt(m3 / b1) ^ 2)
-        lambda = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 ) # Equation 18c of Arnold et al. (1993)
+
+        # Equation 18c of Arnold et al. (1993)
+        p = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 )
+
+        # A trick to select a reasonable lambda value is p becomes out of bounds
+        lambda = sign(p)
+        if (abs(p) < 1) {
+            lambda = p / sqrt( 1 - p^2 )
+        }
 
         return( c( 1, dzeta, sigma, lambda ) )
     } else {
