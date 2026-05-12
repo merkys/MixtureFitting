@@ -202,7 +202,7 @@ llsnmm <- function( x, p ) {
 
     ll = 0
     for (i in 1:m) {
-        ll = ll + sum(log(p[i] * dsn(x, p[m+i], sqrt(p[2*m+i]), p[3*m+i])))
+        ll = ll + sum(log(p[i] * dsn(x, p[m+i], p[2*m+i], p[3*m+i])))
     }
     return( ll )
 }
@@ -1524,16 +1524,16 @@ s_fit_primitive <- function( x ) {
 # According to https://www3.stat.sinica.edu.tw/statistica/oldpdf/A17n35.pdf
 snmm_fit_em <- function(x, p) {
     m = length(p) / 4
-    omega   = p[1:m]
-    dzeta   = p[(m+1):(2*m)]
-    sigmasq = p[(2*m+1):(3*m)]
-    lambda  = p[(3*m+1):(4*m)]
+    omega  = p[1:m]
+    dzeta  = p[(m+1):(2*m)]
+    sigma  = p[(2*m+1):(3*m)]
+    lambda = p[(3*m+1):(4*m)]
 
     # (12)
     z = matrix( nrow = m, ncol = length(x) )
     zsum = numeric( length = length(x) )
     for (i in 1:m) {
-        z[i,] = omega[i] * dsn(x, dzeta[i], sqrt(sigmasq[i]), lambda[i])
+        z[i,] = omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
         zsum = zsum + z[i,]
     }
     for (i in 1:m) {
@@ -1548,8 +1548,8 @@ snmm_fit_em <- function(x, p) {
     s1 = matrix( nrow = m, ncol = length(x) )
     s2 = matrix( nrow = m, ncol = length(x) )
     for (i in 1:m) {
-        sigmaT = sqrt(sigmasq[i]) * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
-        arg = lambda[i] * (x - dzeta[i]) / sqrt(sigmasq[i])
+        sigmaT = sigma[i] * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
+        arg = lambda[i] * (x - dzeta[i]) / sigma[i]
         s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
         s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
     }
@@ -1566,12 +1566,12 @@ snmm_fit_em <- function(x, p) {
 
     # CM-step 3
     for (i in 1:m) {
-        sigmasq[i] = (sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,]))
+        sigma[i] = sqrt((sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,])))
     }
 
     # CM-step 4
     for (i in 1:m) {
-        a = sigmasq[i] * sum(z[i,])
+        a = sigma[i] ^ 2 * sum(z[i,])
         b = sum((x - dzeta[i]) * s1[i,])
         c = sum(s2[i,])
         d = sum(z[i,] * (x - dzeta[i]) ^ 2)
@@ -1585,12 +1585,12 @@ snmm_fit_em <- function(x, p) {
     }
 
     # Order the model's components by their location
-    omega   = omega[order(dzeta)]
-    sigmasq = sigmasq[order(dzeta)]
-    lambda  = lambda[order(dzeta)]
-    dzeta   = dzeta[order(dzeta)]
+    omega  = omega[order(dzeta)]
+    sigma  = sigma[order(dzeta)]
+    lambda = lambda[order(dzeta)]
+    dzeta  = dzeta[order(dzeta)]
 
-    return( c(omega, dzeta, sigmasq, lambda) )
+    return( c(omega, dzeta, sigma, lambda) )
 }
 
 mk_fit_images <- function( h, l, prefix = "img_" ) {
@@ -1714,10 +1714,10 @@ snmm_init_vector <- function( x ) {
 
     # (3)
     dzeta = m1 - a1 * curt(m3 / b1)
-    sigmasq = m2 + a1 ^ 2 * curt(m3 / b1) ^ 2
+    sigma = sqrt(m2 + a1 ^ 2 * curt(m3 / b1) ^ 2)
     lambda = arg / sqrt(arg)
 
-    return( c( dzeta, sigmasq, lambda ) )
+    return( c( dzeta, sigma, lambda ) )
 }
 
 snmm_init_vector_kmeans <- function( x, n ) {
