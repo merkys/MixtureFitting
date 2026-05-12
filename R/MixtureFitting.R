@@ -1581,7 +1581,7 @@ snmm_fit_em <- function(x, p) {
             stop( "no roots found" )
         }
         root = Re(roots[1])
-        lambda[i] = sqrt( (root ^ 2) / (1 - root ^ 2) )
+        lambda[i] = sign(root) * sqrt( (root ^ 2) / (1 - root ^ 2) )
     }
 
     # Order the model's components by their location
