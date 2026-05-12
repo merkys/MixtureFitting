@@ -1522,73 +1522,89 @@ s_fit_primitive <- function( x ) {
 }
 
 # According to https://www3.stat.sinica.edu.tw/statistica/oldpdf/A17n35.pdf
-snmm_fit_em <- function(x, p) {
+snmm_fit_em <- function(x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
     m = length(p) / 4
     omega  = p[1:m]
     dzeta  = p[(m+1):(2*m)]
     sigma  = p[(2*m+1):(3*m)]
     lambda = p[(3*m+1):(4*m)]
 
-    # (12)
-    z = matrix( nrow = m, ncol = length(x) )
-    zsum = numeric( length = length(x) )
-    for (i in 1:m) {
-        z[i,] = omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
-        zsum = zsum + z[i,]
-    }
-    for (i in 1:m) {
-        z[i,] = z[i,] / zsum
-    }
+    run = TRUE
+    while( run ) {
+        prev_omega  = omega
+        prev_dzeta  = dzeta
+        prev_sigma  = sigma
+        prev_lambda = lambda
 
-    # (13) and (14)
-    muT = matrix( nrow = m, ncol = length(x) )
-    for (i in 1:m) {
-        muT[i,] = sn_delta(lambda[i]) * (x - dzeta[i])
-    }
-    s1 = matrix( nrow = m, ncol = length(x) )
-    s2 = matrix( nrow = m, ncol = length(x) )
-    for (i in 1:m) {
-        sigmaT = sigma[i] * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
-        arg = lambda[i] * (x - dzeta[i]) / sigma[i]
-        s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
-        s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
-    }
-
-    # CM-step 1
-    for (i in 1:m) {
-        omega[i] = sum(z[i,]) / length(x)
-    }
-
-    # CM-step 2
-    for (i in 1:m) {
-        dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1[i,])) / sum(z[i,])
-    }
-
-    # CM-step 3
-    for (i in 1:m) {
-        sigma[i] = sqrt((sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,])))
-    }
-
-    # CM-step 4
-    for (i in 1:m) {
-        a = sigma[i] ^ 2 * sum(z[i,])
-        b = sum((x - dzeta[i]) * s1[i,])
-        c = sum(s2[i,])
-        d = sum(z[i,] * (x - dzeta[i]) ^ 2)
-        roots_orig = polyroot( c( b, a - c - d, b, -a ) ) # a root must have absolute value < 1
-        roots = roots_orig[abs(Im(roots_orig)) < 1e-6 & abs(Re(roots_orig)) < 1]
-        if( length(roots) == 0 ) {
-            stop( "no roots found" )
+        # (12)
+        z = matrix( nrow = m, ncol = length(x) )
+        zsum = numeric( length = length(x) )
+        for (i in 1:m) {
+            z[i,] = omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
+            zsum = zsum + z[i,]
         }
-        root = Re(roots[1])
-        lambda[i] = sign(root) * sqrt( (root ^ 2) / (1 - root ^ 2) )
-    }
+        for (i in 1:m) {
+            z[i,] = z[i,] / zsum
+        }
 
-    # Order the model's components by their location
-    omega  = omega[order(dzeta)]
-    sigma  = sigma[order(dzeta)]
-    lambda = lambda[order(dzeta)]
-    dzeta  = dzeta[order(dzeta)]
+        # (13) and (14)
+        muT = matrix( nrow = m, ncol = length(x) )
+        for (i in 1:m) {
+            muT[i,] = sn_delta(lambda[i]) * (x - dzeta[i])
+        }
+        s1 = matrix( nrow = m, ncol = length(x) )
+        s2 = matrix( nrow = m, ncol = length(x) )
+        for (i in 1:m) {
+            sigmaT = sigma[i] * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
+            arg = lambda[i] * (x - dzeta[i]) / sigma[i]
+            s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
+            s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
+        }
+
+        # CM-step 1
+        for (i in 1:m) {
+            omega[i] = sum(z[i,]) / length(x)
+        }
+
+        # CM-step 2
+        for (i in 1:m) {
+            dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1[i,])) / sum(z[i,])
+        }
+
+        # CM-step 3
+        for (i in 1:m) {
+            sigma[i] = sqrt((sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,])))
+        }
+
+        # CM-step 4
+        for (i in 1:m) {
+            a = sigma[i] ^ 2 * sum(z[i,])
+            b = sum((x - dzeta[i]) * s1[i,])
+            c = sum(s2[i,])
+            d = sum(z[i,] * (x - dzeta[i]) ^ 2)
+            roots_orig = polyroot( c( b, a - c - d, b, -a ) ) # a root must have absolute value < 1
+            roots = roots_orig[abs(Im(roots_orig)) < 1e-6 & abs(Re(roots_orig)) < 1]
+            if( length(roots) == 0 ) {
+                stop( "no roots found" )
+            }
+            root = Re(roots[1])
+            lambda[i] = sign(root) * sqrt( (root ^ 2) / (1 - root ^ 2) )
+        }
+
+        # Order the model's components by their location
+        omega  = omega[order(dzeta)]
+        sigma  = sigma[order(dzeta)]
+        lambda = lambda[order(dzeta)]
+        dzeta  = dzeta[order(dzeta)]
+
+        if( all( !is.na( c( omega, sigma, lambda, dzeta ) ) ) &&
+            all( abs( omega  - prev_omega  ) < epsilon[1] ) &&
+            all( abs( dzeta  - prev_dzeta  ) < epsilon[2] ) &&
+            all( abs( sigma  - prev_sigma  ) < epsilon[3] ) &&
+            all( abs( lambda - prev_lambda ) < epsilon[4] ) ) {
+            run = FALSE
+        }
+    }
 
     return( c(omega, dzeta, sigma, lambda) )
 }

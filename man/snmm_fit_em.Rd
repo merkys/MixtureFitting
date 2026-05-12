@@ -4,10 +4,9 @@
 \title{Estimate Skew-Normal Mixture parameters using Expectation Maximization.}
 \description{
     Estimates parameters for skew-normal mixture using Expectation Maximization algorithm.
-    For now, the method does a single iteration, thus it has to be called in a cycle.
 }
 \usage{
-    snmm_fit_em( x, p )
+    snmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001 ) )
 }
 \arguments{
     \item{x}{data vector}
@@ -20,6 +19,15 @@
         sigma\emph{i} is the scale of \emph{i}-th component and
         lambda\emph{i} is the shape of \emph{i}-th component.
     }
+    \item{epsilon}{
+        tolerance threshold for convergence. Structure of epsilon is
+        epsilon = c( epsilon_omega, epsilon_dzeta, epsilon_sigma, epsilon_lambda ), where
+        epsilon_omega is threshold for component proportions,
+        epsilon_dzeta is threshold for component locations,
+        epsilon_sigma is threshold for component scales and
+        epsilon_lambda is threshold for component shapes.
+    }
+
 }
 \value{
     Vector of mixture parameters, whose structure is the same as of input
