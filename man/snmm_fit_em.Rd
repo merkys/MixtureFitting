@@ -6,7 +6,7 @@
     Estimates parameters for skew-normal mixture using Expectation Maximization algorithm.
 }
 \usage{
-    snmm_fit_em( x, p, epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ) )
+    snmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ) )
 }
 \arguments{
     \item{x}{data vector}
@@ -18,6 +18,11 @@
         dzeta\emph{i} is the location of \emph{i}-th component,
         sigma\emph{i} is the scale of \emph{i}-th component and
         lambda\emph{i} is the shape of \emph{i}-th component.
+    }
+    \item{w}{
+        weights of data points, must have the same length as the data
+        vector; if not given or has different length, equal weights are
+        assumed.
     }
     \item{epsilon}{
         tolerance threshold for convergence. Structure of epsilon is

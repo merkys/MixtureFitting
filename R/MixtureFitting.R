@@ -1522,7 +1522,11 @@ s_fit_primitive <- function( x ) {
 }
 
 # According to https://www3.stat.sinica.edu.tw/statistica/oldpdf/A17n35.pdf
-snmm_fit_em <- function(x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
+snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
+    if( length(w) != length(x) ) {
+        w = rep( 1,  length(x) )
+    }
+
     m = length(p) / 4
     omega  = p[1:m]
     dzeta  = p[(m+1):(2*m)]
@@ -1540,7 +1544,7 @@ snmm_fit_em <- function(x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
         z = matrix( nrow = m, ncol = length(x) )
         zsum = numeric( length = length(x) )
         for (i in 1:m) {
-            z[i,] = omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
+            z[i,] = w * omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
             zsum = zsum + z[i,]
         }
         for (i in 1:m) {
@@ -1563,7 +1567,7 @@ snmm_fit_em <- function(x, p, epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
 
         # CM-step 1
         for (i in 1:m) {
-            omega[i] = sum(z[i,]) / length(x)
+            omega[i] = sum(z[i,]) / sum(w)
         }
 
         # CM-step 2
