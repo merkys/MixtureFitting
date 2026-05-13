@@ -92,6 +92,15 @@ dcgmm <- function( x, p ) {
     return( sum )
 }
 
+dsnmm <- function( x, p ) {
+    P = matrix( p, ncol = 4 )
+    y = numeric( length(x) )
+    for (i in 1:nrow(P)) {
+        y = y + P[i,1] * dsn( x, P[i,2], P[i,3], P[i,4] )
+    }
+    return (y)
+}
+
 llgmm <- function( x, p, implementation = "C" ) {
     if( length( p[is.na(p)] ) > 0 ) {
         return( NaN )
@@ -1548,7 +1557,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             zsum = zsum + z[i,]
         }
         for (i in 1:m) {
-            z[i,] = z[i,] / zsum
+            z[i,] = w * z[i,] / zsum
         }
         z[is.na(z) | z < 1e-300] = 0 # Assign weight of 0 to unimportant observations
 
@@ -1571,7 +1580,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
 
         # CM-step 1
         for (i in 1:m) {
-            omega[i] = sum(z[i,]) / length(x)
+            omega[i] = sum(z[i,]) / sum(w)
         }
 
         # CM-step 2

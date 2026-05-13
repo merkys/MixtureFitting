@@ -38,6 +38,7 @@ export(polyroot_NR)
 
 export(ds)
 export(dsmm)
+export(dsnmm)
 export(rgmm)
 export(rvmm)
 export(rcmm)
