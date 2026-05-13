@@ -1544,13 +1544,13 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
         z = matrix( nrow = m, ncol = length(x) )
         zsum = numeric( length = length(x) )
         for (i in 1:m) {
-            z[i,] = w * omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
+            z[i,] = omega[i] * dsn(x, dzeta[i], sigma[i], lambda[i])
             zsum = zsum + z[i,]
         }
         for (i in 1:m) {
             z[i,] = z[i,] / zsum
         }
-        z[is.na(z)] = 0
+        z[is.na(z) | z < 1e-300] = 0 # Assign weight of 0 to unimportant observations
 
         # (13) and (14)
         muT = matrix( nrow = m, ncol = length(x) )
@@ -1564,11 +1564,14 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             arg = lambda[i] * (x - dzeta[i]) / sigma[i]
             s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
             s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
+            # The following NA values appear due to 0 (weight) * Inf (value with cdf = 0)
+            s1[i,is.na(s1[i,])] = 0
+            s2[i,is.na(s2[i,])] = 0
         }
 
         # CM-step 1
         for (i in 1:m) {
-            omega[i] = sum(z[i,]) / sum(w)
+            omega[i] = sum(z[i,]) / length(x)
         }
 
         # CM-step 2
