@@ -1738,7 +1738,7 @@ snmm_init_vector <- function( x, n = 1 ) {
         p = sign(m3) / sqrt( a1 ^ 2 + m2 * curt(b1 / m3) ^ 2 )
 
         # A trick to select a reasonable lambda value is p becomes out of bounds
-        lambda = sign(p)
+        lambda = m3
         if (abs(p) < 1) {
             lambda = p / sqrt( 1 - p^2 )
         }
