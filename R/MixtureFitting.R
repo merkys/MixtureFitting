@@ -1550,6 +1550,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
         for (i in 1:m) {
             z[i,] = z[i,] / zsum
         }
+        z[is.na(z)] = 0
 
         # (13) and (14)
         muT = matrix( nrow = m, ncol = length(x) )
