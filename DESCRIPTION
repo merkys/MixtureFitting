@@ -1,6 +1,6 @@
 Package: MixtureFitting
-Version: 0.7.0
-Date: 2026-04-23
+Version: 0.8.0
+Date: 2026-05-18
 Title: Fitting of Univariate Mixture Distributions to Data using Various Approaches
 Authors@R: person(given = "Andrius",
                   family = "Merkys",
