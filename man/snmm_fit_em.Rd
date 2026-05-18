@@ -6,7 +6,8 @@
     Estimates parameters for skew-normal mixture using Expectation Maximization algorithm.
 }
 \usage{
-    snmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ) )
+    snmm_fit_em( x, p, w = numeric(),
+                 epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ) )
 }
 \arguments{
     \item{x}{data vector}

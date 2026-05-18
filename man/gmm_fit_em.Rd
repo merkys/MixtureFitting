@@ -6,8 +6,8 @@
     Estimates parameters for Gaussian mixture using Expectation Maximization algorithm.
 }
 \usage{
-    gmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ), max_steps = 0,
-                debug = FALSE, implementation = "C", ... )
+    gmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ),
+                max_steps = 0, debug = FALSE, implementation = "C", ... )
 }
 \arguments{
     \item{x}{data vector}
