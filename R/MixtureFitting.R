@@ -1567,23 +1567,26 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             muT = sn_delta(lambda[i]) * (x - dzeta[i])
             sigmaT = sigma[i] * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
             arg = lambda[i] * (x - dzeta[i]) / sigma[i]
-            s1 = z[i,] * (muT + sigmaT * dnorm(arg) / pnorm(arg))
-            s2 = z[i,] * (muT^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT * sigmaT)
+            sigmaT_dp_ratio = sigmaT * dnorm(arg) / pnorm(arg)
+            s1 = z[i,] * (muT + sigmaT_dp_ratio)
+            s2 = z[i,] * (muT^2 + sigmaT^2 + sigmaT_dp_ratio * muT)
             # The following NA values appear due to 0 (weight) * Inf (value with cdf = 0)
             s1[is.na(s1)] = 0
             s2[is.na(s2)] = 0
 
+            sumz = sum(z[i,])
+
             # CM-step 1
-            omega[i] = sum(z[i,]) / sum(w)
+            omega[i] = sumz / sum(w)
 
             # CM-step 2
-            dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1)) / sum(z[i,])
+            dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1)) / sumz
 
             # CM-step 3
-            sigma[i] = sqrt((sum(s2) - 2 * sn_delta(lambda[i]) * sum(s1 * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,])))
+            sigma[i] = sqrt((sum(s2) - 2 * sn_delta(lambda[i]) * sum(s1 * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sumz))
 
             # CM-step 4
-            a = sigma[i] ^ 2 * sum(z[i,])
+            a = sigma[i] ^ 2 * sumz
             b = sum((x - dzeta[i]) * s1)
             c = sum(s2)
             d = sum(z[i,] * (x - dzeta[i]) ^ 2)
