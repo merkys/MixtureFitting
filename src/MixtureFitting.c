@@ -335,8 +335,9 @@ void dsnmm( double *x, int *xlength,
     for (int i = 0; i < *xlength; i++) {
         ret[i] = 0.0;
         for (int j = 0; j < m; j++) {
-            ret[i] = ret[i] + p[j] * dnorm( x[i], p[m+j], p[2*m+j], 0 ) *
-                                     (1 + erf( p[3*m+j] * x[i] / sqrt2 ));
+            double arg = ( x[i] - p[m+j] ) / p[2*m+j];
+            ret[i] = ret[i] + p[j] / p[2*m+j] * dnorm( arg, 0, 1, 0 ) *
+                              (1.0 + erf( p[3*m+j] * arg / sqrt2 ));
         }
     }
 }
