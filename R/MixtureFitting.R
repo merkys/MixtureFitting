@@ -1563,17 +1563,14 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
         z[is.na(z) | z < 1e-300] = 0 # Assign weight of 0 to unimportant observations
 
         # (13) and (14)
-        muT = matrix( nrow = m, ncol = length(x) )
-        for (i in 1:m) {
-            muT[i,] = sn_delta(lambda[i]) * (x - dzeta[i])
-        }
         s1 = matrix( nrow = m, ncol = length(x) )
         s2 = matrix( nrow = m, ncol = length(x) )
         for (i in 1:m) {
+            muT = sn_delta(lambda[i]) * (x - dzeta[i])
             sigmaT = sigma[i] * sqrt( 1 - sn_delta(lambda[i]) ^ 2 )
             arg = lambda[i] * (x - dzeta[i]) / sigma[i]
-            s1[i,] = z[i,] * (muT[i,] + sigmaT * dnorm(arg) / pnorm(arg))
-            s2[i,] = z[i,] * (muT[i,]^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT[i,] * sigmaT)
+            s1[i,] = z[i,] * (muT + sigmaT * dnorm(arg) / pnorm(arg))
+            s2[i,] = z[i,] * (muT^2 + sigmaT^2 + dnorm(arg) / pnorm(arg) * muT * sigmaT)
             # The following NA values appear due to 0 (weight) * Inf (value with cdf = 0)
             s1[i,is.na(s1[i,])] = 0
             s2[i,is.na(s2[i,])] = 0
