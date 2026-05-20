@@ -1576,18 +1576,14 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             s2[i,is.na(s2[i,])] = 0
         }
 
-        # CM-step 1
         for (i in 1:m) {
+            # CM-step 1
             omega[i] = sum(z[i,]) / sum(w)
-        }
 
-        # CM-step 2
-        for (i in 1:m) {
+            # CM-step 2
             dzeta[i] = (sum(z[i,] * x) - sn_delta(lambda[i]) * sum(s1[i,])) / sum(z[i,])
-        }
 
-        # CM-step 3
-        for (i in 1:m) {
+            # CM-step 3
             sigma[i] = sqrt((sum(s2[i,]) - 2 * sn_delta(lambda[i]) * sum(s1[i,] * (x - dzeta[i])) + sum(z[i,] * (x - dzeta[i]) ^ 2)) / (2 * (1 - sn_delta(lambda[i]) ^ 2) * sum(z[i,])))
         }
 
