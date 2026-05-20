@@ -326,6 +326,21 @@ void dvmm( double *x, int *xlength,
     }
 }
 
+void dsnmm( double *x, int *xlength,
+            double *p, int *plength,
+            double *ret )
+{
+    int m = *plength / 4;
+    double sqrt2 = sqrt(2);
+    for (int i = 0; i < *xlength; i++) {
+        ret[i] = 0.0;
+        for (int j = 0; j < m; j++) {
+            ret[i] = ret[i] + p[j] * dnorm( x[i], p[m+j], p[2*m+j], 0 ) *
+                                     (1 + erf( p[3*m+j] * x[i] / sqrt2 ));
+        }
+    }
+}
+
 void llvmm( double *x, int *xlength,
             double *p, int *plength,
             double *ret )

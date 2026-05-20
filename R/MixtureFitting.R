@@ -58,7 +58,6 @@ dcmm <- function( x, p, implementation = "C" ) {
     }
 
     if( implementation == "C" ) {
-
         buffer = numeric( length(x) )
         ret = .C( "dcmm",
                   as.double(x),
@@ -69,7 +68,6 @@ dcmm <- function( x, p, implementation = "C" ) {
         buffer[1:length(x)] <- ret[1:length(x)]
         return( buffer )
     } else {
-
         m = length(p)/3
         A = p[1:m]
         c = p[(m+1):(2*m)]
@@ -92,13 +90,23 @@ dcgmm <- function( x, p ) {
     return( sum )
 }
 
-dsnmm <- function( x, p ) {
-    P = matrix( p, ncol = 4 )
+dsnmm <- function( x, p, implementation = "C" ) {
     y = numeric( length(x) )
-    for (i in 1:nrow(P)) {
-        y = y + P[i,1] * dsn( x, P[i,2], P[i,3], P[i,4] )
+    if( implementation == "C" ) {
+        ret = .C( "dsnmm",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  retvec = numeric( length(x) ))$retvec
+        y[1:length(x)] <- ret[1:length(x)]
+    } else {
+        P = matrix( p, ncol = 4 )
+        for (i in 1:nrow(P)) {
+            y = y + P[i,1] * dsn( x, P[i,2], P[i,3], P[i,4] )
+        }
     }
-    return (y)
+    return( y )
 }
 
 llgmm <- function( x, p, implementation = "C" ) {
@@ -107,7 +115,6 @@ llgmm <- function( x, p, implementation = "C" ) {
     }
 
     if( implementation == "C" ) {
-
         ret = .C( "llgmm",
                   as.double(x),
                   as.integer( length(x) ),
@@ -207,13 +214,7 @@ llcmm <- function( x, p, implementation = "C" ) {
 }
 
 llsnmm <- function( x, p ) {
-    m = length(p)/4
-
-    y = numeric( length(x) )
-    for (i in 1:m) {
-        y = y + p[i] * dsn(x, p[m+i], p[2*m+i], p[3*m+i])
-    }
-    return( sum( log( y ) ) )
+    return( sum( log( dsnmm( x, p ) ) ) )
 }
 
 gmm_fit_em <- function( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001 ), max_steps = 0,
