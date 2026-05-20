@@ -6,7 +6,7 @@
     Density function for the skew-normal mixture model.
 }
 \usage{
-    dsnmm( x, p )
+    dsnmm( x, p, implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -18,6 +18,9 @@
         dzeta\emph{i} is the location of \emph{i}-th component,
         sigma\emph{i} is the scale of \emph{i}-th component and
         lambda\emph{i} is the shape of \emph{i}-th component.
+    }
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
     }
 }
 \value{A vector.}
