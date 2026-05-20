@@ -1574,9 +1574,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             # The following NA values appear due to 0 (weight) * Inf (value with cdf = 0)
             s1[i,is.na(s1[i,])] = 0
             s2[i,is.na(s2[i,])] = 0
-        }
 
-        for (i in 1:m) {
             # CM-step 1
             omega[i] = sum(z[i,]) / sum(w)
 
