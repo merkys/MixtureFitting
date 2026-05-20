@@ -1600,12 +1600,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
             b = sum((x - dzeta[i]) * s1[i,])
             c = sum(s2[i,])
             d = sum(z[i,] * (x - dzeta[i]) ^ 2)
-            roots_orig = polyroot( c( b, a - c - d, b, -a ) ) # a root must have absolute value < 1
-            roots = roots_orig[abs(Im(roots_orig)) < 1e-6 & abs(Re(roots_orig)) < 1]
-            if( length(roots) == 0 ) {
-                stop( "no roots found" )
-            }
-            root = Re(roots[1])
+            root = polyroot_NR( c( b, a - c - d, b, -a ) ) # a root must have absolute value < 1
             lambda[i] = sign(root) * sqrt( (root ^ 2) / (1 - root ^ 2) )
         }
 
