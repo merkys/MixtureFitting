@@ -342,6 +342,58 @@ void dsnmm( double *x, int *xlength,
     }
 }
 
+void sn_delta( double x ) { return( x / sqrt( 1 + x * x ) ); }
+
+void snmm_fit_em( double *x, int *xlength,
+                  double *p, int *plength,
+                  double *w,
+                  double *epsilon,
+                  int *max_steps,
+                  int *debug,
+                  double *ret,
+                  int *steps )
+{
+    int m = *plength / 4;
+    double omega[m];
+    double dzeta[m];
+    double sigma[m];
+    double lambda[m];
+    for (int i = 0; i < m; i++) {
+        omega[i]  = p[i];
+        dzeta[i]  = p[m+i];
+        sigma[i]  = p[2*m+i];
+        lambda[i] = p[3*m+i];
+    }
+    double wsum = 0;
+    for (int i = 0; i < *xlength; i++)
+        wsum += w[i];
+    double *z = calloc( *xlength, sizeof( double ) );
+    if (!z)
+        error( "cannot allocate memory" );
+    double *zsum = calloc( *xlength, sizeof( double ) );
+    if (!zsum)
+        error( "cannot allocate memory" );
+    bool run = true;
+    while (run) {
+        for (int i = 0; i < *xlength; i++)
+            zsum[i] = 0.0;
+        for (int j = 0; j < m; j++) {
+            double par[4] = { omega[j], dzeta[j], sigma[j], lambda[j] };
+            int parlength = 4;
+            dsnmm( x, xlength, &par, &parlength, z );
+            for (int i = 0; i < *xlength; i++)
+                zsum[i] += z[i];
+        }
+        for (int j = 0; j < m; j++) {
+            double par[4] = { omega[j], dzeta[j], sigma[j], lambda[j] };
+            int parlength = 4;
+            dsnmm( x, xlength, &par, &parlength, z );
+            for (int i = 0; i < *xlength; i++)
+                z[i] = w[i] * z[i] / zsum[i];
+        }
+    }
+}
+
 void llvmm( double *x, int *xlength,
             double *p, int *plength,
             double *ret )
