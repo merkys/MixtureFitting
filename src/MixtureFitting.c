@@ -419,6 +419,8 @@ void snmm_fit_em( double *x, int *xlength,
         error( "cannot allocate memory" );
     int run = 1;
     while (run) {
+        run = 0;
+
         for (int i = 0; i < *xlength; i++)
             zsum[i] = 0.0;
         for (int j = 0; j < m; j++) {
@@ -455,6 +457,11 @@ void snmm_fit_em( double *x, int *xlength,
                 s2[i] = z[i] * (muT * muT + sigmaT * sigmaT + sigmaT_dp_ratio * muT);
             }
 
+            double prev_omega  = omega[j];
+            double prev_dzeta  = dzeta[j];
+            double prev_sigma  = sigma[j];
+            double prev_lambda = lambda[j];
+
             // CM-step 1
             omega[j] = sumz / wsum;
 
@@ -486,15 +493,36 @@ void snmm_fit_em( double *x, int *xlength,
             coef[3] = sum_z_x_min_dzeta;
             int coef_length = 4;
             double init = 0;
-            double epsilon = 1e-6;
+            double polyroot_epsilon = 1e-6;
             int debug = 0;
             double root;
-            polyroot_NR( coef, &coef_length, &init, &epsilon, &debug, &root );
+            polyroot_NR( coef, &coef_length, &init, &polyroot_epsilon, &debug, &root );
+            free( coef );
             lambda[j] = sqrt( (root * root) / (1 - root * root) );
             if (root < 0)
                 lambda[j] *= -1;
+
+            // Check for convergence
+            if( fabs( omega[j]  - prev_omega  ) > epsilon[0] ||
+                fabs( dzeta[j]  - prev_dzeta  ) > epsilon[1] ||
+                fabs( sigma[j]  - prev_sigma  ) > epsilon[2] ||
+                fabs( lambda[j] - prev_lambda ) > epsilon[3] ) {
+                run = 1;
+            }
+
+            *steps = *steps + 1;
         }
     }
+
+    for (int i = 0; i < m; i++) {
+        ret[i]     = omega[i];
+        ret[m+i]   = dzeta[i];
+        ret[2*m+i] = sigma[i];
+        ret[3*m+i] = lambda[i];
+    }
+
+    free( z );
+    free( zsum );
 }
 
 void llvmm( double *x, int *xlength,
