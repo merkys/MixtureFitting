@@ -450,13 +450,15 @@ void snmm_fit_em( double *x, int *xlength,
                 sumz += z[i];
             }
 
-            double sigmaT = sigma[j] * sqrt( 1 - sn_delta(lambda[j]) * sn_delta(lambda[j]) );
+            double sn_delta_lambda = sn_delta(lambda[j]);
+
+            double sigmaT = sigma[j] * sqrt( 1 - sn_delta_lambda * sn_delta_lambda );
             double *s1 = calloc( *xlength, sizeof( double ) );
             if (!s1) error( "cannot allocate memory" );
             double *s2 = calloc( *xlength, sizeof( double ) );
             if (!s2) error( "cannot allocate memory" );
             for (int i = 0; i < *xlength; i++) {
-                double muT = sn_delta(lambda[j]) * (x[i] - dzeta[j]);
+                double muT = sn_delta_lambda * (x[i] - dzeta[j]);
                 double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
                 double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg, 0, 1, 1, 0);
                 s1[i] = z[i] * (muT + sigmaT_dp_ratio);
@@ -476,7 +478,7 @@ void snmm_fit_em( double *x, int *xlength,
             double sum_s1 = sum( s1, *xlength );
             for (int i = 0; i < *xlength; i++)
                 sum_zx += z[i] * x[i];
-            dzeta[j] = (sum_zx - sn_delta(lambda[j]) * sum_s1) / sumz;
+            dzeta[j] = (sum_zx - sn_delta_lambda * sum_s1) / sumz;
 
             // CM-step 3
             double sum_s2 = sum( s2, *xlength );
@@ -486,7 +488,7 @@ void snmm_fit_em( double *x, int *xlength,
                 sum_s1_x_min_dzeta += s1[i] * (x[i] - dzeta[j]);
                 sum_z_x_min_dzeta += z[i] * (x[i] - dzeta[j]) * (x[i] - dzeta[j]);
             }
-            sigma[j] = sqrt((sum_s2 - 2 * sn_delta(lambda[j]) * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta(lambda[j]) * sn_delta(lambda[j])) * sumz));
+            sigma[j] = sqrt((sum_s2 - 2 * sn_delta_lambda * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta_lambda * sn_delta_lambda) * sumz));
 
             free( s1 );
             free( s2 );
