@@ -342,7 +342,14 @@ void dsnmm( double *x, int *xlength,
     }
 }
 
-void sn_delta( double x ) { return( x / sqrt( 1 + x * x ) ); }
+double sn_delta( double x ) { return( x / sqrt( 1 + x * x ) ); }
+
+double sum( double *x, int length ) {
+    double ret = 0;
+    for (int i = 0; i < length; i++)
+        ret += x[i];
+    return( ret );
+}
 
 void snmm_fit_em( double *x, int *xlength,
                   double *p, int *plength,
@@ -364,16 +371,14 @@ void snmm_fit_em( double *x, int *xlength,
         sigma[i]  = p[2*m+i];
         lambda[i] = p[3*m+i];
     }
-    double wsum = 0;
-    for (int i = 0; i < *xlength; i++)
-        wsum += w[i];
+    double wsum = sum( w, *xlength );
     double *z = calloc( *xlength, sizeof( double ) );
     if (!z)
         error( "cannot allocate memory" );
     double *zsum = calloc( *xlength, sizeof( double ) );
     if (!zsum)
         error( "cannot allocate memory" );
-    bool run = true;
+    int run = 1;
     while (run) {
         for (int i = 0; i < *xlength; i++)
             zsum[i] = 0.0;
@@ -388,8 +393,44 @@ void snmm_fit_em( double *x, int *xlength,
             double par[4] = { omega[j], dzeta[j], sigma[j], lambda[j] };
             int parlength = 4;
             dsnmm( x, xlength, &par, &parlength, z );
-            for (int i = 0; i < *xlength; i++)
+            double sigmaT = sigma[j] * sqrt( 1 - sn_delta(lambda[j]) * sn_delta(lambda[j]) );
+            double *s1 = calloc( *xlength, sizeof( double ) );
+            double *s2 = calloc( *xlength, sizeof( double ) );
+            double sumz = sum( z, *xlength );
+            for (int i = 0; i < *xlength; i++) {
                 z[i] = w[i] * z[i] / zsum[i];
+                double muT = sn_delta(lambda[j]) * (x[i] - dzeta[j]);
+                double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
+                double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg);
+                s1[i] = z[i] * (muT + sigmaT_dp_ratio);
+                s2[i] = z[i] * (muT * muT + sigmaT * sigmaT + sigmaT_dp_ratio * muT);
+            }
+
+            // CM-step 1
+            omega[j] = sumz / wsum;
+
+            // CM-step 2
+            double sum_zx = 0;
+            double sum_s1 = sum( s1, *xlength );
+            for (int i = 0; i < *xlength; i++)
+                sum_zx += z[i] * x[i];
+            dzeta[j] = (sum_zx - sn_delta(lambda[j]) * sum_s1) / sumz;
+
+            // CM-step 3
+            double sum_s2 = sum( s2, *xlength );
+            double sum_s1_x_min_dzeta = 0;
+            double sum_z_x_min_dzeta = 0;
+            for (int i = 0; i < *xlength; i++) {
+                sum_s1_x_min_dzeta += s1[i] * (x[i] - dzeta[j]);
+                sum_z_x_min_dzeta += z[i] * (x[i] - dzeta[j]) * (x[i] - dzeta[j]);
+            }
+            sigma[j] = sqrt((sum_s2 - 2 * sn_delta(lambda[i]) * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta(lambda[i]) * sn_delta(lambda[i])) * sumz));
+
+            // CM-step 4
+            double a = sigma[j] * sigma[j] * sumz;
+            double b = sum_s1_x_min_dzeta;
+            double c = sum_s2;
+            double d = sum_z_x_min_dzeta;
         }
     }
 }
