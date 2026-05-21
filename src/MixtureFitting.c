@@ -436,6 +436,9 @@ void snmm_fit_em( double *x, int *xlength,
             }
             sigma[j] = sqrt((sum_s2 - 2 * sn_delta(lambda[j]) * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta(lambda[j]) * sn_delta(lambda[j])) * sumz));
 
+            free( s1 );
+            free( s2 );
+
             // CM-step 4
             double a = sigma[j] * sigma[j] * sumz;
             double b = sum_s1_x_min_dzeta;
