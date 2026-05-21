@@ -394,8 +394,6 @@ void snmm_fit_em( double *x, int *xlength,
                   double *p, int *plength,
                   double *w,
                   double *epsilon,
-                  int *max_steps,
-                  int *debug,
                   double *ret,
                   int *steps )
 {

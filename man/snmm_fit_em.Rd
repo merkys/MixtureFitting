@@ -6,8 +6,8 @@
     Estimates parameters for skew-normal mixture using Expectation Maximization algorithm.
 }
 \usage{
-    snmm_fit_em( x, p, w = numeric(),
-                 epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ) )
+    snmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ),
+                 implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -33,7 +33,9 @@
         epsilon_sigma is threshold for component scales and
         epsilon_lambda is threshold for component shapes.
     }
-
+    \item{implementation}{
+        flag to switch between C (default) and R implementations.
+    }
 }
 \value{
     Vector of mixture parameters, whose structure is the same as of input
