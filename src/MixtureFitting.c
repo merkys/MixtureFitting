@@ -16,6 +16,45 @@ double rad2deg( double x ) {
     return x * 180 / M_PI;
 }
 
+void polyroot_NR( double *p, int *plength,
+                  double *init, double *epsilon,
+                  int *debug, double *ret )
+{
+    double x = *init;
+    int steps = 0;
+
+    double d[*plength-1];
+    for (int i = 0; i < *plength-1; i++)
+        d[i] = p[i+1] * (i+1);
+
+    int run = 1;
+    while (run == 1) {
+        double powers[*plength];
+        powers[0] = 1;
+        for (int i = 1; i < *plength; i++)
+            powers[i] = powers[i-1] * x;
+
+        double numerator = 0.0;
+        double denominator = 0.0;
+        for (int i = 0; i < *plength; i++) {
+            numerator = numerator + p[i] * powers[i];
+            if (i < *plength-1)
+                denominator = denominator + d[i] * powers[i];
+        }
+
+        double diff = numerator / denominator;
+        x = x - diff;
+        steps++;
+        if (fabs( diff ) < *epsilon)
+            run = 0;
+    }
+
+    if (*debug > 0)
+        Rprintf( "Convergence reached after %u iteration(s)\n", steps );
+
+    *ret = x;
+}
+
 void dgmm( double *x, int *xlength,
            double *p, int *plength,
            double *ret )
@@ -440,10 +479,20 @@ void snmm_fit_em( double *x, int *xlength,
             free( s2 );
 
             // CM-step 4
-            double a = sigma[j] * sigma[j] * sumz;
-            double b = sum_s1_x_min_dzeta;
-            double c = sum_s2;
-            double d = sum_z_x_min_dzeta;
+            double *coef = calloc( 4, sizeof( double ) );
+            coef[0] = sigma[j] * sigma[j] * sumz;
+            coef[1] = sum_s1_x_min_dzeta;
+            coef[2] = sum_s2;
+            coef[3] = sum_z_x_min_dzeta;
+            int coef_length = 4;
+            double init = 0;
+            double epsilon = 1e-6;
+            int debug = 0;
+            double root;
+            polyroot_NR( coef, &coef_length, &init, &epsilon, &debug, &root );
+            lambda[j] = sqrt( (root * root) / (1 - root * root) );
+            if (root < 0)
+                lambda[j] *= -1;
         }
     }
 }
@@ -632,43 +681,4 @@ void vmm_init_vector( int *m, double *ret )
         ret[*m+i] = 360/(*m) * i;
         ret[2*(*m)+i] = (((double)*m)/(12*180))*(((double)*m)/(12*180));
     }
-}
-
-void polyroot_NR( double *p, int *plength,
-                  double *init, double *epsilon,
-                  int *debug, double *ret )
-{
-    double x = *init;
-    int steps = 0;
-
-    double d[*plength-1];
-    for (int i = 0; i < *plength-1; i++)
-        d[i] = p[i+1] * (i+1);
-
-    int run = 1;
-    while (run == 1) {
-        double powers[*plength];
-        powers[0] = 1;
-        for (int i = 1; i < *plength; i++)
-            powers[i] = powers[i-1] * x;
-
-        double numerator = 0.0;
-        double denominator = 0.0;
-        for (int i = 0; i < *plength; i++) {
-            numerator = numerator + p[i] * powers[i];
-            if (i < *plength-1)
-                denominator = denominator + d[i] * powers[i];
-        }
-
-        double diff = numerator / denominator;
-        x = x - diff;
-        steps++;
-        if (fabs( diff ) < *epsilon)
-            run = 0;
-    }
-
-    if (*debug > 0)
-        Rprintf( "Convergence reached after %u iteration(s)\n", steps );
-
-    *ret = x;
 }
