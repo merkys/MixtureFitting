@@ -383,16 +383,26 @@ void snmm_fit_em( double *x, int *xlength,
         for (int i = 0; i < *xlength; i++)
             zsum[i] = 0.0;
         for (int j = 0; j < m; j++) {
-            double par[4] = { omega[j], dzeta[j], sigma[j], lambda[j] };
+            double *par = calloc( 4, sizeof( double ) );
+            par[0] = omega[j];
+            par[1] = dzeta[j];
+            par[2] = sigma[j];
+            par[3] = lambda[j];
             int parlength = 4;
-            dsnmm( x, xlength, &par, &parlength, z );
+            dsnmm( x, xlength, par, &parlength, z );
+            free( par );
             for (int i = 0; i < *xlength; i++)
                 zsum[i] += z[i];
         }
         for (int j = 0; j < m; j++) {
-            double par[4] = { omega[j], dzeta[j], sigma[j], lambda[j] };
+            double *par = calloc( 4, sizeof( double ) );
+            par[0] = omega[j];
+            par[1] = dzeta[j];
+            par[2] = sigma[j];
+            par[3] = lambda[j];
             int parlength = 4;
-            dsnmm( x, xlength, &par, &parlength, z );
+            dsnmm( x, xlength, par, &parlength, z );
+            free( par );
             double sigmaT = sigma[j] * sqrt( 1 - sn_delta(lambda[j]) * sn_delta(lambda[j]) );
             double *s1 = calloc( *xlength, sizeof( double ) );
             double *s2 = calloc( *xlength, sizeof( double ) );
@@ -401,7 +411,7 @@ void snmm_fit_em( double *x, int *xlength,
                 z[i] = w[i] * z[i] / zsum[i];
                 double muT = sn_delta(lambda[j]) * (x[i] - dzeta[j]);
                 double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
-                double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg);
+                double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg, 0, 1, 1, 0);
                 s1[i] = z[i] * (muT + sigmaT_dp_ratio);
                 s2[i] = z[i] * (muT * muT + sigmaT * sigmaT + sigmaT_dp_ratio * muT);
             }
@@ -424,7 +434,7 @@ void snmm_fit_em( double *x, int *xlength,
                 sum_s1_x_min_dzeta += s1[i] * (x[i] - dzeta[j]);
                 sum_z_x_min_dzeta += z[i] * (x[i] - dzeta[j]) * (x[i] - dzeta[j]);
             }
-            sigma[j] = sqrt((sum_s2 - 2 * sn_delta(lambda[i]) * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta(lambda[i]) * sn_delta(lambda[i])) * sumz));
+            sigma[j] = sqrt((sum_s2 - 2 * sn_delta(lambda[j]) * sum_s1_x_min_dzeta + sum_z_x_min_dzeta) / (2 * (1 - sn_delta(lambda[j]) * sn_delta(lambda[j])) * sumz));
 
             // CM-step 4
             double a = sigma[j] * sigma[j] * sumz;
