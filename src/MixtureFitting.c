@@ -410,11 +410,9 @@ void snmm_fit_em( double *x, int *xlength,
     }
     double wsum = sum( w, *xlength );
     double *z = calloc( *xlength, sizeof( double ) );
-    if (!z)
-        error( "cannot allocate memory" );
+    if (!z) error( "cannot allocate memory" );
     double *zsum = calloc( *xlength, sizeof( double ) );
-    if (!zsum)
-        error( "cannot allocate memory" );
+    if (!zsum) error( "cannot allocate memory" );
     int run = 1;
     while (run) {
         run = 0;
@@ -423,6 +421,7 @@ void snmm_fit_em( double *x, int *xlength,
             zsum[i] = 0.0;
         for (int j = 0; j < m; j++) {
             double *par = calloc( 4, sizeof( double ) );
+            if (!par) error( "cannot allocate memory" );
             par[0] = omega[j];
             par[1] = dzeta[j];
             par[2] = sigma[j];
@@ -436,6 +435,7 @@ void snmm_fit_em( double *x, int *xlength,
 
         for (int j = 0; j < m; j++) {
             double *par = calloc( 4, sizeof( double ) );
+            if (!par) error( "cannot allocate memory" );
             par[0] = omega[j];
             par[1] = dzeta[j];
             par[2] = sigma[j];
@@ -452,7 +452,9 @@ void snmm_fit_em( double *x, int *xlength,
 
             double sigmaT = sigma[j] * sqrt( 1 - sn_delta(lambda[j]) * sn_delta(lambda[j]) );
             double *s1 = calloc( *xlength, sizeof( double ) );
+            if (!s1) error( "cannot allocate memory" );
             double *s2 = calloc( *xlength, sizeof( double ) );
+            if (!s2) error( "cannot allocate memory" );
             for (int i = 0; i < *xlength; i++) {
                 double muT = sn_delta(lambda[j]) * (x[i] - dzeta[j]);
                 double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
@@ -496,6 +498,7 @@ void snmm_fit_em( double *x, int *xlength,
             double d = sum_z_x_min_dzeta;
 
             double *coef = calloc( 4, sizeof( double ) );
+            if (!coef) error( "cannot allocate memory" );
             coef[0] =  b;
             coef[1] =  a - c - d;
             coef[2] =  b;
