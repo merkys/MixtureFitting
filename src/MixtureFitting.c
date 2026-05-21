@@ -492,11 +492,16 @@ void snmm_fit_em( double *x, int *xlength,
             free( s2 );
 
             // CM-step 4
+            double a = sigma[j] * sigma[j] * sumz;
+            double b = sum_s1_x_min_dzeta;
+            double c = sum_s2;
+            double d = sum_z_x_min_dzeta;
+
             double *coef = calloc( 4, sizeof( double ) );
-            coef[0] = sigma[j] * sigma[j] * sumz;
-            coef[1] = sum_s1_x_min_dzeta;
-            coef[2] = sum_s2;
-            coef[3] = sum_z_x_min_dzeta;
+            coef[0] =  b;
+            coef[1] =  a - c - d;
+            coef[2] =  b;
+            coef[3] = -a;
             int coef_length = 4;
             double init = 0;
             double polyroot_epsilon = 1e-6;
