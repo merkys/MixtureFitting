@@ -1531,8 +1531,34 @@ s_fit_primitive <- function( x ) {
     return( c( xbar, alpha, ni ) )
 }
 
+snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ), max_steps = 0,
+                        debug = FALSE, implementation = "C") {
+    if( length(w) != length(x) ) {
+        w = x * 0 + 1
+    }
+
+    l = NULL
+    if( implementation == "C" ) {
+        ret = .C( "snmm_fit_em",
+                  as.double(x),
+                  as.integer( length(x) ),
+                  as.double(p),
+                  as.integer( length(p) ),
+                  as.double(w),
+                  as.double( epsilon ),
+                  as.integer( max_steps ),
+                  as.integer( debug ),
+                  retvec = numeric( length(p) ),
+                  steps = integer(1) )
+        l = ret$retvec
+    } else {
+        l = snmm_fit_em_R( x, p, w, epsilon )
+    }
+    return( l )
+}
+
 # According to https://www3.stat.sinica.edu.tw/statistica/oldpdf/A17n35.pdf
-snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
+snmm_fit_em_R <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 )) {
     if( length(w) != length(x) ) {
         w = rep( 1,  length(x) )
     }

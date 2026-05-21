@@ -435,6 +435,7 @@ void snmm_fit_em( double *x, int *xlength,
             for (int i = 0; i < *xlength; i++)
                 zsum[i] += z[i];
         }
+
         for (int j = 0; j < m; j++) {
             double *par = calloc( 4, sizeof( double ) );
             par[0] = omega[j];
@@ -444,12 +445,17 @@ void snmm_fit_em( double *x, int *xlength,
             int parlength = 4;
             dsnmm( x, xlength, par, &parlength, z );
             free( par );
+
+            double sumz = 0;
+            for (int i = 0; i < *xlength; i++) {
+                z[i] = w[i] * z[i] / zsum[i];
+                sumz += z[i];
+            }
+
             double sigmaT = sigma[j] * sqrt( 1 - sn_delta(lambda[j]) * sn_delta(lambda[j]) );
             double *s1 = calloc( *xlength, sizeof( double ) );
             double *s2 = calloc( *xlength, sizeof( double ) );
-            double sumz = sum( z, *xlength );
             for (int i = 0; i < *xlength; i++) {
-                z[i] = w[i] * z[i] / zsum[i];
                 double muT = sn_delta(lambda[j]) * (x[i] - dzeta[j]);
                 double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
                 double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg, 0, 1, 1, 0);
