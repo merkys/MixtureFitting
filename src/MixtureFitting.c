@@ -394,6 +394,7 @@ void snmm_fit_em( double *x, int *xlength,
                   double *p, int *plength,
                   double *w,
                   double *epsilon,
+                  int *debug,
                   double *ret,
                   int *steps )
 {
@@ -508,13 +509,15 @@ void snmm_fit_em( double *x, int *xlength,
             int coef_length = 4;
             double init = 0;
             double polyroot_epsilon = 1e-6;
-            int debug = 0;
+            int polyroot_debug = 0;
             double root;
-            polyroot_NR( coef, &coef_length, &init, &polyroot_epsilon, &debug, &root );
+            polyroot_NR( coef, &coef_length, &init, &polyroot_epsilon, &polyroot_debug, &root );
             free( coef );
             lambda[j] = sqrt( (root * root) / (1 - root * root) );
             if (root < 0)
                 lambda[j] *= -1;
+
+            if (*debug) Rprintf( "%f %f %f %f ", omega[j], dzeta[j], sigma[j], lambda[j] );
 
             // Check for convergence
             if( fabs( omega[j]  - prev_omega  ) > epsilon[0] ||
@@ -524,8 +527,9 @@ void snmm_fit_em( double *x, int *xlength,
                 run = 1;
             }
 
-            *steps = *steps + 1;
+            if (*debug) Rprintf( "\n" );
         }
+        *steps = *steps + 1;
     }
 
     for (int i = 0; i < m; i++) {

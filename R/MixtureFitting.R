@@ -1531,7 +1531,7 @@ s_fit_primitive <- function( x ) {
     return( c( xbar, alpha, ni ) )
 }
 
-snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ), implementation = "C") {
+snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6 ), debug = FALSE, implementation = "C") {
     if( length(w) != length(x) ) {
         w = x * 0 + 1
     }
@@ -1545,6 +1545,7 @@ snmm_fit_em <- function(x, p, w = numeric(), epsilon = c( 1e-6, 1e-6, 1e-6, 1e-6
                   as.integer( length(p) ),
                   as.double(w),
                   as.double( epsilon ),
+                  as.integer( debug ),
                   retvec = numeric( length(p) ),
                   steps = integer(1) )
         l = ret$retvec

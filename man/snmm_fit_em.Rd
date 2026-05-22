@@ -7,7 +7,7 @@
 }
 \usage{
     snmm_fit_em( x, p, w = numeric(), epsilon = c( 0.000001, 0.000001, 0.000001, 0.000001 ),
-                 implementation = "C" )
+                 debug = FALSE, implementation = "C" )
 }
 \arguments{
     \item{x}{data vector}
@@ -32,6 +32,9 @@
         epsilon_dzeta is threshold for component locations,
         epsilon_sigma is threshold for component scales and
         epsilon_lambda is threshold for component shapes.
+    }
+    \item{debug}{
+        flag to turn the debug prints on/off.
     }
     \item{implementation}{
         flag to switch between C (default) and R implementations.
