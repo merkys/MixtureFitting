@@ -49,8 +49,7 @@ void polyroot_NR( double *p, int *plength,
             run = 0;
     }
 
-    if (*debug > 0)
-        Rprintf( "Convergence reached after %u iteration(s)\n", steps );
+    if (*debug > 0) Rprintf( "Convergence reached after %u iteration(s)\n", steps );
 
     *ret = x;
 }
@@ -462,8 +461,8 @@ void snmm_fit_em( double *x, int *xlength,
                 double muT = sn_delta_lambda * (x[i] - dzeta[j]);
                 double arg = lambda[j] * (x[i] - dzeta[j]) / sigma[j];
                 double sigmaT_dp_ratio = sigmaT * dnorm(arg, 0, 1, 0) / pnorm(arg, 0, 1, 1, 0);
-                s1[i] = z[i] * (muT + sigmaT_dp_ratio);
-                s2[i] = z[i] * (muT * muT + sigmaT * sigmaT + sigmaT_dp_ratio * muT);
+                s1[i] = z[i] ? z[i] * (muT + sigmaT_dp_ratio) : 0;
+                s2[i] = z[i] ? z[i] * (muT * muT + sigmaT * sigmaT + sigmaT_dp_ratio * muT) : 0;
             }
 
             double prev_omega  = omega[j];
@@ -509,9 +508,8 @@ void snmm_fit_em( double *x, int *xlength,
             int coef_length = 4;
             double init = 0;
             double polyroot_epsilon = 1e-6;
-            int polyroot_debug = 0;
             double root;
-            polyroot_NR( coef, &coef_length, &init, &polyroot_epsilon, &polyroot_debug, &root );
+            polyroot_NR( coef, &coef_length, &init, &polyroot_epsilon, debug, &root );
             free( coef );
             lambda[j] = sqrt( (root * root) / (1 - root * root) );
             if (root < 0)
