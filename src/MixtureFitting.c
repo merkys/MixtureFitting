@@ -417,6 +417,8 @@ void snmm_fit_em( double *x, int *xlength,
     while (run) {
         run = 0;
 
+        if (*debug) Rprintf( "MDL%d ", m );
+
         for (int i = 0; i < *xlength; i++)
             zsum[i] = 0.0;
         for (int j = 0; j < m; j++) {
@@ -524,9 +526,9 @@ void snmm_fit_em( double *x, int *xlength,
                 fabs( lambda[j] - prev_lambda ) > epsilon[3] ) {
                 run = 1;
             }
-
-            if (*debug) Rprintf( "\n" );
         }
+
+        if (*debug) Rprintf( "\n" );
         *steps = *steps + 1;
     }
 
