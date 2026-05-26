@@ -526,6 +526,8 @@ void snmm_fit_em( double *x, int *xlength,
                 fabs( lambda[j] - prev_lambda ) > epsilon[3] ) {
                 run = 1;
             }
+            if( isnan( sigma[j] ) || isnan( lambda[j] ) )
+                run = 0;
         }
 
         if (*debug) Rprintf( "\n" );
