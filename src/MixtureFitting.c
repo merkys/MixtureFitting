@@ -416,6 +416,7 @@ void snmm_fit_em( double *x, int *xlength,
     int run = 1;
     while (run) {
         run = 0;
+        int is_nan = 0;
 
         if (*debug) Rprintf( "MDL%d ", m );
 
@@ -527,11 +528,13 @@ void snmm_fit_em( double *x, int *xlength,
                 run = 1;
             }
             if( isnan( sigma[j] ) || isnan( lambda[j] ) )
-                run = 0;
+                is_nan = 1;
         }
-
         if (*debug) Rprintf( "\n" );
+
         *steps = *steps + 1;
+        if( is_nan )
+            run = 0;
     }
 
     for (int i = 0; i < m; i++) {
